@@ -1,20 +1,31 @@
+import XMonad
+
 import qualified Data.Map as M
 import System.Exit
-import XMonad
+import Data.List
 import XMonad.Actions.NoBorders
+
+import qualified XMonad.StackSet as W
+
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.SetWMName
 import XMonad.Hooks.StatusBar
 import XMonad.Hooks.StatusBar.PP
+import XMonad.Hooks.ManageHelpers
+
 import XMonad.Layout.Spacing
 import XMonad.Layout.ThreeColumns
-import qualified XMonad.StackSet as W
+import XMonad.Layout.Fullscreen
+import XMonad.Layout.NoBorders
+
+import qualified XMonad.Util.Hacks as Hacks
 import XMonad.Util.EZConfig (additionalKeysP)
 import XMonad.Util.Loggers
 import XMonad.Util.Run
 import XMonad.Util.SpawnOnce
 import XMonad.Util.Ungrab
+import XMonad.Util.Cursor
 
 myModMask :: KeyMask
 myModMask = mod1Mask
@@ -28,9 +39,14 @@ myBrowser = "firefox-developer-edition"
 myWorkspaces :: [WorkspaceId]
 myWorkspaces = [" 1 ", " 2 ", " 3 ", " 4 ", " 5 ", " 6 ", " 7 ", " 8 ", " 9 "]
 
+-- Used in myManageHook, `startsWith` query
+startsWith :: Query String -> String -> Query Bool
+startsWith q s = q >>= \t -> return (s `isPrefixOf` t)
+
 myKeys :: [(String, X ())]
 myKeys =
-  [ -- Spawn a terminal instance.
+  [
+    -- Spawn a terminal instance.
     ("M-S-<Return>", spawn myTerminal),
     -- Spawn dmenu.
     ("M-p", spawn "dmenu_run"),
@@ -49,7 +65,8 @@ myKeys =
     ("<XF86AudioRaiseVolume>", spawn "pactl set-sink-volume @DEFAULT_SINK@ +5%"),
     -- Close the focused window.
     ("M-S-c", kill),
-    -- Layout Configuration
+
+  -- Layout Configuration
     -- Switch to the next layout.
     ("M-<Space>", sendMessage NextLayout),
     -- Reset the layout to the workspace default.
@@ -66,7 +83,7 @@ myKeys =
     ("M-m", windows W.focusMaster),
     -- Swap the focused window with the master window.
     ("M-<Return>", windows W.swapMaster),
-    -- Swap the focused window with the next window.
+   -- Swap the focused window with the next window.
     ("M-S-j", windows W.swapDown),
     -- Swap the focused window with the previous window.
     ("M-S-k", windows W.swapUp),
@@ -76,48 +93,61 @@ myKeys =
     ("M-l", sendMessage Expand),
     -- Re-tile a window.
     ("M-t", withFocused $ windows . W.sink),
-    -- Xmonad
+  -- Xmonad
     -- Quit Xmonad
     ("M-S-q", io exitSuccess),
     -- Restart Xmonad
     ("M-q", spawn "xmonad --recompile ; killall xmobar ; xmonad --restart")
   ]
 
-myMouseBindings XConfig {XMonad.modMask = modm} =
-  M.fromList
-    [ -- Set the window floating mode and move via dragging.
-      ( (modm, button1),
-        \w ->
-          focus w >> mouseMoveWindow w
-            >> windows W.shiftMaster
-      ),
-      -- Raise the window to the top of the stack.
+myMouseBindings XConfig {XMonad.modMask = modm} = M.fromList
+    [ 
+      ((modm, button1), \w -> focus w >> mouseMoveWindow w >> windows W.shiftMaster),
       ((modm, button2), \w -> focus w >> windows W.shiftMaster),
-      -- Set the window to floating mode and resize by dragging.
-      ( (modm, button3),
-        \w ->
-          focus w >> mouseResizeWindow w
-            >> windows W.shiftMaster
-      )
+      ((modm, button3), \w -> focus w >> mouseResizeWindow w >> windows W.shiftMaster)
     ]
 
 myStartupHook :: X ()
 myStartupHook = do
+  setDefaultCursor xC_left_ptr
   spawnOnce "~/.fehbg"
   spawnOnce "picom"
 
-myManageHook =
-  composeAll
-    [ className =? "Gimp" --> doFloat,
-      className =? "Steam" --> doFloat,
+myManageHook = composeAll
+    [ 
+      -- Fullscreen
+      isFullscreen --> doFullFloat,
+      isFullscreen --> hasBorder False,
+      -- GIMP
+      className =? "Gimp" --> doFloat,
+      -- Firefox
+      (className =? "Firefox" <&&> title =? "File Upload") --> doCenterFloat,
+      (className =? "Firefox" <&&> title =? "File Upload") --> doCenterFloat,
+      (className =? "firefoxdeveloperedition" <&&> title =? "Close Firefox") --> doCenterFloat,
+      -- Jetbrains
+      (className =? "jetbrains-idea" <&&> title =? " ") --> doCenterFloat,
+      title =? "Welcome to IntelliJ IDEA" --> doCenterFloat,
+      className `startsWith` "jetbrains-" <&&> title =? "win0" --> doFloat,
+      
+      -- OBS
+      className =? "obs" --> doFloat,
+      -- Xmessage
+      title =? "xmessage" --> doCenterFloat,
+      -- Discord
+      role =? "GtkFileChooserDialog" --> doCenterFloat,
+      -- Steam
+      className =? "Steam" --> doCenterFloat,
+      className =? "csgo_linux64" --> hasBorder False, 
+      -- MultiMC
+      className =? "MultiMC" --> doCenterFloat,
+      -- Other..
       resource =? "desktop_window" --> doIgnore,
       resource =? "kdesktop" --> doIgnore
-    ]
+    ] where role = stringProperty "WM_WINDOW_ROLE"
 
 myEventHook = mempty
 
-myGaps =
-  spacingRaw
+myGaps = spacingRaw
     False
     (Border 5 5 5 5)
     True
@@ -132,9 +162,9 @@ myLayout = avoidStruts $ myGaps $ tiled ||| Mirror tiled ||| Full
     delta = 3 / 100
 
 myXmobarPP :: PP
-myXmobarPP =
-  def
-    { ppCurrent = xmobarColor "#61AFEF" "" . wrap "[" "]",
+myXmobarPP = def
+    { 
+      ppCurrent = xmobarColor "#61AFEF" "" . wrap "[" "]",
       ppHidden = xmobarColor "#ABB2BF" "",
       ppHiddenNoWindows = xmobarColor "#6b7089" "",
       ppSep = " > ",
@@ -142,26 +172,26 @@ myXmobarPP =
       ppExtras = []
     }
 
-myConfig =
-  def
-    { modMask = myModMask,
+myConfig = def
+    { 
+      modMask = myModMask,
       mouseBindings = myMouseBindings,
       borderWidth = 3,
       normalBorderColor = "#544862",
       focusedBorderColor = "#61AFEF",
       layoutHook = myLayout,
-      startupHook = myStartupHook >> setWMName "LG3D",
+      startupHook = setWMName "LG3D" >> myStartupHook,
       manageHook = myManageHook,
       handleEventHook = myEventHook,
       workspaces = myWorkspaces
-    }
-    `additionalKeysP` myKeys
+    } `additionalKeysP` myKeys
 
 main :: IO ()
-main =
-  xmonad
+main = xmonad
     . docks
     . ewmhFullscreen
+    . fullscreenSupport
     . ewmh
-    . withEasySB (statusBarProp "xmobar ~/.config/xmobar/xmobarrc" (pure myXmobarPP)) defToggleStrutsKey
+    . Hacks.javaHack
+    . withEasySB (statusBarProp "xmobar ~/.xmonad/xmobar/xmobar.hs" (pure myXmobarPP)) defToggleStrutsKey
     $ myConfig

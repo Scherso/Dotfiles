@@ -11,7 +11,10 @@ source $HOME/.aliases
 export EDITOR=nvim 
 
 # Plugins
-plugins=(git)
+plugins=(
+    zsh-autosuggestions
+    zsh-syntax-highlighting
+)
 
 # Addons --->
 
@@ -29,11 +32,7 @@ if [ -z "${DISPLAY}" ] && [ "${XDG_VTNR}" -eq 1 ]; then
 fi
 
 # Starting Colorls 
-source $(dirname $(gem which colorls))/tab_complete.sh 
-path+=(
-    $(ruby -e 'puts File.join(Gem.user_dir, "bin")')
-)
-
-# ZSH Syntax Highlighting and Auto Suggestions
-source $HOME/.config/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+#source $(dirname $(gem which colorls))/tab_complete.sh 
+#path+=(
+#    $(ruby -e 'puts File.join(Gem.user_dir, "bin")')
+#)
