@@ -1,9 +1,0 @@
-$ stack build --silent --stack-yaml /home/sam/.xmonad/stack.yaml
-$ stack ghc --stack-yaml /home/sam/.xmonad/stack.yaml -- --make xmonad.hs -i -ilib -fforce-recomp -main-is main -v0 -outputdir /home/sam/.xmonad/build-x86_64-linux -o /home/sam/.xmonad/xmonad-x86_64-linux
-
-xmonad.hs:164:5: warning: [-Wtabs]
-    Tab character found here, and in one further location.
-    Please use spaces instead.
-    |
-164 |         role = stringProperty "WM_WINDOW_ROLE"
-    |     ^^^^
