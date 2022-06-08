@@ -139,9 +139,9 @@ myManageHook = composeAll
       -- GIMP
       className =? "Gimp" --> doFloat,
       -- Firefox
-      (className =? "Firefox" <&&> title =? "File Upload") --> doCenterFloat,
-      (className =? "Firefox" <&&> title =? "File Upload") --> doCenterFloat,
-      (className =? "firefoxdeveloperedition" <&&> title =? "Close Firefox") --> doCenterFloat,
+      (className =? "Firefox" <&&> title =? "File Upload") --> doFloat,
+      (className =? "Firefox" <&&> title =? "File Upload") --> doFloat,
+      (className `startsWith` "firefox" <&&> title =? "Close Firefox") --> doCenterFloat,
       -- Jetbrains
       (className =? "jetbrains-idea" <&&> title =? " ") --> doCenterFloat,
       title =? "Welcome to IntelliJ IDEA" --> doCenterFloat,
@@ -150,15 +150,14 @@ myManageHook = composeAll
       className =? "obs" --> doFloat,
       -- Xmessage
       title =? "xmessage" --> doCenterFloat,
-      -- Discord
-      role =? "GtkFileChooserDialog" --> doCenterFloat,
       -- Steam
       className =? "Steam" --> doCenterFloat,
       -- MultiMC
       className =? "MultiMC" --> doCenterFloat,
-      -- Other..
+      -- Universal
       resource =? "desktop_window" --> doIgnore,
       resource =? "kdesktop" --> doIgnore,
+      role =? "GtkFileChooserDialog" --> doCenterFloat,
       role =? "About" <||> role =? "about" --> doFloat
     ] where 
     	role = stringProperty "WM_WINDOW_ROLE"
