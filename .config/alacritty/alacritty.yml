@@ -16,12 +16,12 @@ window:
 # Font Configuration 
 font: 
   normal:
-    family: SF Mono Powerline
+    family: SF Mono Powerline 
     style: Regular 
     size: 13.0
 
   bold:
-    family: SF Mono Powerline
+    family: SF Mono Powerline 
     style: Bold
     size: 13.0
 

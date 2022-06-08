@@ -4,6 +4,9 @@ export ZSH="$HOME/.oh-my-zsh"
 # Theme
 ZSH_THEME="common"
 
+#autoload -U promptinit; promptinit
+#prompt pure
+
 # Aliases 
 source $HOME/.aliases 
 
@@ -30,6 +33,9 @@ fi
 if [ -z "${DISPLAY}" ] && [ "${XDG_VTNR}" -eq 1 ]; then
   exec startx
 fi
+
+# Pure Prompt
+#fpath+=$HOME/.zsh/pure
 
 # Starting Colorls 
 #source $(dirname $(gem which colorls))/tab_complete.sh 

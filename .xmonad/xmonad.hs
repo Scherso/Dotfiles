@@ -3,6 +3,7 @@ import XMonad
 import qualified Data.Map as M
 import System.Exit
 import Data.List
+import Data.Monoid
 import XMonad.Actions.NoBorders
 
 import qualified XMonad.StackSet as W
@@ -28,7 +29,7 @@ import XMonad.Util.Ungrab
 import XMonad.Util.Cursor
 
 myModMask :: KeyMask
-myModMask = mod1Mask
+myModMask = mod4Mask
 
 myTerminal :: String
 myTerminal = "alacritty"
@@ -38,6 +39,17 @@ myBrowser = "firefox-developer-edition"
 
 myWorkspaces :: [WorkspaceId]
 myWorkspaces = [" 1 ", " 2 ", " 3 ", " 4 ", " 5 ", " 6 ", " 7 ", " 8 ", " 9 "]
+
+-- Colors
+myNormColor :: String
+myNormColor = "#544862"
+
+myFocusColor :: String 
+myFocusColor = "#61AFEF"
+
+-- Border Width
+myBorderWidth :: Dimension
+myBorderWidth = 3
 
 -- Used in myManageHook, `startsWith` query
 startsWith :: Query String -> String -> Query Bool
@@ -93,6 +105,7 @@ myKeys =
     ("M-l", sendMessage Expand),
     -- Re-tile a window.
     ("M-t", withFocused $ windows . W.sink),
+
   -- Xmonad
     -- Quit Xmonad
     ("M-S-q", io exitSuccess),
@@ -109,10 +122,15 @@ myMouseBindings XConfig {XMonad.modMask = modm} = M.fromList
 
 myStartupHook :: X ()
 myStartupHook = do
+  -- Cursor Styling
   setDefaultCursor xC_left_ptr
+  -- Spawning daemons
+  spawnOnce "picom &"
   spawnOnce "~/.fehbg"
-  spawnOnce "picom"
+  -- Setting the window manager name to LG3D to fix Java Swing apps
+  setWMName "LG3D"
 
+myManageHook :: XMonad.Query (Data.Monoid.Endo WindowSet)
 myManageHook = composeAll
     [ 
       -- Fullscreen
@@ -128,7 +146,6 @@ myManageHook = composeAll
       (className =? "jetbrains-idea" <&&> title =? " ") --> doCenterFloat,
       title =? "Welcome to IntelliJ IDEA" --> doCenterFloat,
       className `startsWith` "jetbrains-" <&&> title =? "win0" --> doFloat,
-      
       -- OBS
       className =? "obs" --> doFloat,
       -- Xmessage
@@ -137,13 +154,15 @@ myManageHook = composeAll
       role =? "GtkFileChooserDialog" --> doCenterFloat,
       -- Steam
       className =? "Steam" --> doCenterFloat,
-      className =? "csgo_linux64" --> hasBorder False, 
       -- MultiMC
       className =? "MultiMC" --> doCenterFloat,
       -- Other..
       resource =? "desktop_window" --> doIgnore,
-      resource =? "kdesktop" --> doIgnore
-    ] where role = stringProperty "WM_WINDOW_ROLE"
+      resource =? "kdesktop" --> doIgnore,
+      role =? "About" <||> role =? "about" --> doFloat
+    ] where 
+    	role = stringProperty "WM_WINDOW_ROLE"
+	windown = stringProperty "WM_NAME"
 
 myEventHook = mempty
 
@@ -175,12 +194,13 @@ myXmobarPP = def
 myConfig = def
     { 
       modMask = myModMask,
+      terminal = myTerminal,
       mouseBindings = myMouseBindings,
-      borderWidth = 3,
-      normalBorderColor = "#544862",
-      focusedBorderColor = "#61AFEF",
+      borderWidth = myBorderWidth,
+      normalBorderColor = myNormColor,
+      focusedBorderColor = myFocusColor,
       layoutHook = myLayout,
-      startupHook = setWMName "LG3D" >> myStartupHook,
+      startupHook = myStartupHook,
       manageHook = myManageHook,
       handleEventHook = myEventHook,
       workspaces = myWorkspaces

@@ -10,8 +10,8 @@ alias ~="cd ~"
 # Functionality 
 alias sudo='sudo ' 
 
-# Lunar Vim i broke it 
-# alias lvim="$HOME/.local/bin/lvim"
+# Lunar Vim 
+alias lvim="$HOME/.local/bin/lvim"
 
 # Colorls 
 #alias ls='colorls'

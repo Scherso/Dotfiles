@@ -26,7 +26,6 @@ Config { font = "xft:SF Mono Powerline:pixelsize=13:antialias=true:hinting=true"
                     , Run Memory ["-t","Mem: <usedratio>%"] 10
                     , Run UnsafeXMonadLog
 		    , Run Com "/home/sam/.xmonad/xmobar/volume.sh" [] "volume" 10
-		    , Run Com "/home/sam/.xmonad/xmobar/wifi.sh" [] "wifi" 10
 		    , Run Com "/home/sam/.xmonad/xmobar/gputemp.sh" [] "gpu" 10
 		    , Run Com "/home/sam/.xmonad/xmobar/cputemp.sh" [] "cpu" 10
                     ]
@@ -40,6 +39,6 @@ Config { font = "xft:SF Mono Powerline:pixelsize=13:antialias=true:hinting=true"
        %date%
        { <fc=#DFDFDF>%cpu%</fc> \
        \| <fc=#DFDFDF>%gpu%</fc> \
-       \| <fc=#ffffff>%memory%</fc>  %volume% %wifi%  " 
+       \| <fc=#ffffff>%memory%</fc>  %volume%  " 
        }
 
