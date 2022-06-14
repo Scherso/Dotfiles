@@ -8,14 +8,10 @@ alias .....="cd ../../../.."
 alias ~="cd ~"
 
 # Functionality 
-alias sudo='sudo ' 
+alias sudo='doas ' 
 
 # Lunar Vim 
-alias lvim="$HOME/.local/bin/lvim"
+alias nvim="$HOME/.local/bin/lvim"
 
-# Colorls 
-#alias ls='colorls'
-#alias 'ls -a'='colorls -a'
-#alias 'ls -r'='colorls -r'
-#alias lc='colorls -lA --sd'
-
+# Proton Executable for Windows apps
+alias protonexec="$HOME/.local/share/Steam/steamapps/common/Proton\ -\ Experimental/files/bin/wine"

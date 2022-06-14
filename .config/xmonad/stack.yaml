@@ -1,0 +1,11 @@
+resolver: lts-19.10
+
+packages:
+- xmobar-git
+- xmonad-git
+- xmonad-contrib-git
+
+flags:
+  xmobar:
+    with_xft: true
+    with_xpm: true

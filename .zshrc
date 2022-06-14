@@ -42,3 +42,4 @@ fi
 #path+=(
 #    $(ruby -e 'puts File.join(Gem.user_dir, "bin")')
 #)
+export PATH=$PATH:/home/sam/.spicetify
