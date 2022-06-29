@@ -1,9 +1,10 @@
-resolver: lts-19.10
+resolver:
+  url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/19/11.yaml
 
 packages:
-- xmobar-git
-- xmonad-git
-- xmonad-contrib-git
+  - xmobar-git
+  - xmonad-git
+  - xmonad-contrib-git
 
 flags:
   xmobar:

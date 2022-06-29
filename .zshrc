@@ -4,9 +4,6 @@ export ZSH="$HOME/.oh-my-zsh"
 # Theme
 ZSH_THEME="common"
 
-#autoload -U promptinit; promptinit
-#prompt pure
-
 # Aliases 
 source $HOME/.aliases 
 
@@ -34,12 +31,5 @@ if [ -z "${DISPLAY}" ] && [ "${XDG_VTNR}" -eq 1 ]; then
   exec startx
 fi
 
-# Pure Prompt
-#fpath+=$HOME/.zsh/pure
-
-# Starting Colorls 
-#source $(dirname $(gem which colorls))/tab_complete.sh 
-#path+=(
-#    $(ruby -e 'puts File.join(Gem.user_dir, "bin")')
-#)
+# Spicy Spotify wink wink
 export PATH=$PATH:/home/sam/.spicetify
