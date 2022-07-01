@@ -28,8 +28,9 @@ fi
 
 # Automatically Starting Xorg
 if [ -z "${DISPLAY}" ] && [ "${XDG_VTNR}" -eq 1 ]; then
-  exec startx
+  exec sx sh $HOME/.xinitrc
 fi
 
-# Spicy Spotify wink wink
 export PATH=$PATH:/home/sam/.spicetify
+
+[ -f "/home/sam/.ghcup/env" ] && source "/home/sam/.ghcup/env" # ghcup-env
