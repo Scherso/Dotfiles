@@ -8,4 +8,4 @@
 
 xrandr -s 0
 
-exec xmonad > $HOME/.xmonad/log.txt
+exec xmonad > $HOME/.config/xmonad/log.txt
