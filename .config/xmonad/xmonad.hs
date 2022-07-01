@@ -1,7 +1,6 @@
 ------------------------------------------------------------------------
 -- ~/.config/xmonad/xmonad.hs
 -- validate syntax: xmonad --recompile
-{-# LANGUAGE FlexibleContexts #-}
 ------------------------------------------------------------------------
 
 import qualified Data.Map                   as M
