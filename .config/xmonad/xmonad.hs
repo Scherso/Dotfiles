@@ -1,5 +1,6 @@
 import qualified Data.Map                   as M
 import 		 Data.List
+import		 Data.Functor
 import 		 Data.Monoid
 import 		 System.Exit
 import 		 XMonad
@@ -29,8 +30,11 @@ myTerminal = "alacritty"  -- Default Terminal
 myBrowser :: String
 myBrowser = "firefox"     -- Default Browser
 
-myWorkspaces :: [WorkspaceId]
-myWorkspaces = [" 1 ", " 2 ", " 3 ", " 4 ", " 5 ", " 6 ", " 7 ", " 8 ", " 9 "]
+myWorkspaces :: [String]
+myWorkspaces = map (wrap " " " " . show) [1..9] 
+
+myXmobar :: String
+myXmobar = "xmobar ~/.config/xmonad/xmobar/xmobar.hs"
 
 -- Colors
 myNormColor :: String
@@ -48,7 +52,7 @@ myKeys =
   -- Xmonad
    [ ("M-g",        withFocused toggleBorder)
    , ("M-S-c",      kill)
-   , ("M-S-x",	    forceKill)
+   , ("M-S-x",	    withFocused forceKillWindow)
    , ("M-<Space>",  sendMessage NextLayout)
    , ("M-n", 	    refresh)
   -- Windows
@@ -71,7 +75,7 @@ myKeys =
    , ("M-f",	      spawn myBrowser)
    , ("M-s", 	      spawn "screenshot")
   -- Dmenu
-   , ("M-p", 	      spawn "dmenu_run")
+   , ("M-p", 	      spawn "/bin/zsh ; dmenu_run")
   -- Multimedia Keys
    , ("<XF86AudioPlay>",	spawn "playerctl play-pause")
    , ("<XF86AudioPrev>", 	spawn "playerctl previous")
@@ -84,10 +88,8 @@ myKeys =
   -- Making a window have a full float over a workspace.
     toggleFull = withFocused $ windows . (flip W.float $ W.RationalRect 0 0 1 1)
   -- Force killing a frozen window.
-    forceKillWindow w = withDisplay $ \d -> 
-      io $ killClient d w >> return () 
-    forceKill = withFocused forceKillWindow :: X ()
-
+    forceKillWindow w = withDisplay $ \d ->
+      io $ void $ killClient d w 
 
 myMouseBindings :: XConfig l -> M.Map (KeyMask, Button) (Window -> X ())
 myMouseBindings XConfig {XMonad.modMask = modm} = M.fromList
@@ -117,10 +119,10 @@ myManageHook = composeAll
     , className  =? "Gimp" --> doFloat
   -- Firefox
     , className =? "firefox"	       <&&> title =? "File Upload"   --> doFloat
-    , className `startsWith` "firefox" <&&> title =? "Close Firefox" --> doCenterFloat
+    , className ^? "firefox" <&&> title =? "Close Firefox" --> doCenterFloat
   -- Jetbrains
-    , className `startsWith` "jetbrains-" <&&> title `startsWith` "Welcome to " --> doCenterFloat
-    , className `startsWith` "jetbrains-" <&&> title =? "splash"                --> doFloat
+    , className ^? "jetbrains-" <&&> title ^? "Welcome to " --> doCenterFloat
+    , className ^? "jetbrains-" <&&> title =? "splash"                --> doFloat
   -- OBS
     , className =? "obs"      --> doFloat
   -- X/X11
@@ -140,8 +142,6 @@ myManageHook = composeAll
     where
   -- Hides windows from appearing in a workspace.
       doHide = ask >>= doF . W.delete :: ManageHook
-  -- Checks if a string of text "starts with" given text.
-      startsWith q s = isPrefixOf s <$> q
   -- Checking the name of a role and icon.
       role = stringProperty "WM_WINDOW_ROLE"
 
@@ -151,20 +151,17 @@ myManageHook = composeAll
 myEventHook :: Event -> X All
 myEventHook = mempty
 
-myGaps = spacingRaw False(Border w w w w) True(Border w w w w) True
-    where
-      w = 5
-
 myLayout =
     avoidStruts
     $ lessBorders OnlyScreenFloat
-    $ myGaps 
+    $ spacingRaw False(Border w w w w) True(Border w w w w) True 
     $ tiled ||| Mirror tiled ||| Full
     where
       tiled = Tall nmaster delta ratio
       nmaster = 1
       ratio = 1 / 2
       delta = 3 / 100
+      w = 5
 
 myXmobarPP :: X PP
 myXmobarPP = clickablePP $ def
@@ -180,7 +177,7 @@ myXmobarPP = clickablePP $ def
     }
 
 xmobar :: StatusBarConfig
-xmobar = statusBarProp "xmobar ~/.config/xmonad/xmobar/xmobar.hs" myXmobarPP
+xmobar = statusBarProp myXmobar myXmobarPP
 
 myConfig = def
     { modMask            = myModMask
@@ -204,5 +201,5 @@ main = do
     . fullscreenSupport
     . ewmh
     . Hacks.javaHack
-    . withSB xmobar
+    . withEasySB xmobar def 
     $ myConfig
