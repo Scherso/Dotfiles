@@ -3,11 +3,16 @@
 -- validate syntax: xmonad --recompile
 ------------------------------------------------------------------------
 
+-- Data Imports 
 import qualified Data.Map                   as M
 import           Data.List
 import           Data.Functor
 import           Data.Monoid
+
+-- used in io exitSuccess 
 import           System.Exit
+
+-- XMonad imports 
 import           XMonad
 import           XMonad.Actions.NoBorders
 import           XMonad.Hooks.EwmhDesktops
@@ -19,38 +24,34 @@ import           XMonad.Hooks.StatusBar.PP
 import           XMonad.Layout.Fullscreen
 import           XMonad.Layout.NoBorders
 import           XMonad.Layout.Spacing
-import qualified XMonad.StackSet            as W
+import qualified XMonad.StackSet as W
 import           XMonad.Util.ClickableWorkspaces
 import           XMonad.Util.Cursor
 import           XMonad.Util.EZConfig       (additionalKeysP)
 import qualified XMonad.Util.Hacks          as Hacks
 import           XMonad.Util.SpawnOnce
 
+  -- Windows key/Super key
 myModMask :: KeyMask
-myModMask = mod4Mask      -- Windows key/Super key
-
+myModMask = mod4Mask 
+  -- Default Terminal
 myTerminal :: String
-myTerminal = "alacritty"  -- Default Terminal
-
+myTerminal = "alacritty"
+  -- Default Browser
 myBrowser :: String
-myBrowser = "firefox"     -- Default Browser
-
+myBrowser = "firefox"
+  -- Workspaces
 myWorkspaces :: [String]
 myWorkspaces = map (wrap " " " " . show) [1..9]
-
-myXmobar :: String
-myXmobar = "xmobar ~/.config/xmonad/xmobar/xmobar.hs"
-
--- Colors
-myNormColor :: String
-myNormColor = "#544862"
-
-myFocusColor :: String
-myFocusColor = "#61AFEF"
-
--- Border Width
+  -- Border Width
 myBorderWidth :: Dimension
 myBorderWidth = 3
+  -- Formal Unfocused Color
+myNormColor :: String
+myNormColor = "#544862"
+  -- Focused Color
+myFocusColor :: String
+myFocusColor = "#61AFEF"
 
 myKeys :: [(String, X ())]
 myKeys =
@@ -109,48 +110,37 @@ myMouseBindings XConfig {XMonad.modMask = modm} = M.fromList
 
 myStartupHook :: X ()
 myStartupHook = do
-  -- Cursor Styling
-    setDefaultCursor xC_left_ptr
-  -- Spawning daemons
-    spawnOnce "picom &"
-    spawnOnce "~/.fehbg"
-  -- Setting the window manager name to LG3D to fix Java Swing apps
-    setWMName "XMonad LG3D"
+  traverse spawnOnce
+    [ "xsetroot -cursor_name left_ptr"
+    , "~/.fehbg"
+    , "picom"
+    , "pulseaudio --start"
+    ]
+  setWMName "XMonad LG3D"
 
 myManageHook :: XMonad.Query (Data.Monoid.Endo WindowSet)
-myManageHook = composeAll
-  -- Fullscreen
+myManageHook = mconcat
     [ isFullscreen --> doFullFloat
-  -- GIMP
-    , className  =? "Gimp" --> doFloat
-  -- Firefox
-    , className =? "firefox"           <&&> title =? "File Upload" --> doFloat
-    , className ^? "firefox" <&&> title =? "Close Firefox"         --> doCenterFloat
-  -- Jetbrains
+    , isDialog     --> doFloat 
+    , className =? "Gimp"     --> doFloat
+    , className =? "obs"      --> doFloat
+    , className =? "MultiMC"  --> doFloat
+    , className =? "Xmessage" --> doCenterFloat
+    , className =? "Steam"    --> doCenterFloat
+    , className =? "firefox"    <&&> title =? "File Upload" --> doFloat
     , className ^? "jetbrains-" <&&> title ^? "Welcome to " --> doCenterFloat
     , className ^? "jetbrains-" <&&> title =? "splash"      --> doFloat
-  -- OBS
-    , className =? "obs"      --> doFloat
-  -- X/X11
-    , title     =? "xmessage" --> doCenterFloat
-  -- Steam
-    , className =? "Steam"            --> doCenterFloat
-    , title     =? "Wine System Tray" --> doHide
-  -- MultiMC
-    , className =? "MultiMC"  --> doCenterFloat
-  -- Universal
-    , resource =? "desktop_window"         --> doIgnore
-    , resource =? "kdesktop"               --> doIgnore
-    , role =? "GtkFileChooserDialog"       --> doCenterFloat
-    , role =? "About" <||> role =? "about" --> doFloat
-    , isDialog                             --> doFloat
+    , resource  =? "desktop_window"             --> doIgnore
+    , resource  =? "kdesktop"                   --> doIgnore
+    , title     =? "Wine System Tray"           --> doHide
+    , role      =? "GtkFileChooserDialog"       --> doCenterFloat
+    , role      =? "About" <||> role =? "about" --> doFloat
     ]
     where
-  -- Hides windows from appearing in a workspace.
+    -- Hides windows from appearing in a workspace.
       doHide = ask >>= doF . W.delete :: ManageHook
-  -- Checking the name of a role and icon.
+    -- WM_WINDOW_ROLE will be parsed with the role variable.
       role = stringProperty "WM_WINDOW_ROLE"
-
 --    doClose = ask >>= liftX . killWindow >> mempty :: ManageHook
 --    doForceKill = ask >>= liftX . forceKillWindow >> mempty :: ManageHook
 
@@ -170,7 +160,8 @@ myLayout =
       w = 5
 
 myXmobarPP :: X PP
-myXmobarPP = clickablePP $ def
+myXmobarPP = 
+  clickablePP $ def
     { ppCurrent          = xmobarColor "#61AFEF" "" . wrap "<box type=Bottom offset=C5 width=3 color=#61AFEF>" "</box>"
     , ppHidden           = xmobarColor "#ABB2BF" ""
     , ppVisibleNoWindows = Just (xmobarColor "#a9b1d6" "")
@@ -185,7 +176,11 @@ myXmobarPP = clickablePP $ def
 xmobar :: StatusBarConfig
 xmobar = statusBarProp myXmobar myXmobarPP
 
-myConfig = def
+myXmobar :: String
+myXmobar = "xmobar ~/.config/xmonad/xmobar/xmobar.hs"
+
+myConfig = 
+  def
     { modMask            = myModMask
     , terminal           = myTerminal
     , mouseBindings      = myMouseBindings
@@ -198,6 +193,7 @@ myConfig = def
     , handleEventHook    = myEventHook
     , workspaces         = myWorkspaces
     } `additionalKeysP` myKeys
+
 
 main :: IO ()
 main = do
