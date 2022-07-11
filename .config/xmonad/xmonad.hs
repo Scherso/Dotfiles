@@ -119,7 +119,8 @@ myStartupHook = do
   setWMName "XMonad LG3D"
 
 myManageHook :: XMonad.Query (Data.Monoid.Endo WindowSet)
-myManageHook = mconcat
+myManageHook = 
+  mconcat
     [ isFullscreen --> doFullFloat
     , isDialog     --> doFloat 
     , className =? "Gimp"     --> doFloat
