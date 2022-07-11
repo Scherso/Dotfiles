@@ -1,7 +1,7 @@
-------------------------------------------------------------------------
+---------------------------------------
 -- ~/.config/xmonad/xmonad.hs
 -- validate syntax: xmonad --recompile
-------------------------------------------------------------------------
+---------------------------------------
 
 -- Data Imports 
 import qualified Data.Map                   as M
@@ -194,7 +194,6 @@ myConfig =
     , handleEventHook    = myEventHook
     , workspaces         = myWorkspaces
     } `additionalKeysP` myKeys
-
 
 main :: IO ()
 main = do
