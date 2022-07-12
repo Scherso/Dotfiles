@@ -24,7 +24,7 @@ import           XMonad.Hooks.StatusBar.PP
 import           XMonad.Layout.Fullscreen
 import           XMonad.Layout.NoBorders
 import           XMonad.Layout.Spacing
-import qualified XMonad.StackSet as W
+import qualified XMonad.StackSet            as W
 import           XMonad.Util.ClickableWorkspaces
 import           XMonad.Util.Cursor
 import           XMonad.Util.EZConfig       (additionalKeysP)
