@@ -136,7 +136,7 @@ myManageHook =
     , resource  =? "desktop_window"             --> doIgnore
     , resource  =? "kdesktop"                   --> doIgnore
     , title     =? "Wine System Tray"           --> doHide
-    , role	    =? "GtkFileChooserDialog"	      --> doCenterFloat 
+    , role	=? "GtkFileChooserDialog"	--> doCenterFloat 
     , role      =? "About" <||> role =? "about" --> doFloat
     ]
     where
