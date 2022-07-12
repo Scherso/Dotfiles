@@ -111,19 +111,21 @@ myMouseBindings XConfig {XMonad.modMask = modm} = M.fromList
 myStartupHook :: X ()
 myStartupHook = do
   traverse spawnOnce
-    [ "xsetroot -cursor_name left_ptr"
-    , "~/.fehbg"
+    [ "~/.fehbg"
     , "picom"
     , "pulseaudio --start"
     ]
+  setDefaultCursor xC_left_ptr
   setWMName "XMonad LG3D"
 
 myManageHook :: XMonad.Query (Data.Monoid.Endo WindowSet)
 myManageHook = 
-  mconcat
-    [ isFullscreen --> doFullFloat
-    , isDialog     --> doFloat 
-    , className =? "Gimp"     --> doFloat
+  composeOne
+    [ transience
+    , isDialog     -?> doCenterFloat
+    , isFullscreen -?> doFullFloat
+    ] <> composeAll
+    [ className =? "Gimp"     --> doFloat
     , className =? "obs"      --> doFloat
     , className =? "MultiMC"  --> doFloat
     , className =? "Xmessage" --> doCenterFloat
@@ -134,7 +136,7 @@ myManageHook =
     , resource  =? "desktop_window"             --> doIgnore
     , resource  =? "kdesktop"                   --> doIgnore
     , title     =? "Wine System Tray"           --> doHide
-    , role      =? "GtkFileChooserDialog"       --> doCenterFloat
+    , role	    =? "GtkFileChooserDialog"	      --> doCenterFloat 
     , role      =? "About" <||> role =? "about" --> doFloat
     ]
     where

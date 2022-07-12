@@ -32,12 +32,12 @@ Config { font		   = "xft:SF Mono Nerd Font:pixelsize=13:antialias=true:hinting=t
        , sepChar = "%"
        , alignSep = "}{"
        , template = "\
-       		    \ <fn=5>%UnsafeXMonadLog%</fn>\
+       		    \ <fn=9><fc=#C678DD>  </fc></fn><fn=5>%UnsafeXMonadLog%</fn>\
        		    \}
        		    <box type=Bottom offset=C9 width=3 color=#79859d><fc=#79859d>%date%</fc></box>
       		    { 
        		    <box type=Bottom offset=C9 width=3 color=#97a6c4><fc=#97a6c4>%wlp5s0%</fc></box> \
        		    \  <box type=Bottom offset=C9 width=3 color=#98C379><fc=#98C379>%cpu%</fc></box> \
-       	            \  <box type=Bottom offset=C9 width=3 color=#61AFEF><fc=#61AFEF>%gpu%</fc></box> \
-                    \  <box type=Bottom offset=C9 width=3 color=#C678DD><fc=#C678DD>%volume%</fc></box>  "  
+       	      \  <box type=Bottom offset=C9 width=3 color=#61AFEF><fc=#61AFEF>%gpu%</fc></box> \
+              \  <box type=Bottom offset=C9 width=3 color=#C678DD><fc=#C678DD>%volume%</fc></box>  "  
        }
