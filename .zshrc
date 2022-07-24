@@ -36,6 +36,8 @@ if [ -z "${DISPLAY}" ] && [ "${XDG_VTNR}" -eq 1 ]; then
   exec sx sh $HOME/.xinitrc
 fi
 
+# Spicetify 
 export PATH=$PATH:/home/sam/.spicetify
 
-[ -f "/home/sam/.ghcup/env" ] && source "/home/sam/.ghcup/env" # ghcup-env
+# GHCUP-env
+[ -f "/home/sam/.ghcup/env" ] && source "/home/sam/.ghcup/env"
