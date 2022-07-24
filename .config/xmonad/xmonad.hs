@@ -5,7 +5,6 @@
 
 -- Data Imports 
 import qualified Data.Map                   as M
-import           Data.List
 import           Data.Functor
 import           Data.Monoid
 
@@ -14,7 +13,7 @@ import           System.Exit
 
 -- XMonad imports 
 import           XMonad
-import           XMonad.Actions.NoBorders
+import           XMonad.Actions.NoBorders   (toggleBorder)
 import           XMonad.Hooks.EwmhDesktops
 import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.ManageHelpers
@@ -22,7 +21,7 @@ import           XMonad.Hooks.SetWMName
 import           XMonad.Hooks.StatusBar
 import           XMonad.Hooks.StatusBar.PP
 import           XMonad.Layout.Fullscreen
-import           XMonad.Layout.NoBorders
+import           XMonad.Layout.NoBorders    
 import           XMonad.Layout.Spacing
 import qualified XMonad.StackSet            as W
 import           XMonad.Util.ClickableWorkspaces
@@ -131,16 +130,20 @@ myManageHook =
     , className =? "Xmessage" --> doCenterFloat
     , className =? "Steam"    --> doCenterFloat
     , className =? "firefox"    <&&> title =? "File Upload" --> doFloat
+    , className =? "firefox"	<&&> title =? "Library"     --> doCenterFloat
+    , className =? "firefox"	<&&> title ^? "Save"	    --> doFloat
     , className ^? "jetbrains-" <&&> title ^? "Welcome to " --> doCenterFloat
     , className ^? "jetbrains-" <&&> title =? "splash"      --> doFloat
     , resource  =? "desktop_window"             --> doIgnore
     , resource  =? "kdesktop"                   --> doIgnore
-    , title     =? "Wine System Tray"           --> doHide
     , role	=? "GtkFileChooserDialog"	--> doCenterFloat 
     , role      =? "About" <||> role =? "about" --> doFloat
+  -- Steam Games / Linux Gaming 
+    , className =? "steam_app_1551360" <&&> title /=? "Forza Horizon 5" --> doHide -- Prevents black screen when fullscreening
+    , title 	=? "Wine System Tray"					--> doHide -- Prevents Wine System Trays from taking input focus
     ]
     where
-    -- Hides windows from appearing in a workspace.
+    -- Hides windows without ignoring it, see doHideIgnore in XMonad contrib
       doHide = ask >>= doF . W.delete :: ManageHook
     -- WM_WINDOW_ROLE will be parsed with the role variable.
       role = stringProperty "WM_WINDOW_ROLE"
