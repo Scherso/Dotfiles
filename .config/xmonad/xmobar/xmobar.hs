@@ -1,43 +1,32 @@
-Config { font		   = "xft:SF Mono Nerd Font:pixelsize=13:antialias=true:hinting=true"
+Config { font              = "xft:SF Mono Nerd Font:pixelsize=13:antialias=true:hinting=true"
        , additionalFonts = [ "xft:SF Mono Nerd Font:pixelsize=13:antialias=true:hinting=true"
-        		   , "xft:SF Mono Nerd Font:pixelsize=13:antialias=true:hinting=true"
-	                   , "xft:SF Mono Nerd Font:pixelsize=13:antialias=true:hinting=true"
-	                   , "xft:SF Mono Nerd Font:pixelsize=13:antialias=true:hinting=true"
+                           , "xft:SF Mono Nerd Font:size=21"
+                           , "xft:SF Mono Nerd Font:size=13"
+                           , "xft:SF Mono Nerd Font:size=13"
                            , "xft:SF Mono Nerd Font:pixelsize=13:antialias=true:hinting=true"
                            ]
-       , borderColor = "#545862"
-       -- , border = FullBM 0
-       -- , borderWidth = 3
        , bgColor = "#282c34"
        , fgColor = "#aab2bf"
-       , alpha = 255
        , position = Static { xpos = 10, ypos = 5, width = 1900, height = 30 }
-       , textOffset = -1
-       , iconOffset = -1
-       , lowerOnStart = True
-       , pickBroadest = False
-       , persistent = False
+       , overrideRedirect = False
+       , lowerOnStart = False
        , hideOnStart = False
-       , iconRoot = ".config/xmonad/xpm/" -- default: "."
        , allDesktops = True
-       , overrideRedirect = True
-       , commands = [ 
-		      Run Date "  %a %b %d - %-l:%M %p " "date" 10 
-		    , Run Network "wlp5s0" ["-t"," <rx> kb   <tx> kb"] 10
-		    , Run Com "/home/sam/.config/xmonad/xmobar/gputemp.sh" [] "gpu" 10
-		    , Run Com "/home/sam/.config/xmonad/xmobar/cputemp.sh" [] "cpu" 10
-	            , Run Com "/home/sam/.config/xmonad/xmobar/volume.sh"  [] "volume" 1 
+       , persistent = True
+       , commands = [
+                      Run Date "  %a %b %d - %-l:%M %p " "date" 50 
+                    , Run Network "wlp5s0" ["-t"," <rx> kb   <tx> kb"] 10
+                    , Run Com "/home/sam/.config/xmonad/xmobar/gputemp.sh" [] "gpu" 10
+                    , Run K10Temp "0000:00:18.3" ["--template", "﨎 <Tdie>ºC"] 10
+                    , Run Com "/home/sam/.config/xmonad/xmobar/volume.sh"  [] "volume" 1
                     , Run UnsafeXMonadLog
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "\
-       		    \ <fn=9><fc=#C678DD>  </fc></fn><fn=5>%UnsafeXMonadLog%</fn>\
-       		    \}
-       		    <box type=Bottom offset=C9 width=3 color=#79859d><fc=#79859d>%date%</fc></box>
-      		    { 
-       		    <box type=Bottom offset=C9 width=3 color=#97a6c4><fc=#97a6c4>%wlp5s0%</fc></box> \
-       		    \  <box type=Bottom offset=C9 width=3 color=#98C379><fc=#98C379>%cpu%</fc></box> \
-       	      \  <box type=Bottom offset=C9 width=3 color=#61AFEF><fc=#61AFEF>%gpu%</fc></box> \
-              \  <box type=Bottom offset=C9 width=3 color=#C678DD><fc=#C678DD>%volume%</fc></box>  "  
+       , template ="<fn=5>%UnsafeXMonadLog%</fn>}{\
+                   \<fn=2><fc=#333842,#282c34:0></fc></fn><fc=#e06c75,#333842:0>%wlp5s0% </fc>\
+                   \<fn=2><fc=#3e4451,#333842:0></fc></fn><fc=#56b6c2,#3e4451:0>%k10temp% </fc>\
+                   \<fn=2><fc=#49515f,#3e4451:0></fc></fn><fc=#c678dd,#49515f:0>  %gpu% </fc>\
+                   \<fn=2><fc=#545d6d,#49515f:0></fc></fn><fc=#98c379,#545d6d:0>%date%  <fc=#61AFEF,#545d6d:0>%volume%  </fc></fc>"
        }
+
