@@ -2,7 +2,7 @@
 export ZSH="$HOME/.oh-my-zsh"
 
 # Theme
-ZSH_THEME="common"
+ZSH_THEME="agnoster"
 
 # Aliases 
 source $HOME/.aliases 
