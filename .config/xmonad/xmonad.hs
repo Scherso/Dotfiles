@@ -161,10 +161,10 @@ myLayout =
     $ tiled ||| Mirror tiled ||| Full
     where
       tiled = Tall nmaster delta ratio
-      nmaster = 1
-      ratio = 1 / 2
-      delta = 3 / 100
-      w = 5
+      nmaster = 1     -- Default number of windows in the master pane.
+      ratio = 1 / 2   -- Default proportion of screen occupied by master panes.
+      delta = 3 / 100 -- Percent of screen increment by when resizing panes.
+      w = 5           -- Width of pixel size between windows while tiled. 
 
 myXmobarPP :: X PP
 myXmobarPP = 
