@@ -178,7 +178,8 @@ myManageHook = manageRules
               , isSplash
               ]      -?> doCenterFloat
       ] <> composeAll
-      [ className =? "firefox"    <&&> title =? "File Upload" --> doFloat
+      [ manageDocks
+      , className =? "firefox"    <&&> title =? "File Upload" --> doFloat
       , className =? "firefox"    <&&> title =? "Library"     --> doCenterFloat
       , className =? "firefox"    <&&> title ^? "Save"	      --> doFloat
       , className ^? "jetbrains-" <&&> title ^? "Welcome to " --> doCenterFloat
