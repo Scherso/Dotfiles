@@ -88,6 +88,7 @@ myKeys =
    , ("<XF86AudioMute>",        spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle")
    , ("<XF86AudioLowerVolume>", spawn "pactl set-sink-volume @DEFAULT_SINK@ -1%")
    , ("<XF86AudioRaiseVolume>", spawn "pactl set-sink-volume @DEFAULT_SINK@ +1%")
+   , ("<Print>", 		spawn "maim | xclip -selection clipboard -t image/png")
    , ("<Pause>",                spawn "amixer sset Capture toggle")
    ]
    where
@@ -118,36 +119,78 @@ myStartupHook = do
   setDefaultCursor xC_left_ptr
   setWMName "XMonad LG3D"
 
+isInstance (ClassApp c _) = className =? c
+isInstance (TitleApp t _) = title =? t
+isInstance (NameApp n _)  = appName =? n
+
+type AppName      = String
+type AppTitle     = String
+type AppClassName = String
+type AppCommand   = String
+
+data App
+  = ClassApp AppClassName AppCommand
+  | TitleApp AppTitle AppCommand
+  | NameApp AppName AppCommand
+  deriving Show
+
+gimp     = ClassApp "Gimp.bin"              "gimp.bin"
+gimp2    = ClassApp "Gimp-2.99"             "gimp-2.99"
+multimc  = ClassApp "MultiMC"               "MultiMC"
+about    = TitleApp "About Mozilla Firefox" "About Mozilla Firefox"
+message  = ClassApp "Xmessage"              "Xmessage"
+steam    = ClassApp "Steam"                 "Steam"
+obs      = ClassApp "Obs"                   "obs"
+
 myManageHook :: XMonad.Query (Data.Monoid.Endo WindowSet)
-myManageHook = 
-  composeOne
-    [ transience
-    , isDialog     -?> doCenterFloat
-    , isFullscreen -?> doFullFloat
-    ] <> composeAll
-    [ className =? "Gimp"     --> doFloat
-    , className =? "obs"      --> doFloat
-    , className =? "MultiMC"  --> doFloat
-    , className =? "Xmessage" --> doCenterFloat
-    , className =? "Steam"    --> doCenterFloat
-    , className =? "firefox"    <&&> title =? "File Upload" --> doFloat
-    , className =? "firefox"	<&&> title =? "Library"     --> doCenterFloat
-    , className =? "firefox"	<&&> title ^? "Save"	    --> doFloat
-    , className ^? "jetbrains-" <&&> title ^? "Welcome to " --> doCenterFloat
-    , className ^? "jetbrains-" <&&> title =? "splash"      --> doFloat
-    , resource  =? "desktop_window"             --> doIgnore
-    , resource  =? "kdesktop"                   --> doIgnore
-    , role	=? "GtkFileChooserDialog"	--> doCenterFloat 
-    , role      =? "About" <||> role =? "about" --> doFloat
-  -- Steam Games / Linux Gaming 
-    , className =? "steam_app_1551360" <&&> title /=? "Forza Horizon 5" --> doHide -- Prevents black screen when fullscreening
-    , title 	=? "Wine System Tray"					--> doHide -- Prevents Wine System Trays from taking input focus
-    ]
-    where
-    -- Hides windows without ignoring it, see doHideIgnore in XMonad contrib
-      doHide = ask >>= doF . W.delete :: ManageHook
-    -- WM_WINDOW_ROLE will be parsed with the role variable.
-      role = stringProperty "WM_WINDOW_ROLE"
+myManageHook = manageRules
+  where
+  -- Hides windows without ignoring it, see doHideIgnore in XMonad contrib.
+    doHide = ask >>= doF . W.delete :: ManageHook
+  -- WM_WINDOW_ROLE will be parsed with the role variable.
+    role = stringProperty "WM_WINDOW_ROLE"
+  -- To match multiple properties with one operator
+    anyOf = foldl (<||>) (pure False) :: [Query Bool] -> Query Bool
+  -- To match multiple classNames with one operator
+    match = anyOf . fmap isInstance :: [App] -> Query Bool
+  -- Checking for splash dialogs
+    isSplash = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_SPLASH"
+  -- Checking for pop-ups
+    isPopup = role =? "pop-up"
+  -- Checking for file chooser dialog
+    isFileChooserDialog = role =? "GtkFileChooserDialog"
+  -- Managing rules for applications
+    manageRules = composeOne
+      [ transience
+      , isDialog     -?> doCenterFloat
+      , isFullscreen -?> doFullFloat 
+      , match [ gimp
+              , gimp2
+              , multimc
+              , about
+              , message
+              , steam
+              , obs
+              ]      -?> doFloat
+      , anyOf [ isFileChooserDialog
+              , isDialog
+              , isPopup
+              , isSplash
+              ]      -?> doCenterFloat
+      ] <> composeAll
+      [ className =? "firefox"    <&&> title =? "File Upload" --> doFloat
+      , className =? "firefox"    <&&> title =? "Library"     --> doCenterFloat
+      , className =? "firefox"    <&&> title ^? "Save"	      --> doFloat
+      , className ^? "jetbrains-" <&&> title ^? "Welcome to " --> doCenterFloat
+      , className ^? "jetbrains-" <&&> title =? "splash"      --> doFloat
+      , resource  =? "desktop_window"                         --> doIgnore
+      , resource  =? "kdesktop"                               --> doIgnore
+    -- Steam Game Fixes 
+      , className =? "steam_app_1551360" <&&> title /=? "Forza Horizon 5" --> doHide -- Prevents black screen when fullscreening
+      , title 	  =? "Wine System Tray"					  --> doHide -- Prevents Wine System Trays from taking input focus
+      ]
+
+--    May be useful one day 
 --    doClose = ask >>= liftX . killWindow >> mempty :: ManageHook
 --    doForceKill = ask >>= liftX . forceKillWindow >> mempty :: ManageHook
 
