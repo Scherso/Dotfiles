@@ -95,6 +95,7 @@ myKeys =
    ]
    where
   -- Making a window have a full float over a workspace.
+    toggleFull :: Window -> X () 
     toggleFull w = windows $ \s -> if 
       | M.lookup w (W.floating s) == Just fullscreen -> W.sink w s 
       | otherwise -> W.float w fullscreen s 
