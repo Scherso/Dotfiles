@@ -1,3 +1,5 @@
+{-# LANGUAGE MultiWayIf #-} -- Required for toggleFull in myKeys
+
 ---------------------------------------
 -- ~/.config/xmonad/xmonad.hs
 -- validate syntax: xmonad --recompile
@@ -71,7 +73,7 @@ myKeys =
    , ("M-h",        sendMessage Shrink)
    , ("M-l",        sendMessage Expand)
    , ("M-t",        withFocused $ windows . W.sink)
-   , ("M-S-f",      toggleFull)
+   , ("M-S-f",      withFocused toggleFull)
   -- Quit
    , ("M-S-q",      io exitSuccess)
    , ("M-q",        spawn "xmonad --recompile ; killall xmobar ; xmonad --restart")
@@ -88,12 +90,16 @@ myKeys =
    , ("<XF86AudioMute>",        spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle")
    , ("<XF86AudioLowerVolume>", spawn "pactl set-sink-volume @DEFAULT_SINK@ -1%")
    , ("<XF86AudioRaiseVolume>", spawn "pactl set-sink-volume @DEFAULT_SINK@ +1%")
-   , ("<Print>", 		spawn "maim | xclip -selection clipboard -t image/png")
+   , ("<Print>", 		            spawn "maim | xclip -selection clipboard -t image/png")
    , ("<Pause>",                spawn "amixer sset Capture toggle")
    ]
    where
   -- Making a window have a full float over a workspace.
-    toggleFull = withFocused $ windows . flip W.float (W.RationalRect 0 0 1 1)
+    toggleFull w = windows $ \s -> if 
+      | M.lookup w (W.floating s) == Just fullscreen -> W.sink w s 
+      | otherwise -> W.float w fullscreen s 
+        where
+          fullscreen = W.RationalRect 0 0 1 1
   -- Force killing a frozen window.
     forceKillWindow :: Window -> X ()
     forceKillWindow w = withDisplay $ \d ->
@@ -140,7 +146,7 @@ multimc  = ClassApp "MultiMC"               "MultiMC"
 about    = TitleApp "About Mozilla Firefox" "About Mozilla Firefox"
 message  = ClassApp "Xmessage"              "Xmessage"
 steam    = ClassApp "Steam"                 "Steam"
-obs      = ClassApp "Obs"                   "obs"
+obs      = ClassApp "obs"                   "obs"
 
 myManageHook :: XMonad.Query (Data.Monoid.Endo WindowSet)
 myManageHook = manageRules
@@ -149,17 +155,17 @@ myManageHook = manageRules
     doHide = ask >>= doF . W.delete :: ManageHook
   -- WM_WINDOW_ROLE will be parsed with the role variable.
     role = stringProperty "WM_WINDOW_ROLE"
-  -- To match multiple properties with one operator
+  -- To match multiple properties with one operator.
     anyOf = foldl (<||>) (pure False) :: [Query Bool] -> Query Bool
-  -- To match multiple classNames with one operator
+  -- To match multiple classNames with one operator.
     match = anyOf . fmap isInstance :: [App] -> Query Bool
-  -- Checking for splash dialogs
+  -- Checking for splash dialogs.
     isSplash = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_SPLASH"
-  -- Checking for pop-ups
+  -- Checking for pop-ups.
     isPopup = role =? "pop-up"
-  -- Checking for file chooser dialog
+  -- Checking for file chooser dialog.
     isFileChooserDialog = role =? "GtkFileChooserDialog"
-  -- Managing rules for applications
+  -- Managing rules for applications.
     manageRules = composeOne
       [ transience
       , isDialog     -?> doCenterFloat
@@ -187,8 +193,8 @@ myManageHook = manageRules
       , resource  =? "desktop_window"                         --> doIgnore
       , resource  =? "kdesktop"                               --> doIgnore
     -- Steam Game Fixes 
-      , className =? "steam_app_1551360" <&&> title /=? "Forza Horizon 5" --> doHide -- Prevents black screen when fullscreening
-      , title 	  =? "Wine System Tray"					  --> doHide -- Prevents Wine System Trays from taking input focus
+      , className =? "steam_app_1551360" <&&> title /=? "Forza Horizon 5" --> doHide -- Prevents black screen when fullscreening.
+      , title 	  =? "Wine System Tray"					                          --> doHide -- Prevents Wine System Trays from taking input focus.
       ]
 
 --    May be useful one day 
