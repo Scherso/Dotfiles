@@ -80,7 +80,7 @@ myKeys =
   -- Applications
    , ("M-S-<Return>", spawn myTerminal)
    , ("M-f",          spawn myBrowser)
-   , ("M-s",          spawn "screenshot")
+   , ("M-s",          spawn screenShotSelection)
   -- Dmenu
    , ("M-p",          spawn "/bin/zsh ; dmenu_run")
   -- Multimedia Keys
@@ -90,7 +90,7 @@ myKeys =
    , ("<XF86AudioMute>",        spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle")
    , ("<XF86AudioLowerVolume>", spawn "pactl set-sink-volume @DEFAULT_SINK@ -1%")
    , ("<XF86AudioRaiseVolume>", spawn "pactl set-sink-volume @DEFAULT_SINK@ +1%")
-   , ("<Print>", 		            spawn "maim | xclip -selection clipboard -t image/png")
+   , ("<Print>", 		            spawn screenShotFullscreen)
    , ("<Pause>",                spawn "amixer sset Capture toggle")
    ]
    where
@@ -105,6 +105,10 @@ myKeys =
     forceKillWindow :: Window -> X ()
     forceKillWindow w = withDisplay $ \d ->
       io $ void $ killClient d w
+  -- Selection Screenshot NOTE: for xfce-screenshooter to work properly, you will need a compositor such as picom
+    screenShotSelection = "xfce4-screenshooter -r -m -s /dev/stdout | xclip -i -selection clipboard -t image/png" :: String 
+  -- Fullscreen Screenshot NOTE: for xfce-screenshooter to work properly, you will need a compositor such as picom
+    screenShotFullscreen = "xfce4-screenshooter -f -m -s /dev/stdout | xclip -i -selection clipboard -t image/png" :: String
 
 myMouseBindings :: XConfig l -> M.Map (KeyMask, Button) (Window -> X ())
 myMouseBindings XConfig {XMonad.modMask = modm} = M.fromList
@@ -170,7 +174,7 @@ myManageHook = manageRules
     manageRules = composeOne
       [ transience
       , isDialog     -?> doCenterFloat
-      , isFullscreen -?> doFullFloat 
+      , isFullscreen -?> (doF W.focusDown <+> doFullFloat) 
       , match [ gimp
               , gimp2
               , multimc
