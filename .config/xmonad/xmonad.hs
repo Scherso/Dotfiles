@@ -145,13 +145,14 @@ data App
   | NameApp AppName AppCommand
   deriving Show
 
-gimp     = ClassApp "Gimp.bin"              "gimp.bin"
-gimp2    = ClassApp "Gimp-2.99"             "gimp-2.99"
-multimc  = ClassApp "MultiMC"               "MultiMC"
-about    = TitleApp "About Mozilla Firefox" "About Mozilla Firefox"
-message  = ClassApp "Xmessage"              "Xmessage"
-steam    = ClassApp "Steam"                 "Steam"
-obs      = ClassApp "obs"                   "obs"
+gimp       = ClassApp "Gimp.bin"              "gimp.bin"
+gimp2      = ClassApp "Gimp-2.99"             "gimp-2.99"
+multimc    = ClassApp "MultiMC"               "MultiMC"
+about      = TitleApp "About Mozilla Firefox" "About Mozilla Firefox"
+message    = ClassApp "Xmessage"              "Xmessage"
+steam      = ClassApp "Steam"                 "Steam"
+obs        = ClassApp "obs"                   "obs"
+noisetorch = TitleApp "NoiseTorch"            "NoiseTorch"
 
 myManageHook :: XMonad.Query (Data.Monoid.Endo WindowSet)
 myManageHook = manageRules
@@ -159,7 +160,7 @@ myManageHook = manageRules
   -- Hides windows without ignoring it, see doHideIgnore in XMonad contrib.
     doHide = ask >>= doF . W.delete :: ManageHook
   -- WM_WINDOW_ROLE will be parsed with the role variable.
-    role = stringProperty "WM_WINDOW_ROLE"
+    isRole = stringProperty "WM_WINDOW_ROLE"
   -- To match multiple properties with one operator.
     anyOf = foldl (<||>) (pure False) :: [Query Bool] -> Query Bool
   -- To match multiple classNames with one operator.
@@ -167,9 +168,9 @@ myManageHook = manageRules
   -- Checking for splash dialogs.
     isSplash = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_SPLASH"
   -- Checking for pop-ups.
-    isPopup = role =? "pop-up"
+    isPopup = isRole =? "pop-up"
   -- Checking for file chooser dialog.
-    isFileChooserDialog = role =? "GtkFileChooserDialog"
+    isFileChooserDialog = isRole =? "GtkFileChooserDialog"
   -- Managing rules for applications.
     manageRules = composeOne
       [ transience
@@ -177,12 +178,14 @@ myManageHook = manageRules
       , isFullscreen -?> (doF W.focusDown <+> doFullFloat) 
       , match [ gimp
               , gimp2
-              , multimc
               , about
               , message
-              , steam
               , obs
               ]      -?> doFloat
+      , match [ steam
+              , multimc
+              , noisetorch
+              ]      -?> doCenterFloat
       , anyOf [ isFileChooserDialog
               , isDialog
               , isPopup
@@ -200,6 +203,7 @@ myManageHook = manageRules
     -- Steam Game Fixes 
       , className =? "steam_app_1551360" <&&> title /=? "Forza Horizon 5" --> doHide -- Prevents black screen when fullscreening.
       , title 	  =? "Wine System Tray"					                          --> doHide -- Prevents Wine System Trays from taking input focus.
+      , title     ^? "Steam - News"                                       --> doHide -- I don't like the Steam news menu 
       ]
 
 --    May be useful one day 
@@ -219,7 +223,7 @@ myLayout =
       nmaster = 1     -- Default number of windows in the master pane.
       ratio = 1 / 2   -- Default proportion of screen occupied by master panes.
       delta = 3 / 100 -- Percent of screen increment by when resizing panes.
-      w = 5           -- Width of pixel size between windows while tiled. 
+      w = 8           -- Width of pixel size between windows while tiled. 
 
 myXmobarPP :: X PP
 myXmobarPP = 
