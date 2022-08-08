@@ -223,7 +223,7 @@ myLayout =
       nmaster = 1     -- Default number of windows in the master pane.
       ratio = 1 / 2   -- Default proportion of screen occupied by master panes.
       delta = 3 / 100 -- Percent of screen increment by when resizing panes.
-      w = 8           -- Width of pixel size between windows while tiled. 
+      w = 7           -- Width of pixel size between windows while tiled. 
 
 myXmobarPP :: X PP
 myXmobarPP = 
