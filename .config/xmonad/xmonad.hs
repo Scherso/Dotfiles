@@ -54,61 +54,127 @@ myNormColor = "#544862"
 myFocusColor :: String
 myFocusColor = "#61AFEF"
 
+--myKeys :: [(String, X ())]
+--myKeys =
+--  -- Xmonad
+--   [ ("M-g",        withFocused toggleBorder)
+--   , ("M-S-c",      kill)
+--   , ("M-S-x",      withFocused forceKillWindow)
+--   , ("M-<Space>",  sendMessage NextLayout)
+--   , ("M-n",        refresh)
+--  -- Windows
+--   , ("M-<Tab>",    windows W.focusDown)
+--   , ("M-j",        windows W.focusDown)
+--   , ("M-k",        windows W.focusUp)
+--   , ("M-m",        windows W.focusMaster)
+--   , ("M-<Return>", windows W.swapMaster)
+--   , ("M-S-j",      windows W.swapDown)
+--   , ("M-S-k",      windows W.swapUp)
+--   , ("M-h",        sendMessage Shrink)
+--   , ("M-l",        sendMessage Expand)
+--   , ("M-t",        withFocused $ windows . W.sink)
+--   , ("M-S-f",      withFocused toggleFull)
+--  -- Quit
+--   , ("M-S-q",      io exitSuccess)
+--   , ("M-q",        spawn "xmonad --recompile ; killall xmobar ; xmonad --restart")
+--  -- Applications
+--   , ("M-S-<Return>", spawn myTerminal)
+--   , ("M-f",          spawn myBrowser)
+--   , ("M-s",          spawn screenShotSelection)
+--  -- Dmenu
+--   , ("M-p",          spawn "/bin/zsh ; dmenu_run")
+--  -- Multimedia Keys
+--   , ("<XF86AudioPlay>",        spawn "playerctl play-pause")
+--   , ("<XF86AudioPrev>",        spawn "playerctl previous")
+--   , ("<XF86AudioNext>",        spawn "playerctl next")
+--   , ("<XF86AudioMute>",        spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle")
+--   , ("<XF86AudioLowerVolume>", spawn "pactl set-sink-volume @DEFAULT_SINK@ -1%")
+--   , ("<XF86AudioRaiseVolume>", spawn "pactl set-sink-volume @DEFAULT_SINK@ +1%")
+--   , ("<Print>", 		            spawn screenShotFullscreen)
+--   , ("<Pause>",                spawn "amixer sset Capture toggle")
+--   ]
+--   where
+--  -- Making a window have a full float over a workspace.
+--    toggleFull :: Window -> X () 
+--    toggleFull w = windows $ \s -> if 
+--      | M.lookup w (W.floating s) == Just fullscreen -> W.sink w s 
+--      | otherwise -> W.float w fullscreen s 
+--        where
+--          fullscreen = W.RationalRect 0 0 1 1
+--  -- Force killing a frozen window.
+--    forceKillWindow :: Window -> X ()
+--    forceKillWindow w = withDisplay $ \d ->
+--      io $ void $ killClient d w
+--  -- Selection Screenshot NOTE: for xfce-screenshooter to work properly, you will need a compositor such as picom
+--    screenShotSelection = "xfce4-screenshooter -r -m -s /dev/stdout | xclip -i -selection clipboard -t image/png" :: String 
+--  -- Fullscreen Screenshot NOTE: for xfce-screenshooter to work properly, you will need a compositor such as picom
+--    screenShotFullscreen = "xfce4-screenshooter -f -m -s /dev/stdout | xclip -i -selection clipboard -t image/png" :: String
+
 myKeys :: [(String, X ())]
-myKeys =
-  -- Xmonad
-   [ ("M-g",        withFocused toggleBorder)
-   , ("M-S-c",      kill)
-   , ("M-S-x",      withFocused forceKillWindow)
-   , ("M-<Space>",  sendMessage NextLayout)
-   , ("M-n",        refresh)
-  -- Windows
-   , ("M-<Tab>",    windows W.focusDown)
-   , ("M-j",        windows W.focusDown)
-   , ("M-k",        windows W.focusUp)
-   , ("M-m",        windows W.focusMaster)
-   , ("M-<Return>", windows W.swapMaster)
-   , ("M-S-j",      windows W.swapDown)
-   , ("M-S-k",      windows W.swapUp)
-   , ("M-h",        sendMessage Shrink)
-   , ("M-l",        sendMessage Expand)
-   , ("M-t",        withFocused $ windows . W.sink)
-   , ("M-S-f",      withFocused toggleFull)
-  -- Quit
-   , ("M-S-q",      io exitSuccess)
-   , ("M-q",        spawn "xmonad --recompile ; killall xmobar ; xmonad --restart")
-  -- Applications
-   , ("M-S-<Return>", spawn myTerminal)
-   , ("M-f",          spawn myBrowser)
-   , ("M-s",          spawn screenShotSelection)
-  -- Dmenu
-   , ("M-p",          spawn "/bin/zsh ; dmenu_run")
-  -- Multimedia Keys
-   , ("<XF86AudioPlay>",        spawn "playerctl play-pause")
-   , ("<XF86AudioPrev>",        spawn "playerctl previous")
-   , ("<XF86AudioNext>",        spawn "playerctl next")
-   , ("<XF86AudioMute>",        spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle")
-   , ("<XF86AudioLowerVolume>", spawn "pactl set-sink-volume @DEFAULT_SINK@ -1%")
-   , ("<XF86AudioRaiseVolume>", spawn "pactl set-sink-volume @DEFAULT_SINK@ +1%")
-   , ("<Print>", 		            spawn screenShotFullscreen)
-   , ("<Pause>",                spawn "amixer sset Capture toggle")
-   ]
-   where
-  -- Making a window have a full float over a workspace.
-    toggleFull :: Window -> X () 
-    toggleFull w = windows $ \s -> if 
-      | M.lookup w (W.floating s) == Just fullscreen -> W.sink w s 
-      | otherwise -> W.float w fullscreen s 
-        where
-          fullscreen = W.RationalRect 0 0 1 1
-  -- Force killing a frozen window.
-    forceKillWindow :: Window -> X ()
-    forceKillWindow w = withDisplay $ \d ->
-      io $ void $ killClient d w
-  -- Selection Screenshot NOTE: for xfce-screenshooter to work properly, you will need a compositor such as picom
-    screenShotSelection = "xfce4-screenshooter -r -m -s /dev/stdout | xclip -i -selection clipboard -t image/png" :: String 
-  -- Fullscreen Screenshot NOTE: for xfce-screenshooter to work properly, you will need a compositor such as picom
-    screenShotFullscreen = "xfce4-screenshooter -f -m -s /dev/stdout | xclip -i -selection clipboard -t image/png" :: String
+myKeys = 
+  xmonad
+    ++ window
+    ++ applications
+    ++ multimedia
+  where 
+  -- XMonad base keybinds.
+    xmonad = 
+      [ ("M-g",        withFocused toggleBorder)
+      , ("M-S-c",      kill)
+      , ("M-S-x",      withFocused forceKillWindow)
+      , ("M-<Space>",  sendMessage NextLayout)
+      , ("M-n",        refresh)
+      , ("M-S-q",      io exitSuccess)
+      , ("M-q",        spawn "xmonad --recompile ; killall xmobar ; xmonad --restart")
+      ]
+      where
+      -- Force killing a frozen window.
+        forceKillWindow :: Window -> X ()
+        forceKillWindow w = withDisplay $ \d ->
+          io $ void $ killClient d w
+  -- Window management keybinds.
+    window = 
+      [ ("M-<Tab>",    windows W.focusDown)
+      , ("M-j",        windows W.focusDown)
+      , ("M-k",        windows W.focusUp)
+      , ("M-m",        windows W.focusMaster)
+      , ("M-<Return>", windows W.swapMaster)
+      , ("M-S-j",      windows W.swapDown)
+      , ("M-S-k",      windows W.swapUp)
+      , ("M-h",        sendMessage Shrink)
+      , ("M-l",        sendMessage Expand)
+      , ("M-t",        withFocused $ windows . W.sink)
+      , ("M-S-f",      withFocused toggleFull)
+      ]
+      where 
+      -- Making a window have a full float over a workspace.
+        toggleFull :: Window -> X () 
+        toggleFull w = windows $ \s -> if 
+          | M.lookup w (W.floating s) == Just fullscreen -> W.sink w s 
+          | otherwise -> W.float w fullscreen s 
+            where
+              fullscreen = W.RationalRect 0 0 1 1
+  -- Spawning applications.
+    applications =
+      [ ("M-S-<Return>", spawn myTerminal)
+      , ("M-f",          spawn myBrowser)
+      , ("M-s",          spawn screenShotSelection)
+      , ("<Print>", 		 spawn screenShotFullscreen)
+      , ("M-p",          spawn "/bin/zsh ; dmenu_run")
+      ]
+      where
+        screenShotSelection  = "xfce4-screenshooter -r -m -s /dev/stdout | xclip -i -selection clipboard -t image/png" :: String 
+        screenShotFullscreen = "xfce4-screenshooter -f -m -s /dev/stdout | xclip -i -selection clipboard -t image/png" :: String
+  -- Multimedia keybinds.
+    multimedia =
+      [ ("<XF86AudioPlay>",        spawn "playerctl play-pause")
+      , ("<XF86AudioPrev>",        spawn "playerctl previous")
+      , ("<XF86AudioNext>",        spawn "playerctl next")
+      , ("<XF86AudioMute>",        spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle")
+      , ("<XF86AudioLowerVolume>", spawn "pactl set-sink-volume @DEFAULT_SINK@ -1%")
+      , ("<XF86AudioRaiseVolume>", spawn "pactl set-sink-volume @DEFAULT_SINK@ +1%")
+      , ("<Pause>",                spawn "amixer sset Capture toggle")
+      ]
 
 myMouseBindings :: XConfig l -> M.Map (KeyMask, Button) (Window -> X ())
 myMouseBindings XConfig {XMonad.modMask = modm} = M.fromList
@@ -223,7 +289,7 @@ myLayout =
       nmaster = 1     -- Default number of windows in the master pane.
       ratio = 1 / 2   -- Default proportion of screen occupied by master panes.
       delta = 3 / 100 -- Percent of screen increment by when resizing panes.
-      w = 7           -- Width of pixel size between windows while tiled. 
+      w = 8           -- Width of pixel size between windows while tiled. 
 
 myXmobarPP :: X PP
 myXmobarPP = 
