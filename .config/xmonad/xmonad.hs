@@ -54,62 +54,6 @@ myNormColor = "#544862"
 myFocusColor :: String
 myFocusColor = "#61AFEF"
 
---myKeys :: [(String, X ())]
---myKeys =
---  -- Xmonad
---   [ ("M-g",        withFocused toggleBorder)
---   , ("M-S-c",      kill)
---   , ("M-S-x",      withFocused forceKillWindow)
---   , ("M-<Space>",  sendMessage NextLayout)
---   , ("M-n",        refresh)
---  -- Windows
---   , ("M-<Tab>",    windows W.focusDown)
---   , ("M-j",        windows W.focusDown)
---   , ("M-k",        windows W.focusUp)
---   , ("M-m",        windows W.focusMaster)
---   , ("M-<Return>", windows W.swapMaster)
---   , ("M-S-j",      windows W.swapDown)
---   , ("M-S-k",      windows W.swapUp)
---   , ("M-h",        sendMessage Shrink)
---   , ("M-l",        sendMessage Expand)
---   , ("M-t",        withFocused $ windows . W.sink)
---   , ("M-S-f",      withFocused toggleFull)
---  -- Quit
---   , ("M-S-q",      io exitSuccess)
---   , ("M-q",        spawn "xmonad --recompile ; killall xmobar ; xmonad --restart")
---  -- Applications
---   , ("M-S-<Return>", spawn myTerminal)
---   , ("M-f",          spawn myBrowser)
---   , ("M-s",          spawn screenShotSelection)
---  -- Dmenu
---   , ("M-p",          spawn "/bin/zsh ; dmenu_run")
---  -- Multimedia Keys
---   , ("<XF86AudioPlay>",        spawn "playerctl play-pause")
---   , ("<XF86AudioPrev>",        spawn "playerctl previous")
---   , ("<XF86AudioNext>",        spawn "playerctl next")
---   , ("<XF86AudioMute>",        spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle")
---   , ("<XF86AudioLowerVolume>", spawn "pactl set-sink-volume @DEFAULT_SINK@ -1%")
---   , ("<XF86AudioRaiseVolume>", spawn "pactl set-sink-volume @DEFAULT_SINK@ +1%")
---   , ("<Print>", 		            spawn screenShotFullscreen)
---   , ("<Pause>",                spawn "amixer sset Capture toggle")
---   ]
---   where
---  -- Making a window have a full float over a workspace.
---    toggleFull :: Window -> X () 
---    toggleFull w = windows $ \s -> if 
---      | M.lookup w (W.floating s) == Just fullscreen -> W.sink w s 
---      | otherwise -> W.float w fullscreen s 
---        where
---          fullscreen = W.RationalRect 0 0 1 1
---  -- Force killing a frozen window.
---    forceKillWindow :: Window -> X ()
---    forceKillWindow w = withDisplay $ \d ->
---      io $ void $ killClient d w
---  -- Selection Screenshot NOTE: for xfce-screenshooter to work properly, you will need a compositor such as picom
---    screenShotSelection = "xfce4-screenshooter -r -m -s /dev/stdout | xclip -i -selection clipboard -t image/png" :: String 
---  -- Fullscreen Screenshot NOTE: for xfce-screenshooter to work properly, you will need a compositor such as picom
---    screenShotFullscreen = "xfce4-screenshooter -f -m -s /dev/stdout | xclip -i -selection clipboard -t image/png" :: String
-
 myKeys :: [(String, X ())]
 myKeys = 
   xmonad
