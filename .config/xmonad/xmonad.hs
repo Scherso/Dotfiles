@@ -63,13 +63,13 @@ myKeys =
   where 
   -- XMonad base keybinds.
     xmonad = 
-      [ ("M-g",        withFocused toggleBorder)
-      , ("M-S-c",      kill)
-      , ("M-S-x",      withFocused forceKillWindow)
-      , ("M-<Space>",  sendMessage NextLayout)
-      , ("M-n",        refresh)
-      , ("M-S-q",      io exitSuccess)
-      , ("M-q",        spawn "xmonad --recompile ; killall xmobar ; xmonad --restart")
+      [ ("M-g",       withFocused toggleBorder)
+      , ("M-S-c",     kill)
+      , ("M-S-x",     withFocused forceKillWindow)
+      , ("M-<Space>", sendMessage NextLayout)
+      , ("M-n",       refresh)
+      , ("M-S-q",     io exitSuccess)
+      , ("M-q",       spawn "xmonad --recompile ; killall xmobar ; xmonad --restart")
       ]
       where
       -- Force killing a frozen window.
@@ -115,8 +115,8 @@ myKeys =
       , ("<XF86AudioPrev>",        spawn "playerctl previous")
       , ("<XF86AudioNext>",        spawn "playerctl next")
       , ("<XF86AudioMute>",        spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle")
-      , ("<XF86AudioLowerVolume>", spawn "pactl set-sink-volume @DEFAULT_SINK@ -1%")
-      , ("<XF86AudioRaiseVolume>", spawn "pactl set-sink-volume @DEFAULT_SINK@ +1%")
+      , ("<XF86AudioLowerVolume>", spawn "pactl set-sink-volume @DEFAULT_SINK@ -2%")
+      , ("<XF86AudioRaiseVolume>", spawn "pactl set-sink-volume @DEFAULT_SINK@ +2%")
       , ("<Pause>",                spawn "amixer sset Capture toggle")
       ]
 
@@ -135,7 +135,6 @@ myStartupHook = do
   traverse spawnOnce
     [ "~/.fehbg"
     , "picom"
-    , "pulseaudio --start"
     ]
   setDefaultCursor xC_left_ptr
   setWMName "XMonad LG3D"
@@ -155,14 +154,15 @@ data App
   | NameApp AppName AppCommand
   deriving Show
 
-gimp       = ClassApp "Gimp.bin"              "gimp.bin"
-gimp2      = ClassApp "Gimp-2.99"             "gimp-2.99"
-multimc    = ClassApp "MultiMC"               "MultiMC"
-about      = TitleApp "About Mozilla Firefox" "About Mozilla Firefox"
-message    = ClassApp "Xmessage"              "Xmessage"
-steam      = ClassApp "Steam"                 "Steam"
-obs        = ClassApp "obs"                   "obs"
-noisetorch = TitleApp "NoiseTorch"            "NoiseTorch"
+gimp        = ClassApp "Gimp.bin"              "gimp.bin"
+gimp2       = ClassApp "Gimp-2.99"             "gimp-2.99"
+multimc     = ClassApp "MultiMC"               "MultiMC"
+about       = TitleApp "About Mozilla Firefox" "About Mozilla Firefox"
+message     = ClassApp "Xmessage"              "Xmessage"
+steam       = ClassApp "Steam"                 "Steam"
+obs         = ClassApp "obs"                   "obs"
+noisetorch  = TitleApp "NoiseTorch"            "NoiseTorch"
+easyeffects = TitleApp "Preferences"           "Preferences"
 
 myManageHook :: XMonad.Query (Data.Monoid.Endo WindowSet)
 myManageHook = manageRules
@@ -195,6 +195,7 @@ myManageHook = manageRules
       , match [ steam
               , multimc
               , noisetorch
+              , easyeffects
               ]      -?> doCenterFloat
       , anyOf [ isFileChooserDialog
               , isDialog
@@ -203,13 +204,14 @@ myManageHook = manageRules
               ]      -?> doCenterFloat
       ] <> composeAll
       [ manageDocks
-      , className =? "firefox"    <&&> title =? "File Upload" --> doFloat
-      , className =? "firefox"    <&&> title =? "Library"     --> doCenterFloat
-      , className =? "firefox"    <&&> title ^? "Save"	      --> doFloat
-      , className ^? "jetbrains-" <&&> title ^? "Welcome to " --> doCenterFloat
-      , className ^? "jetbrains-" <&&> title =? "splash"      --> doFloat
-      , resource  =? "desktop_window"                         --> doIgnore
-      , resource  =? "kdesktop"                               --> doIgnore
+      , className =? "firefox"    <&&> title  =? "File Upload" --> doFloat
+      , className =? "firefox"    <&&> title  =? "Library"     --> doCenterFloat
+      , className =? "firefox"    <&&> title  ^? "Save"	       --> doFloat
+      , className ^? "jetbrains-" <&&> title  ^? "Welcome to " --> doCenterFloat
+      , className ^? "jetbrains-" <&&> title  =? "splash"      --> doFloat
+      , resource  =? "desktop_window"                          --> doIgnore
+      , resource  =? "kdesktop"                                --> doIgnore
+      , isRole    ^? "About"      <||> isRole ^? "about"       --> doFloat
     -- Steam Game Fixes 
       , className =? "steam_app_1551360" <&&> title /=? "Forza Horizon 5" --> doHide -- Prevents black screen when fullscreening.
       , title 	  =? "Wine System Tray"					                          --> doHide -- Prevents Wine System Trays from taking input focus.
