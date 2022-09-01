@@ -103,7 +103,7 @@ myKeys =
       [ ("M-S-<Return>", spawn myTerminal)
       , ("M-f",          spawn myBrowser)
       , ("M-s",          spawn screenShotSelection)
-      , ("<Print>", 		 spawn screenShotFullscreen)
+      , ("<Print>",      spawn screenShotFullscreen)
       , ("M-p",          spawn "/bin/zsh ; dmenu_run")
       ]
       where
@@ -161,8 +161,6 @@ about       = TitleApp "About Mozilla Firefox" "About Mozilla Firefox"
 message     = ClassApp "Xmessage"              "Xmessage"
 steam       = ClassApp "Steam"                 "Steam"
 obs         = ClassApp "obs"                   "obs"
-noisetorch  = TitleApp "NoiseTorch"            "NoiseTorch"
-easyeffects = TitleApp "Preferences"           "Preferences"
 
 myManageHook :: XMonad.Query (Data.Monoid.Endo WindowSet)
 myManageHook = manageRules
@@ -194,8 +192,6 @@ myManageHook = manageRules
               ]      -?> doFloat
       , match [ steam
               , multimc
-              , noisetorch
-              , easyeffects
               ]      -?> doCenterFloat
       , anyOf [ isFileChooserDialog
               , isDialog
@@ -214,7 +210,7 @@ myManageHook = manageRules
       , isRole    ^? "About"      <||> isRole ^? "about"       --> doFloat
     -- Steam Game Fixes 
       , className =? "steam_app_1551360" <&&> title /=? "Forza Horizon 5" --> doHide -- Prevents black screen when fullscreening.
-      , title 	  =? "Wine System Tray"					                          --> doHide -- Prevents Wine System Trays from taking input focus.
+      , title 	  =? "Wine System Tray"                                   --> doHide -- Prevents Wine System Trays from taking input focus.
       , title     ^? "Steam - News"                                       --> doHide -- I don't like the Steam news menu 
       ]
 
@@ -223,9 +219,9 @@ myManageHook = manageRules
 --    doForceKill = ask >>= liftX . forceKillWindow >> mempty :: ManageHook
 
 myEventHook :: Event -> X All
-myEventHook = mempty
+myEventHook _ = return (All True)
 
-myLayout =
+myLayoutHook =
     avoidStruts
     $ lessBorders OnlyScreenFloat
     $ spacingRaw False(Border w w w w) True(Border w w w w) True
@@ -265,7 +261,7 @@ myConfig =
     , borderWidth        = myBorderWidth
     , normalBorderColor  = myNormColor
     , focusedBorderColor = myFocusColor
-    , layoutHook         = myLayout
+    , layoutHook         = myLayoutHook
     , startupHook        = myStartupHook
     , manageHook         = myManageHook
     , handleEventHook    = myEventHook
