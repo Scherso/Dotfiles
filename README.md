@@ -3,7 +3,7 @@
      src="https://wiki.gentoo.org/images/b/b8/Larry-nefarius-v2.svg"
 />
 
-### My [Gentoo][gentoo] Dotfiles, and a guided installation for [Arch][arch] and [Gentoo][gentoo] Linux.
+### My [Gentoo][gentoo] Dotfiles, installation for [Arch][arch] and [Gentoo][gentoo] Linux. WIP Readme
 
 <a href="https://xmonad.org">
   <img 
