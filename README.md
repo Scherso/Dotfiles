@@ -25,7 +25,7 @@
   Larry :two_hearts:
 </p>
 
-## Dependencies this readme is still a work in progress
+## Dependencies 
   
 <img
      align="right" width="30px"
@@ -53,19 +53,14 @@ pacman -S \
 USE="X elongind dbus"
 ```
   
-2. **Add `libinput` to your `INPUT_DEVICES` flag.**
-```bash
-INPUT_DEVICES="libinput"
-```
+2. **Configure your `VIDEO_CARDS` flag, mine for example is `radeonsi amdgpu`, more info can be found [here][xgwiki].**
   
-3. **Configure your `VIDEO_CARDS` flag, mine for example is `radeonsi amdgpu`, more info can be found [here][xgwiki].**
-  
-4. **Perform a world update to apply these changes.**
+3. **Perform a world update to apply these changes.**
 ```bash
 emerge --ask --verbose --update --newuse --deep @world
 ```
 
-5. **Install the necessary x11 dependencies.**
+4. **Install the necessary x11 dependencies.**
 ```bash
 emerge -a \
 > dev-vcs/git \
@@ -154,6 +149,8 @@ flags:
 # While still in $HOME/.config/xmonad/
 stack install
 ```
+
+#### This readme is still a work in progress. It will probably be finished soon
 
     
 [arch]:   https://archlinux.org
