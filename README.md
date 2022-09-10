@@ -111,10 +111,49 @@ stack setup
 ```
 > NOTE: You can run `stack ghc` to configure GHC actions, and `stack ghci` to use an interactive environment. 
 
-3. **Clone `xmonad`, `xmonad-contrib`, and `xmobar`
-```bash
-mkdir $HOME/.config/xmonad/
+3. **Clone `xmonad`, `xmonad-contrib`, and `xmobar` into the `xmonad` directory.** 
 
+- Make an `XMonad` directory.
+```bash
+[[ ! -d "$HOME/.config/xmonad" ]] && mkdir $HOME/.config/xmonad
+```
+
+- Change your directory to `~/.config/xmonad/`
+```bash
+cd $HOME/.config/xmonad
+```
+
+- Clone the respective repositories. 
+```bash
+git clone "https://github.com/xmonad/xmonad" xmonad-git
+git clone "https://github.com/xmonad/xmonad-contrib" xmonad-contrib-git
+git clone "https://codeberg.org/xmobar/xmobar" xmobar-git
+```
+
+4. **Initialize Stack.**
+```bash
+# While still in $HOME/.config/xmonad/
+stack init
+```
+
+- A file named stack.yaml will appear, you can replace the contents of that file replace with my configuration with the following command. 
+```bash
+curl https://raw.githubusercontent.com/Scherso/dotfiles/main/.config/xmonad/stack.yaml > $HOME/.config/xmonad/stack.yaml
+```
+
+- Alternatively, you can enter it yourself by including the following `xmobar` flags.
+```yaml
+flags:
+  xmobar:
+    with_xft: true
+    with_xpm: true
+```
+
+5. **Building and Installing XMonad binaries.**
+```bash 
+# While still in $HOME/.config/xmonad/
+stack install
+```
 
     
 [arch]:   https://archlinux.org
