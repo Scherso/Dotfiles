@@ -41,13 +41,13 @@ pacman -S \
 > libx11 libxft libxinerama libxss libxrandr \
 > pkgconf dbus
 ```
-  
+
+- **Gentoo Linux**
+
 <img
      align="right" width="30px"
      src="https://gentoo.org/assets/img/logo/gentoo-signet.svg"
 />
-
-- **Gentoo Linux**
 1. **Add `X`, `elogind` and `dbus` to your `USE` flag.**
 ```bash
 USE="X elongind dbus"
@@ -64,7 +64,7 @@ INPUT_DEVICES="libinput"
 ```bash
 emerge --ask --verbose --update --newuse --deep @world
 ```
-  
+
 5. **Install the necessary x11 dependencies.**
 ```bash
 emerge -a \
@@ -78,16 +78,48 @@ emerge -a \
 
 ## Package Installation and Configuration
 
-<a href="https://xmonad.org">
-  <img 
-       align="right" width="30px" 
-       src="https://xmonad.org/images/logo.svg" 
-  />
-</a>
+<img 
+     align="right" width="30px" 
+     src="https://xmonad.org/images/logo.svg" 
+/>
+### Installing [XMonad][xmonad] and [XMobar][xmobar] with [Stack][stack]
 
-- **XMonad**
+1. **Installing [Stack][stack].**
+- Client URL
+```bash
+curl -sSL https://get.haskellstack.org/ | sh
+```
+
+- GNU Web Get
+```bash
+wget -qO- https://get.haskellstack.org/ | sh
+```
+
+- Portage (Gentoo)
+```bash
+emerge -a dev-haskell/stack
+```
+
+- Pacman (Arch)
+```bash
+pacman -S stack
+```
+
+2. **Install GHC with Stack.**
+```bash
+stack setup
+```
+> NOTE: You can run `stack ghc` to configure GHC actions, and `stack ghci` to use an interactive environment. 
+
+3. **Clone `xmonad`, `xmonad-contrib`, and `xmobar`
+```bash
+mkdir $HOME/.config/xmonad/
+
 
     
-[arch]: https://archlinux.org
+[arch]:   https://archlinux.org
 [gentoo]: https://gentoo.org
 [xgwiki]: https://wiki.gentoo.org/wiki/Xorg/Guide#make.conf_configuration
+[xmonad]: https://xmonad.org/
+[xmobar]: https://codeberg.org/xmobar/xmobar
+[stack]:  https://docs.haskellstack.org/en/stable/
