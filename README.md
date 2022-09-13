@@ -117,7 +117,7 @@ stack setup
 ```
 > NOTE: You can run `stack ghc` to configure GHC actions, and `stack ghci` to use an interactive environment. 
 
-4. **Clone `xmonad`, `xmonad-contrib`, and `xmobar` into the `$HOME/.config/xmonad` directory.** 
+4. **Clone `xmonad`, `xmonad-contrib`, and `xmobar` into the `$HOME/.config/xmonad/` directory.** 
 
 - Make an `XMonad` directory.
 ```bash
