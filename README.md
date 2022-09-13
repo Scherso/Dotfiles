@@ -33,7 +33,6 @@
 />
 
 - **Arch Linux**
-  
 ```bash
 pacman -S \ 
 > git \
@@ -82,7 +81,6 @@ emerge -a \
 1. **Make `$HOME/.local/bin` binaries executables.**
 
 - Bash
-
 ```bash
 echo 'PATH="$HOME/.local/bin/:$PATH"' >> $HOME/.bashrc
 ```
@@ -171,13 +169,11 @@ xmonad --version
 7. **Copying the XMonad directory from these dotfiles.**
 
 - Cloning the repository to `$HOME/.sources/`
-
 ```bash
 [[ ! -d "$HOME/.sources" ]] && mkdir $HOME/.sources/ ; git clone https://github.com/Scherso/Dotfiles $HOME/.sources/
 ```
 
 - Moving the xmonad config directory to `$HOME/.config/`
-
 ```bash
 mv $HOME/.sources/.config/xmonad/xmonad.hs $HOME/.config/xmonad/ && mv $HOME/.sources/.config/xmonad/xmobar $HOME/.config/xmonad/
 ```
@@ -204,7 +200,6 @@ dbus-launch --exit-with-session xmonad > $HOME/.config/xmonad/log.txt
 10. **Launch into XMonad**
 
 - **BEFORE LAUNCHING** XMonad's default terminal in this configuration is Alacritty, you can change this by editing the file's `myTerminal` string. Contrary, you can install Alacritty with the this repository's configuration [below](https://github.com/Scherso/dotfiles#installing-and-configuring-alacritty).
-
 
 - While in a tty, run 
 ```bash
@@ -281,7 +276,7 @@ startx
 
 <br />
 
-### Installing [dmenu][dmenu] with this repository's configuration.
+### Installing and configuring [dmenu][dmenu] with this repository's configurations. 
 <img 
      align="right" width="30px" 
      src="https://suckless.org/logo.svg" 
@@ -290,7 +285,6 @@ startx
 1. **Cloning this repository to `$HOME/.sources/`**
 
 - **NOTE: IF you have already cloned this repository, do not follow this step.**
-
 ```bash
 [[ ! -d "$HOME/.sources" ]] && mkdir $HOME/.sources/ ; git clone https://github.com/Scherso/Dotfiles $HOME/.sources/
 ```
@@ -303,16 +297,41 @@ mv $HOME/.sources/Dotfiles/.config/dmenu/ $HOME/.config/
 3. Change your directory to `$HOME/.config/dmenu/` and compile and install.
 
 - Changing the directory
-
 ```bash
 cd $HOME/.config/dmenu
 ```
 
 - Compiling and installing, run the following commands as root. (sudo/doas)
-
 ```bash
 make clean install
 ```
+
+<br />
+
+### Installing and configuring [NeoVim][neovim].
+<img
+     align="right" width="30px"
+     src="https://user-images.githubusercontent.com/90007553/189978733-fa2ec9bb-ee8f-4611-8d7d-5ee309f703c5.png"
+/>
+
+1. **Install NeoVim**
+
+- Gentoo
+```bash
+emerge -a app-editors/neovim
+```
+
+- Arch 
+```bash
+pacman -S app-editors/neovim
+```
+
+```bash
+sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+```
+
+sorry this isn't done yet i'll finish it eventually 
 
 <br />
 
@@ -325,13 +344,11 @@ make clean install
 1. **Install Alacritty**
 
 - Gentoo
-
 ```bash
 emerge -a x11-terms/alacritty
 ```
 
 - Arch
-
 ```bash
 pacman -S alacritty
 ```
@@ -374,7 +391,6 @@ curl https://raw.githubusercontent.com/Scherso/dotfiles/main/.config/picom/picom
 
 <br /> 
 
-
 [arch]:      https://archlinux.org
 [gentoo]:    https://gentoo.org
 [xgwiki]:    https://wiki.gentoo.org/wiki/Xorg/Guide#make.conf_configuration
@@ -385,3 +401,4 @@ curl https://raw.githubusercontent.com/Scherso/dotfiles/main/.config/picom/picom
 [alacritty]: https://alacritty.org
 [rustup]:    https://rustup.rs
 [picom]:     https://github.com/yshui/picom
+[neovim]:    https://neovim.io
