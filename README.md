@@ -101,12 +101,12 @@ curl -sSL https://get.haskellstack.org/ | sh
 wget -qO- https://get.haskellstack.org/ | sh
 ```
 
-- Portage (Gentoo)
+- Gentoo
 ```bash
 emerge -a dev-haskell/stack
 ```
 
-- Pacman (Arch)
+- Arch
 ```bash
 pacman -S stack
 ```
