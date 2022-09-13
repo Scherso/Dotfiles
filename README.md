@@ -47,6 +47,7 @@ pacman -S \
      align="right" width="30px"
      src="https://gentoo.org/assets/img/logo/gentoo-signet.svg"
 />
+
 1. **Add `X`, `elogind` and `dbus` to your `USE` flag.**
 ```bash
 USE="X elongind dbus"
@@ -73,6 +74,7 @@ emerge -a \
 ## Package Installation and Configuration
 
 ### Installing [XMonad][xmonad] and [XMobar][xmobar] with [Stack][stack]
+
 <img 
      align="right" width="30px" 
      src="https://xmonad.org/images/logo.svg" 
@@ -279,6 +281,7 @@ startx
 <br />
 
 ### Installing and configuring [dmenu][dmenu] with this repository's configurations. 
+
 <img 
      align="right" width="30px" 
      src="https://suckless.org/logo.svg" 
@@ -311,6 +314,7 @@ make clean install
 <br />
 
 ### Installing and configuring [NeoVim][neovim].
+
 <img
      align="right" width="30px"
      src="https://user-images.githubusercontent.com/90007553/189978733-fa2ec9bb-ee8f-4611-8d7d-5ee309f703c5.png"
@@ -338,6 +342,7 @@ sorry this isn't done yet i'll finish it eventually
 <br />
 
 ### Installing and configuring [Alacritty][alacritty].
+
 <img
      align="right" width="30px"
      src="https://raw.githubusercontent.com/alacritty/alacritty/master/extra/logo/compat/alacritty-term%2Bscanlines.png"
