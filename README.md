@@ -137,12 +137,13 @@ git clone "https://codeberg.org/xmobar/xmobar" xmobar-git
 ```
 
 5. **Initialize Stack.**
+
+- While still in `$HOME/.config/xmonad/`
 ```bash
-# While still in $HOME/.config/xmonad/
 stack init
 ```
 
-- A file named stack.yaml will appear, you can replace the contents of that file replace with my configuration with the following command. 
+- A stack configuration file, `stack.yaml`, will be created in your working directory. To override the contents of this file with my configurtion, you can run:
 ```bash
 curl https://raw.githubusercontent.com/Scherso/dotfiles/main/.config/xmonad/stack.yaml > $HOME/.config/xmonad/stack.yaml
 ```
@@ -156,17 +157,18 @@ flags:
 ```
 
 6. **Building and Installing XMonad binaries.**
+
+- While still in `$HOME/.config/xmonad/`
 ```bash 
-# While still in $HOME/.config/xmonad/
 stack install
 ```
 
-- Once `XMonad` and `XMobar` are compiled and installed in `$HOME/.local/bin/`, test this by running:
+- Once `XMonad` and `XMobar` have compiled and installed to `$HOME/.local/bin/`, you can test the binaries by running:
 ```bash
 xmonad --version
 ```
 
-7. **Copying the XMonad directory from these dotfiles.**
+7. **Copying the XMonad directory from this repository.**
 
 - Cloning the repository to `$HOME/.sources/`
 ```bash
@@ -175,7 +177,7 @@ xmonad --version
 
 - Moving the xmonad config directory to `$HOME/.config/`
 ```bash
-mv $HOME/.sources/.config/xmonad/xmonad.hs $HOME/.config/xmonad/ && mv $HOME/.sources/.config/xmonad/xmobar $HOME/.config/xmonad/
+mv $HOME/.sources/.config/xmonad/xmonad.hs $HOME/.config/xmonad/ && mv $HOME/.sources/.config/xmonad/xmobar/ $HOME/.config/xmonad/
 ```
 
 8. **Verifying and debugging XMonad**
@@ -192,9 +194,9 @@ xmonad --recompile
 [[ ! -f "$HOME/.xinitrc" ]] && touch $HOME/.xinitrc
 ```
 
-- With the editor of your choice, open the file for editing and add the following lines
+- Add the `dbus-launch` command to your `.xinitrc` file to start XMonad on `startx`
 ```bash
-dbus-launch --exit-with-session xmonad > $HOME/.config/xmonad/log.txt
+echo "dbus-launch --exit-with-session xmonad > $HOME/.config/xmonad/log.txt" > $HOME/.xinitrc
 ```
 
 10. **Launch into XMonad**
@@ -284,7 +286,7 @@ startx
 
 1. **Cloning this repository to `$HOME/.sources/`**
 
-- **NOTE: IF you have already cloned this repository, do not follow this step.**
+- **NOTE** If you have already cloned this repository before, do not follow this step.**
 ```bash
 [[ ! -d "$HOME/.sources" ]] && mkdir $HOME/.sources/ ; git clone https://github.com/Scherso/Dotfiles $HOME/.sources/
 ```
@@ -294,14 +296,14 @@ startx
 mv $HOME/.sources/Dotfiles/.config/dmenu/ $HOME/.config/
 ```
 
-3. Change your directory to `$HOME/.config/dmenu/` and compile and install.
+3. Change your working directory to `$HOME/.config/dmenu/`, then compile and install.
 
-- Changing the directory
+- Changing your working directory.
 ```bash
 cd $HOME/.config/dmenu
 ```
 
-- Compiling and installing, run the following commands as root. (sudo/doas)
+- Compiling and installing. You must run the following commands as root. (sudo/doas)
 ```bash
 make clean install
 ```
@@ -358,7 +360,7 @@ pacman -S alacritty
 [[ ! -d "$HOME/.config/alacritty/alacritty.yml" ]] && mkdir $HOME/.config/alacritty/ ; touch $HOME/.config/alacritty/alacritty.yml
 ```
 
-3. **Appeding this repository's `alacritty.yml` to your configurtion.**
+3. **Appending this repository's `alacritty.yml` to your configuration.**
 ```bash
 curl https://raw.githubusercontent.com/Scherso/dotfiles/main/.config/alacritty/alacritty.yml > $HOME/.config/alacritty/alacritty.yml
 ```
@@ -384,7 +386,7 @@ pacman -S picom
 [[ ! -d "$HOME/.config/picom/picom.conf" ]] && mkdir $HOME/.config/picom/ ; touch $HOME/.config/picom/picom.conf
 ```
 
-3. **Appeding this repository's `alacritty.yml` to your configurtion.**
+3. **Appending this repository's `alacritty.yml` to your configuration.**
 ```bash
 curl https://raw.githubusercontent.com/Scherso/dotfiles/main/.config/picom/picom.conf > $HOME/.config/picom/picom.conf
 ```
