@@ -203,7 +203,7 @@ dbus-launch --exit-with-session xmonad > $HOME/.config/xmonad/log.txt
 
 10. **Launch into XMonad**
 
-- **BEFORE LAUNCHING** XMonad's default terminal in this configuration is Alacritty, you can change this by editing the file's `myTerminal` string. Contrary, you can install Alacritty with the this repository's configuration [below](https://github.com/Scherso/dotfiles/edit/main/README.md#installing-and-configuring-alacritty).
+- **BEFORE LAUNCHING** XMonad's default terminal in this configuration is Alacritty, you can change this by editing the file's `myTerminal` string. Contrary, you can install Alacritty with the this repository's configuration [below](https://github.com/Scherso/dotfiles#installing-and-configuring-alacritty).
 
 
 - While in a tty, run 
