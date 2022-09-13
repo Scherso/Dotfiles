@@ -93,6 +93,7 @@ echo 'PATH="$HOME/.local/bin/:$PATH"' >> $HOME/.zshrc
 ```
 
 2. **Installing [Stack][stack].**
+
 - Client URL
 ```bash
 curl -sSL https://get.haskellstack.org/ | sh
