@@ -72,11 +72,11 @@ emerge -a \
 
 ## Package Installation and Configuration
 
+### Installing [XMonad][xmonad] and [XMobar][xmobar] with [Stack][stack]
 <img 
      align="right" width="30px" 
      src="https://xmonad.org/images/logo.svg" 
 />
-### Installing [XMonad][xmonad] and [XMobar][xmobar] with [Stack][stack]
 
 1. **Make `$HOME/.local/bin` binaries executables.**
 
