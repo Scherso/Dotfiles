@@ -104,7 +104,7 @@ myKeys =
       , ("M-f",          spawn myBrowser)
       , ("M-s",          spawn screenShotSelection)
       , ("<Print>",      spawn screenShotFullscreen)
-      , ("M-p",          spawn "/bin/zsh ; dmenu_run")
+      , ("M-p",          spawn "dmenu_run")
       ]
       where
         screenShotSelection  = "xfce4-screenshooter -r -m -s /dev/stdout | xclip -i -selection clipboard -t image/png" :: String 
