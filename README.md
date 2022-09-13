@@ -389,8 +389,6 @@ pacman -S picom
 curl https://raw.githubusercontent.com/Scherso/dotfiles/main/.config/picom/picom.conf > $HOME/.config/picom/picom.conf
 ```
 
-<br /> 
-
 [arch]:      https://archlinux.org
 [gentoo]:    https://gentoo.org
 [xgwiki]:    https://wiki.gentoo.org/wiki/Xorg/Guide#make.conf_configuration
