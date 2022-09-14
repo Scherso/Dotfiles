@@ -347,7 +347,7 @@ sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.
 
 4. **Cloning this repository to `$HOME/.sources/`**
 
-- **NOTE** If you have already cloned this repository before, do not follow this step.**
+- **NOTE** If you have already cloned this repository before, do not follow this step.
 ```bash
 [[ ! -d "$HOME/.sources" ]] && mkdir $HOME/.sources/ 
 git clone https://github.com/Scherso/Dotfiles $HOME/.sources/
