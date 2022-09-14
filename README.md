@@ -339,7 +339,7 @@ pacman -S app-editors/neovim
 [[ ! -d "$HOME/.config/nvim ]] && mkdir $HOME/.config/nvim/
 ```
 
-3. **Fetch Vim-Plugged and it's directories.**
+3. **Fetch Vim-Plugged and its directories.**
 ```bash
 sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
