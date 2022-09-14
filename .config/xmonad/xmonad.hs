@@ -104,7 +104,7 @@ myKeys =
       , ("M-f",          spawn myBrowser)
       , ("M-s",          spawn screenShotSelection)
       , ("<Print>",      spawn screenShotFullscreen)
-      , ("M-p",          spawn "dmenu_run")
+      , ("M-p",          spawn "/bin/zsh ; dmenu_run")
       ]
       where
         screenShotSelection  = "xfce4-screenshooter -r -m -s /dev/stdout | xclip -i -selection clipboard -t image/png" :: String 
@@ -202,15 +202,16 @@ myManageHook = manageRules
       [ manageDocks
       , className =? "firefox"    <&&> title  =? "File Upload" --> doFloat
       , className =? "firefox"    <&&> title  =? "Library"     --> doCenterFloat
-      , className =? "firefox"    <&&> title  ^? "Save"	       --> doFloat
+      , className =? "firefox"    <&&> title  ^? "Save"        --> doFloat
       , className ^? "jetbrains-" <&&> title  ^? "Welcome to " --> doCenterFloat
       , className ^? "jetbrains-" <&&> title  =? "splash"      --> doFloat
+      , className =? "EasyEffect"                              --> doShift ( myWorkspaces !! 9 )
       , resource  =? "desktop_window"                          --> doIgnore
       , resource  =? "kdesktop"                                --> doIgnore
       , isRole    ^? "About"      <||> isRole ^? "about"       --> doFloat
     -- Steam Game Fixes 
       , className =? "steam_app_1551360" <&&> title /=? "Forza Horizon 5" --> doHide -- Prevents black screen when fullscreening.
-      , title 	  =? "Wine System Tray"                                   --> doHide -- Prevents Wine System Trays from taking input focus.
+      , title     =? "Wine System Tray"                                   --> doHide -- Prevents Wine System Trays from taking input focus.
       , title     ^? "Steam - News"                                       --> doHide -- I don't like the Steam news menu 
       ]
 
