@@ -26,7 +26,7 @@
 </p>
 
 ## Dependencies 
-  
+
 <img
      align="right" width="30px"
      src="http://www.archlinux.org/logos/archlinux-icon-crystal-64.svg" 
@@ -52,9 +52,9 @@ pacman -S \
 ```bash
 USE="X elongind dbus"
 ```
-  
+
 2. **Configure your `VIDEO_CARDS` flag, mine for example is `radeonsi amdgpu`, more info can be found [here][xgwiki].**
-  
+
 3. **Perform a world update to apply these changes.**
 ```bash
 emerge --ask --verbose --update --newuse --deep @world
@@ -217,11 +217,11 @@ startx
 <details>
   <summary> 
     XMonad Bindings</summary>
-   
+
   <br />
-  
+
   - **Base XMonad Keybinds**
-  
+
   | Keybinding | Accociated Function |
   |  :---  | :--- |
   | MOD + g | Toggle borders on a focused window |
@@ -232,9 +232,9 @@ startx
   | MOD + SHIFT + q | Quits XMonad and X Server |
   | MOD + q | Re-compiles and restarts XMonad without killing X server |
   | MOD + 1-9 | Switch to workspaces 1-9 according to the key |
-  
+
   - **Window Managemnt**
-  
+
   | Keybinding | Accociated Function | 
   | :--- | :--- |
   | MOD + tab | Switch focus to the next window |
@@ -248,9 +248,9 @@ startx
   | MOD + l | shrink focused window to the right |
   | MOD + t | Tile a floating window |
   | MOD + SHIFT + F | Toggle fullscreen on a window |
-  
+
   - **Applicatoins (Screenshots are copied to the clipboard)**
-  
+
   | Keybindings | Accociated Function |
   | :--- | :--- |
   | MOD + SHIFT + return | Open Alacritty terminal |
@@ -258,9 +258,9 @@ startx
   | MOD + s | Selective screenshot |
   | Print Screen | Fullscreen screenshot |
   | MOD + p | Open dmenu |
-  
+
   - **Multimedia**
-  
+
   | Keybindings | Accociated Function |
   | :--- | :--- |
   | Play/Pause | Play/Pause media/song |
@@ -269,15 +269,15 @@ startx
   | Mute | Mute audio |
   | LowerVolume | Lower the audio volume |
   | RaiseVolume | Raise the audio volume |
-  
+
   - **Mouse Bindings**
-  
+
   | Mousebinding | Accociated Function |
   | :--- | :--- |
   | MOD + Left Click | Float and move window by dragging |
   | MOD + Middle Click | Move window to the top of the stack |
   | MOD + Right Click | Float and resize window by dragging |
-  
+
 </details>
 
 <br />
