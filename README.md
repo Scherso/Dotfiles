@@ -360,7 +360,7 @@ mv $HOME/.sources/Dotfiles/.config/nvim/* $HOME/.config/nvim/
 nvim
 ```
 
-- Secondly, once you're in NeoVim, press <escape> on your keyboard, and type the following, and then press enter.
+- Secondly, once you're in NeoVim, press `<escape>` on your keyboard, and type the following, and then press enter.
 ```vim
 :PlugInstall
 ```
