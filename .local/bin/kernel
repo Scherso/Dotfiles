@@ -1,4 +1,4 @@
 #!/bin/bash
 
-kern="$(uname -r)"
-echo -e "$kern "
+kern=$(uname -r | sed 's/-gentoo-dist//')
+echo "Kernel Version $kern"

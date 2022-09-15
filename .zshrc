@@ -28,19 +28,17 @@ plugins=(
 # Oh My ZSH
 source $ZSH/oh-my-zsh.sh
 
-# Allowing me to execute commands I authored in ~/.local/bin
-PATH=$PATH:$HOME/.local/bin 
-
-# Automatically Starting Xorg
-if [ -z "${DISPLAY}" ] && [ "${XDG_VTNR}" -eq 1 ]; then
-   exec startx
-fi
-
-# Spicetify 
-export PATH=$PATH:/home/sam/.spicetify
+# Local Binaries
+[[ ! -d "$HOME/.local/bin/" ]] || PATH=$PATH:$HOME/.local/bin 
 
 # GHCUP-env
-[ -f "/home/sam/.ghcup/env" ] && source "/home/sam/.ghcup/env"
+[[ -f "$HOME/.ghcup/env" ]] && source "$HOME/.ghcup/env"
+
+# Spicetify
+[[ ! -d "$HOME/.spicetify" ]] || export PATH=$PATH:$HOME/.spicetify
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# Automatically Starting X Server
+[[ -z "${DISPLAY}" ]] && [[ "${XDG_VTNR}" -eq 1 ]] && startx
