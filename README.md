@@ -123,14 +123,9 @@ stack setup
 
 4. **Clone `xmonad`, `xmonad-contrib`, and `xmobar` into the `$HOME/.config/xmonad/` directory.** 
 
-- Make an `XMonad` directory.
+- Make an `XMonad` directory and change your working directory to it.
 ```bash
-[[ ! -d "$HOME/.config/xmonad" ]] && mkdir $HOME/.config/xmonad/
-```
-
-- Change your directory to `~/.config/xmonad/`
-```bash
-cd $HOME/.config/xmonad/
+[[ ! -d "$HOME/.config/xmonad" ]] && mkdir $HOME/.config/xmonad/ || cd $HOME/.config/xmonad ; cd $_
 ```
 
 - Clone the respective repositories. 
@@ -176,7 +171,7 @@ xmonad --version
 
 - Cloning the repository to `$HOME/.sources/`
 ```bash
-[[ ! -d "$HOME/.sources" ]] && mkdir $HOME/.sources/ ; git clone https://github.com/Scherso/Dotfiles $HOME/.sources/
+[[ -d "$HOME/.sources" ]] || mkdir $HOME/.sources/ ; git clone https://github.com/Scherso/Dotfiles $HOME/.sources/
 ```
 
 - Moving the xmonad config directory to `$HOME/.config/`
@@ -195,7 +190,7 @@ xmonad --recompile
 
 - Make a `.xinitrc` file if you haven't already
 ```bash
-[[ ! -f "$HOME/.xinitrc" ]] && touch $HOME/.xinitrc
+[[ -f "$HOME/.xinitrc" ]] || touch $HOME/.xinitrc
 ```
 
 - Add the `dbus-launch` command to your `.xinitrc` file to start XMonad on `startx`
@@ -293,7 +288,7 @@ startx
 
 - **NOTE** If you have already cloned this repository before, do not follow this step.**
 ```bash
-[[ ! -d "$HOME/.sources" ]] && mkdir $HOME/.sources/ ; git clone https://github.com/Scherso/Dotfiles $HOME/.sources/
+[[ -d "$HOME/.sources" ]] || mkdir $HOME/.sources/ ; git clone https://github.com/Scherso/Dotfiles $HOME/.sources/
 ```
 
 2. Move the dmenu directory to `$HOME/.config/`
@@ -336,7 +331,7 @@ pacman -S app-editors/neovim
 
 2. **Make a `$HOME/.config/nvim/` directory.**
 ```bash
-[[ ! -d "$HOME/.config/nvim ]] && mkdir $HOME/.config/nvim/
+[[ -d "$HOME/.config/nvim ]] || mkdir $HOME/.config/nvim/
 ```
 
 3. **Fetch Vim-Plugged and its directories.**
@@ -393,8 +388,7 @@ pacman -S alacritty
 
 2. **Make `$HOME/.config/alacritty/alacritty.yml`**
 ```bash
-[[ ! -d "$HOME/.config/alacritty/alacritty.yml" ]] && mkdir $HOME/.config/alacritty/ 
-touch $HOME/.config/alacritty/alacritty.yml
+[[ -d "$HOME/.config/alacritty/alacritty.yml" ]] || mkdir $HOME/.config/alacritty/ ; touch $HOME/.config/alacritty/alacritty.yml
 ```
 
 3. **Appending this repository's `alacritty.yml` to your configuration.**
@@ -420,8 +414,7 @@ pacman -S picom
 
 2. **Make `$HOME/.config/picom/picom.conf`**
 ```bash
-[[ ! -d "$HOME/.config/picom/picom.conf" ]] && mkdir $HOME/.config/picom/
-touch $HOME/.config/picom/picom.conf
+[[ -d "$HOME/.config/picom/picom.conf" ]] || mkdir $HOME/.config/picom/ ; touch $HOME/.config/picom/picom.conf
 ```
 
 3. **Appending this repository's `alacritty.yml` to your configuration.**
