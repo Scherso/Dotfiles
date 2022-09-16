@@ -51,8 +51,8 @@ myFocusColor = "#61AFEF" :: String
   -- Home Directory
 myHomeDir = unsafeDupablePerformIO (getEnv "HOME") :: String
 
-myKeys :: [(String, X ())]
-myKeys = 
+myAdditionalKeys :: [(String, X ())]
+myAdditionalKeys = 
   xmonad
     ++ window
     ++ applications
@@ -117,15 +117,31 @@ myKeys =
       , ("<Pause>",                spawn "amixer sset Capture toggle")
       ]
 
+myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
+myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
+  []
+ -- Mod-[1..9] %! Switch to workspace N
+ -- Mod-shift-[1..9] %! Move client to workspace N
+  ++ [ ((m .|. modMask, k), windows $ f i)
+         | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
+         , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]
+     ]
+ -- Mod-{w,e,r} %! Switch to physical/Xinerama screens 1, 2, or 3
+ -- Mod-Shift-{w,e,r} %! Move client to screen 1, 2, or 3
+  ++ [ ((m .|. modMask, key), screenWorkspace sc >>= flip whenJust (windows . f))
+         | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
+         , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]
+     ]
+
 myMouseBindings :: XConfig l -> M.Map (KeyMask, Button) (Window -> X ())
 myMouseBindings XConfig {XMonad.modMask = modm} = M.fromList
-  -- Set the window to floating mode and move by dragging.
-    [ ((modm, button1), \w -> focus w >> mouseMoveWindow w      >> windows W.shiftMaster)
-  -- Raise the window to the top of the stack.
-    , ((modm, button2), \w -> focus w >> windows W.shiftMaster)
-  -- Set the window to floating mode and resize by dragging.
-    , ((modm, button3), \w -> focus w >> mouseResizeWindow w    >> windows W.shiftMaster)
-    ]
+ -- Set the window to floating mode and move by dragging.
+  [ ((modm, button1), \w -> focus w >> mouseMoveWindow w      >> windows W.shiftMaster)
+ -- Raise the window to the top of the stack.
+  , ((modm, button2), \w -> focus w >> windows W.shiftMaster)
+ -- Set the window to floating mode and resize by dragging.
+  , ((modm, button3), \w -> focus w >> mouseResizeWindow w    >> windows W.shiftMaster)
+  ]
 
 myStartupHook :: X ()
 myStartupHook = do
@@ -264,7 +280,8 @@ myConfig =
     , manageHook         = myManageHook
     , handleEventHook    = myEventHook
     , workspaces         = myWorkspaces
-    } `additionalKeysP` myKeys
+    , keys               = myKeys
+    } `additionalKeysP` myAdditionalKeys
 
 main :: IO ()
 main = do
