@@ -41,4 +41,6 @@ source $ZSH/oh-my-zsh.sh
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # Automatically Starting X Server
-[[ -z "${DISPLAY}" ]] && [[ "${XDG_VTNR}" -eq 1 ]] && startx
+if [[ -z "${DISPLAY}" ]] && [[ "${XDG_VTNR}" -eq 1 ]] ; then
+  exec startx
+fi
