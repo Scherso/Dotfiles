@@ -1,9 +1,4 @@
-{-# LANGUAGE MultiWayIf #-} -- Required for toggleFull in myKeys
-
----------------------------------------
--- ~/.config/xmonad/xmonad.hs
--- validate syntax: xmonad --recompile
----------------------------------------
+{-# LANGUAGE MultiWayIf #-} -- Required for toggleFull in myKeys-
 
 -- Data Imports 
 import qualified Data.Map                   as M
@@ -120,14 +115,14 @@ myAdditionalKeys =
 myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   []
- -- Mod-[1..9] %! Switch to workspace N
- -- Mod-shift-[1..9] %! Move client to workspace N
+ -- Mod-[1..9] %! Switch to workspace N.
+ -- Mod-Shift-[1..9] %! Move client to workspace N.
   ++ [ ((m .|. modMask, k), windows $ f i)
          | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
          , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]
      ]
- -- Mod-{w,e,r} %! Switch to physical/Xinerama screens 1, 2, or 3
- -- Mod-Shift-{w,e,r} %! Move client to screen 1, 2, or 3
+ -- Mod-{w,e,r} %! Switch to physical/Xinerama screens 1, 2, or 3.
+ -- Mod-Shift-{w,e,r} %! Move client to screen 1, 2, or 3.
   ++ [ ((m .|. modMask, key), screenWorkspace sc >>= flip whenJust (windows . f))
          | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
          , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]
