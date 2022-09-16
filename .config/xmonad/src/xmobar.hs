@@ -48,13 +48,13 @@ myCommands :: [Runnable]
 myCommands = 
   [ Run UnsafeXMonadLog
   , Run $ Network "wlp5s0" 
-    [ "-t"
-    , "\xf433 <rx> kb \xf431 <tx> kb"
-    ] 10
+  [ "-t"
+  , "\xf433 <rx> kb \xf431 <tx> kb"
+  ] 10
   , Run $ K10Temp "0000:00:18.3"
-    [ "-t"
-    , "\xfb19 <Tdie>°C"
-    ] 10
+  [ "-t"
+  , "\xfb19 <Tdie>°C"
+  ] 10
   , Run $ Date "\xf017 %a %b %d, %-l:%M %p " "date" 10
   , Run $ Com (homeDir <> "/.config/xmonad/scripts/gputemp.sh") ["gpu"] "gpu" 5
   , Run $ Com (homeDir <> "/.config/xmonad/scripts/volume.sh" ) ["vol"] "vol" 1
