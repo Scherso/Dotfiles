@@ -76,3 +76,9 @@ colors:
     - { index: 19, color: '0x3e4451' }
     - { index: 20, color: '0x565c64' }
     - { index: 21, color: '0xb6bdca' }
+
+cursor:
+  style: 
+    shape: Underline
+    blinking: Always
+    unfocused_hollow: true
