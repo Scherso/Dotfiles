@@ -1,12 +1,9 @@
-{-# LANGUAGE PostfixOperators #-}
-
 import System.Environment        (getEnv)
 import System.IO.Unsafe          (unsafeDupablePerformIO)
-import XMonad.Hooks.StatusBar.PP (wrap, xmobarAction, xmobarColor, xmobarFont)
 
 import Xmobar
 
-homeDir = unsafeDupablePerformIO (getEnv "HOME") :: String
+myHomeDir = unsafeDupablePerformIO (getEnv "HOME") :: String
 
 myConfig :: Config
 myConfig =
@@ -56,8 +53,8 @@ myCommands =
   , "\xfb19 <Tdie>°C"
   ] 10
   , Run $ Date "\xf017 %a %b %d, %-l:%M %p " "date" 10
-  , Run $ Com (homeDir <> "/.config/xmonad/scripts/gputemp.sh") ["gpu"] "gpu" 5
-  , Run $ Com (homeDir <> "/.config/xmonad/scripts/volume.sh" ) ["vol"] "vol" 1
+  , Run $ Com (myHomeDir <> "/.config/xmonad/scripts/gputemp.sh") ["gpu"] "gpu" 5
+  , Run $ Com (myHomeDir <> "/.config/xmonad/scripts/volume.sh" ) ["vol"] "vol" 1
   ] 
 
 main :: IO ()
