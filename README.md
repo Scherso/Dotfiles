@@ -134,7 +134,7 @@ stack setup
 ```
 
 - Moving the XMonad directory to `$HOME/.config/xmonad`
-```
+```bash
 mv $HOME/.sources/.config/xmonad/* $HOME/.config/xmonad
 ```
 
@@ -146,7 +146,7 @@ stack install
 ```
 
 - Once completed, run the following while still in the `$HOME/.config/xmonad/` as your working directory.
-```
+```bash
 ./build
 ```
 
