@@ -121,38 +121,21 @@ stack setup
 
 > NOTE: You can run `stack ghc` to configure GHC actions, and `stack ghci` to use an interactive environment. 
 
-4. **Clone `xmonad`, `xmonad-contrib`, and `xmobar` into the `$HOME/.config/xmonad/` directory.** 
-
-- Make an `XMonad` directory and change your working directory to it.
+4. **Make a `$HOME/.config/xmonad/` directory.**
 ```bash
 [[ ! -d "$HOME/.config/xmonad" ]] && mkdir $HOME/.config/xmonad/ || cd $HOME/.config/xmonad ; cd $_
 ```
 
-- Clone the respective repositories. 
+5. **Copying the XMonad directory from this respository.**
+
+- Cloning the repository to `$HOME/.sources/`
 ```bash
-git clone "https://github.com/xmonad/xmonad" xmonad-git
-git clone "https://github.com/xmonad/xmonad-contrib" xmonad-contrib-git
-git clone "https://codeberg.org/xmobar/xmobar" xmobar-git
+[[ -d "$HOME/.sources" ]] || mkdir $HOME/.sources/ ; git clone https://github.com/Scherso/Dotfiles $HOME/.sources/
 ```
 
-5. **Initialize Stack.**
-
-- While still in `$HOME/.config/xmonad/`
-```bash
-stack init
+- Moving the XMonad directory to `$HOME/.config/xmonad`
 ```
-
-- A stack configuration file, `stack.yaml`, will be created in your working directory. To override the contents of this file with my configurtion, you can run:
-```bash
-curl https://raw.githubusercontent.com/Scherso/dotfiles/main/.config/xmonad/stack.yaml > $HOME/.config/xmonad/stack.yaml
-```
-
-- Alternatively, you can enter it yourself by including the following `xmobar` flags.
-```yaml
-flags:
-  xmobar:
-    with_xft: true
-    with_xpm: true
+mv $HOME/.sources/.config/xmonad/* $HOME/.config/xmonad
 ```
 
 6. **Building and Installing XMonad binaries.**
@@ -162,21 +145,14 @@ flags:
 stack install
 ```
 
-- Once `XMonad` and `XMobar` have compiled and installed to `$HOME/.local/bin/`, you can test the binaries by running:
+- Once completed, run the following while still in the `$HOME/.config/xmonad/` as your working directory.
+```
+./build
+```
+
+- Once `XMonad` and `XMobar` have been compiled and installed to `$HOME/.local/bin/`, you can test the binaries by running:
 ```bash
 xmonad --version
-```
-
-7. **Copying the XMonad directory from this repository.**
-
-- Cloning the repository to `$HOME/.sources/`
-```bash
-[[ -d "$HOME/.sources" ]] || mkdir $HOME/.sources/ ; git clone https://github.com/Scherso/Dotfiles $HOME/.sources/
-```
-
-- Moving the xmonad config directory to `$HOME/.config/`
-```bash
-mv $HOME/.sources/.config/xmonad/xmonad.hs $HOME/.config/xmonad/ && mv $HOME/.sources/.config/xmonad/xmobar/ $HOME/.config/xmonad/
 ```
 
 8. **Verifying and debugging XMonad**
