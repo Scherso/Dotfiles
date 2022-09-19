@@ -1,4 +1,4 @@
-{-# LANGUAGE MultiWayIf #-} -- Required for toggleFull in myKeys-
+{-# LANGUAGE MultiWayIf #-} -- Required for toggleFull in myKeys
 
 -- Data Imports 
 import qualified Data.Map                   as M
@@ -107,22 +107,22 @@ myAdditionalKeys =
       , ("<XF86AudioPrev>",        spawn "playerctl previous")
       , ("<XF86AudioNext>",        spawn "playerctl next")
       , ("<XF86AudioMute>",        spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle")
-      , ("<XF86AudioLowerVolume>", spawn "pactl set-sink-volume @DEFAULT_SINK@ -2%")
-      , ("<XF86AudioRaiseVolume>", spawn "pactl set-sink-volume @DEFAULT_SINK@ +2%")
+      , ("<XF86AudioLowerVolume>", spawn "pactl set-sink-volume @DEFAULT_SINK@ -1.5%")
+      , ("<XF86AudioRaiseVolume>", spawn "pactl set-sink-volume @DEFAULT_SINK@ +1.5%")
       , ("<Pause>",                spawn "amixer sset Capture toggle")
       ]
 
 myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   []
- -- Mod-[1..9] %! Switch to workspace N.
- -- Mod-Shift-[1..9] %! Move client to workspace N.
+ -- Mod-[1..9] %! Switch to workspace N
+ -- Mod-shift-[1..9] %! Move client to workspace N
   ++ [ ((m .|. modMask, k), windows $ f i)
          | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
          , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]
      ]
- -- Mod-{w,e,r} %! Switch to physical/Xinerama screens 1, 2, or 3.
- -- Mod-Shift-{w,e,r} %! Move client to screen 1, 2, or 3.
+ -- Mod-{w,e,r} %! Switch to physical/Xinerama screens 1, 2, or 3
+ -- Mod-Shift-{w,e,r} %! Move client to screen 1, 2, or 3
   ++ [ ((m .|. modMask, key), screenWorkspace sc >>= flip whenJust (windows . f))
          | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
          , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]
@@ -162,7 +162,7 @@ data App
   | NameApp AppName AppCommand
   deriving Show
 
-gimp    = ClassApp "Gimp.bin"              "gimp.bin"
+gimp    = ClassApp "Gimp"                  "gimp"
 gimp2   = ClassApp "Gimp-2.99"             "gimp-2.99"
 multimc = ClassApp "MultiMC"               "MultiMC"
 about   = TitleApp "About Mozilla Firefox" "About Mozilla Firefox"
@@ -208,15 +208,15 @@ myManageHook = manageRules
               ]      -?> doCenterFloat
       ] <> composeAll
       [ manageDocks
-      , className =? "firefox"    <&&> title  =? "File Upload" --> doFloat
-      , className =? "firefox"    <&&> title  =? "Library"     --> doCenterFloat
-      , className =? "firefox"    <&&> title  ^? "Save"        --> doFloat
-      , className ^? "jetbrains-" <&&> title  ^? "Welcome to " --> doCenterFloat
-      , className ^? "jetbrains-" <&&> title  =? "splash"      --> doFloat
-      , className =? "EasyEffect"                              --> doShift ( myWorkspaces !! 9 )
-      , resource  =? "desktop_window"                          --> doIgnore
-      , resource  =? "kdesktop"                                --> doIgnore
-      , isRole    ^? "About"      <||> isRole ^? "about"       --> doFloat
+      , className =? "firefox"    <&&> title    =? "File Upload" --> doFloat
+      , className =? "firefox"    <&&> title    =? "Library"     --> doCenterFloat
+      , className =? "firefox"    <&&> title    ^? "Save"        --> doFloat
+      , className =? "firefox"    <&&> resource =? "Toolkit"     --> doFloat
+      , className ^? "jetbrains-" <&&> title    ^? "Welcome to " --> doCenterFloat
+      , className ^? "jetbrains-" <&&> title    =? "splash"      --> doFloat
+      , resource  =? "desktop_window"                            --> doIgnore
+      , resource  =? "kdesktop"                                  --> doIgnore
+      , isRole    ^? "About"      <||> isRole   ^? "about"       --> doFloat
     -- Steam Game Fixes 
       , className =? "steam_app_1551360" <&&> title /=? "Forza Horizon 5" --> doHide -- Prevents black screen when fullscreening.
       , title     =? "Wine System Tray"                                   --> doHide -- Prevents Wine System Trays from taking input focus.
@@ -240,7 +240,7 @@ myLayoutHook =
       nmaster = 1     -- Default number of windows in the master pane.
       ratio = 1 / 2   -- Default proportion of screen occupied by master panes.
       delta = 3 / 100 -- Percent of screen increment by when resizing panes.
-      w = 8           -- Width of pixel size between windows while tiled. 
+      w = 7           -- Width of pixel size between windows while tiled. 
 
 myXmobarPP :: X PP
 myXmobarPP = 

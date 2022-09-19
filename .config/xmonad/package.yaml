@@ -12,7 +12,6 @@ dependencies:
   - xmonad-contrib >= 0.16
 
 source-dirs: src
-
   
 executables:
   xmonad:

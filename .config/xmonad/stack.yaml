@@ -12,7 +12,6 @@ extra-deps:
     commit: afd6824ce00063bb8e9b7a1c5daf0737c2f61616
   - xmobar-0.44.2
 
-
 flags:
   xmobar:
     with_xpm: true
