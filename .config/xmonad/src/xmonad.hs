@@ -243,24 +243,22 @@ myLayoutHook =
       w = 7           -- Width of pixel size between windows while tiled. 
 
 myXmobarPP :: X PP
-myXmobarPP = 
+myXmobarPP =
   clickablePP $ def
-    { ppCurrent          = xmobarColor "#61AFEF" "" . wrap "<box type=Bottom offset=C5 width=3 color=#61AFEF>" "</box>"
+    { ppCurrent          = xmobarColor "#61AFEF" ""
+    , ppVisibleNoWindows = Just (xmobarColor "#A9B1D6" "")
     , ppHidden           = xmobarColor "#ABB2BF" ""
-    , ppVisibleNoWindows = Just (xmobarColor "#a9b1d6" "")
-    , ppHiddenNoWindows  = xmobarColor "#6b7089" ""
+    , ppHiddenNoWindows  = xmobarColor "#6B7089" ""
     , ppUrgent           = xmobarColor "#F7768E" "" . wrap "!" "!"
-    , ppSep              = "<fc=#E06C75> > </fc> "
-    , ppTitle            = xmobarColor "#CCD0D8" "" . shorten 90
     , ppOrder            = \(ws : l : t : ex) -> [ws] ++ map (xmobarColor "#E06C75" "") ex ++ [xmobarColor "#ABB2BF" "" t]
+    , ppTitle            = xmobarColor "#CCD0D8" "" . shorten 64 
+    , ppSep              = "<fc=#E06C75> > </fc>"
     , ppExtras           = []
     }
 
-xmobar :: StatusBarConfig
-xmobar = statusBarProp myXmobar myXmobarPP
+xmobar = statusBarProp myXmobar myXmobarPP :: StatusBarConfig
 
-myXmobar :: String
-myXmobar = ("xmobar " <> myHomeDir <> "/.config/xmonad/src/xmobar.hs")
+myXmobar = ("xmobar " <> myHomeDir <> "/.config/xmonad/src/xmobar.hs") :: String
 
 myConfig = 
   def

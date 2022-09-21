@@ -8,16 +8,16 @@ myHomeDir = unsafeDupablePerformIO (getEnv "HOME") :: String
 myConfig :: Config
 myConfig =
   defaultConfig
-    { font            =   "xft:SF Mono Nerd Font:pixelsize=14:antialias=true:hinting=true" 
-    , additionalFonts = [ "xft:SF Mono Nerd Font:pixelsize=13:antialias=true:hinting=true"
-                        , "xft:SF Mono Nerd Font:size=21:antialias=true:hinting=true"
-                        , "xft:SF Mono Nerd Font:size=14:antialias=true:hinting=true"
-                        , "xft:SF Mono Nerd Font:size=14:antialias=true:hinting=true"
+    { font            =   "xft:SF Mono Nerd Font:pixelsize=11:antialias=true:hinting=true" 
+    , additionalFonts = [ "xft:SF Mono Nerd Font:pixelsize=10:antialias=true:hinting=true"
+                        , "xft:SF Mono Nerd Font:size=13:antialias=true:hinting=true"
+                        , "xft:SF Mono Nerd Font:size=11:antialias=true:hinting=true"
+                        , "xft:SF Mono Nerd Font:size=11:antialias=true:hinting=true"
                         , "xft:SF Mono Nerd Font:pixelsize=13:antialias=true:hinting=true"
                         ]
-    , textOffsets      = [20, 26, 20, 20, 20]
-    , bgColor          = "#282c34"
-    , fgColor          = "#aab2bf"
+    , textOffsets      = [20, 22, 21, 21, 20]
+    , bgColor          = "#282C34"
+    , fgColor          = "#AAB2BF"
     , borderColor      = "#544862"
     , border           = FullB 
     , borderWidth      = 1
@@ -31,14 +31,31 @@ myConfig =
     , commands         = myCommands
     , sepChar  = "%"
     , alignSep = "}{"
-    , template = "<fc=#eeeff2,#C678DD:0> \xf30d </fc><fn=2><fc=#C678DD,#282C34:0>\xe0b0</fc></fn>\
-                  \<fn=5>%UnsafeXMonadLog%</fn>}{\
-                  \<fn=2><fc=#31353f,#282c34:0>\xe0b2</fc></fn><fc=#e06c75,#31353f:0>%wlp5s0% </fc>\
-                  \<fn=2><fc=#393f4a,#31353f:0>\xe0b2</fc></fn><fc=#56b6c2,#393f4a:0>%k10temp% </fc>\
-                  \<fn=2><fc=#424855,#393f4a:0>\xe0b2</fc></fn><fc=#c678dd,#424855:0>%gpu% </fc>\
-                  \<fn=2><fc=#4a5260,#424855:0>\xe0b2</fc></fn><fc=#98c379,#4a5260:0>%vol% </fc>\
-                  \<fn=2><fc=#535b6b,#4a5260:0>\xe0b2</fc></fn><fc=#61AFEF,#535b6b:0>%date% </fc>"
-    } 
+    , template = "<fn=2><fc=#31353F,#282C34:7> \xe0b6</fc></fn>\
+                 \<fn=4><fc=#C678DD,#31353F:5>\xf30d </fc></fn>\
+                 \<fn=2><fc=#31353F,#282C34:7>\xe0b4</fc></fn> \
+                 \\
+                 \<fn=5>%UnsafeXMonadLog%</fn>}{\
+                 \<fn=2><fc=#31353F,#282C34:7>\xe0b6</fc></fn>\
+                 \<fn=4><fc=#E06C75,#31353F:5>%wlp5s0%</fc></fn>\
+                 \<fn=2><fc=#31353F,#282C34:7>\xe0b4</fc></fn> \
+                 \\
+                 \<fn=2><fc=#31353F,#282C34:7>\xe0b6</fc></fn>\
+                 \<fn=4><fc=#56B6C2,#31353F:5>%k10temp%</fc></fn>\
+                 \<fn=2><fc=#31353F,#282C34:7>\xe0b4</fc></fn> \
+                 \\
+                 \<fn=2><fc=#31353F,#282C34:7>\xe0b6</fc></fn>\
+                 \<fn=4><fc=#C678DD,#31353F:5>%gpu%</fc></fn>\
+                 \<fn=2><fc=#31353F,#282C34:7>\xe0b4</fc></fn> \
+                 \\
+                 \<fn=2><fc=#31353F,#282C34:7>\xe0b6</fc></fn>\
+                 \<fn=4><fc=#98C379,#31353F:5>%vol%</fc></fn>\
+                 \<fn=2><fc=#31353F,#282C34:7>\xe0b4</fc></fn> \
+                 \\
+                 \<fn=2><fc=#31353F,#282C34:7>\xe0b6</fc></fn>\
+                 \<fn=4><fc=#61AFEF,#31353F:5>%date%</fc></fn>\
+                 \<fn=2><fc=#31353F,#282C34:7>\xe0b4</fc></fn> "
+    }
 
 myCommands :: [Runnable]
 myCommands = 
@@ -49,9 +66,9 @@ myCommands =
   ] 10
   , Run $ K10Temp "0000:00:18.3"
   [ "-t"
-  , "\xfb19 <Tdie>°C"
+  , "<Tdie>°C"
   ] 10
-  , Run $ Date "\xf017 %a %b %d, %-l:%M %p " "date" 10
+  , Run $ Date "\xf017 %-l:%M %p" "date" 10
   , Run $ Com (myHomeDir <> "/.config/xmonad/scripts/gputemp.sh") ["gpu"] "gpu" 5
   , Run $ Com (myHomeDir <> "/.config/xmonad/scripts/volume.sh" ) ["vol"] "vol" 1
   ] 
