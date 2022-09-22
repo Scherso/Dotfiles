@@ -1,5 +1,7 @@
-{-# LANGUAGE MultiWayIf #-} -- Required for toggleFull in myKeys
-{-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE 
+   MultiWayIf   -- Required for `toggleFull` in `myAdditionalKeys`
+   , LambdaCase -- Required for `(\case)` statement in `myXmobarPP`
+#-} 
 
 -- Data Imports 
 import qualified Data.Map                   as M
