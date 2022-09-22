@@ -28,10 +28,12 @@ myConfig =
     , hideOnStart      = False
     , allDesktops      = True
     , persistent       = True
+    , iconRoot         = myHomeDir <> "/.config/xmonad/icons"
+    , iconOffset       = -1
     , commands         = myCommands
     , sepChar  = "%"
     , alignSep = "}{"
-    , template = "<fn=2><fc=#31353F,#282C34:7> \xe0b6</fc></fn>\
+    , template = " <fn=2><fc=#31353F,#282C34:7>\xe0b6</fc></fn>\
                  \<fn=4><fc=#C678DD,#31353F:5>\xf30d </fc></fn>\
                  \<fn=2><fc=#31353F,#282C34:7>\xe0b4</fc></fn> \
                  \\

@@ -1,10 +1,10 @@
 {-# LANGUAGE MultiWayIf #-} -- Required for toggleFull in myKeys
-{-# LANGUAGE LambdaCase #-}
 
 -- Data Imports 
 import qualified Data.Map                   as M
 import           Data.Functor
 import           Data.Monoid
+import           Data.Maybe                 (fromJust)
 
 -- Used in io exitSuccess 
 import           System.Exit
@@ -37,7 +37,8 @@ myTerminal = "alacritty" :: String
   -- Default Browser
 myBrowser = "firefox" :: String
   -- Workspaces
-myWorkspaces = map (wrap " " " " . show) [1..9] :: [String]
+-- myWorkspaces = map (wrap " " " " . show) [1..9] :: [String]
+myWorkspaces = ["1","2","3","4","5","6","7","8","9"] :: [[Char]]
   -- Border Width
 myBorderWidth = 3 :: Dimension
   -- Formal Unfocused Color
@@ -46,6 +47,18 @@ myNormColor = "#544862" :: String
 myFocusColor = "#61AFEF" :: String
   -- Home Directory
 myHomeDir = unsafeDupablePerformIO (getEnv "HOME") :: String
+
+
+actionPrefix, actionButton, actionSuffix :: [Char]
+actionPrefix = "<action=`xdotool key super+"
+actionButton = "` button="
+actionSuffix = "</action>"
+
+addActions :: [(String, Int)] -> String -> String
+addActions [] ws = ws
+addActions (x:xs) ws = addActions xs (actionPrefix ++ k ++ actionButton ++ show b ++ ">" ++ ws ++ actionSuffix)
+    where k = fst x
+          b = snd x
 
 myAdditionalKeys :: [(String, X ())]
 myAdditionalKeys = 
@@ -112,6 +125,22 @@ myAdditionalKeys =
       , ("<XF86AudioRaiseVolume>", spawn "pactl set-sink-volume @DEFAULT_SINK@ +1.5%")
       , ("<Pause>",                spawn "amixer sset Capture toggle")
       ]
+
+myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
+myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
+  []
+ -- Mod-[1..9] %! Switch to workspace N
+ -- Mod-shift-[1..9] %! Move client to workspace N
+  ++ [ ((m .|. modMask, k), windows $ f i)
+         | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
+         , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]
+     ]
+ -- Mod-{w,e,r} %! Switch to physical/Xinerama screens 1, 2, or 3
+ -- Mod-Shift-{w,e,r} %! Move client to screen 1, 2, or 3
+  ++ [ ((m .|. modMask, key), screenWorkspace sc >>= flip whenJust (windows . f))
+         | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
+         , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]
+     ]
 
 myMouseBindings :: XConfig l -> M.Map (KeyMask, Button) (Window -> X ())
 myMouseBindings XConfig {XMonad.modMask = modm} = M.fromList
@@ -227,29 +256,42 @@ myLayoutHook =
       delta = 3 / 100 -- Percent of screen increment by when resizing panes.
       w = 7           -- Width of pixel size between windows while tiled. 
 
-myXmobarPP :: X PP
-myXmobarPP =
-  clickablePP $ def
-    { ppCurrent          = xmobarColor "#61AFEF" ""
-    , ppVisibleNoWindows = Just (xmobarColor "#A9B1D6" "")
-    , ppHidden           = xmobarColor "#ABB2BF" ""
-    , ppHiddenNoWindows  = xmobarColor "#6B7089" ""
-    , ppUrgent           = xmobarColor "#F7768E" "" . wrap "!" "!"
-    , ppTitle            = xmobarColor "#CCD0D8" "" . shorten 49 
-    , ppSep              = " "
-    , ppWsSep            = xmobarColor "" "#282C34:5" "  "
-    , ppLayout           = xmobarColor "#31353F" "" 
-                           . (\case
-                               "Spacing Tall"        -> "<fn=2><fc=#31353F,#282C34:7>\xe0b6</fc></fn><icon=tiled.xpm/><fn=2><fc=#31353F,#282C34:7>\xe0b4</fc></fn>"
-                               "Spacing Mirror Tall" -> "<fn=2><fc=#31353F,#282C34:7>\xe0b6</fc></fn><icon=mirrortiled.xpm/><fn=2><fc=#31353F,#282C34:7>\xe0b4</fc></fn>"
-                               "Spacing Full"        -> "<fn=2><fc=#31353F,#282C34:7>\xe0b6</fc></fn><icon=full.xpm/><fn=2><fc=#31353F,#282C34:7>\xe0b4</fc></fn>"
-                               _                     -> "<fn=2><fc=#31353F,#282C34:7>\xe0b6</fc></fn><fc=#282C34,#31353F:7>?</fc><fc=#31353F,#282C34:7>\xe0b4</fc></fn>"
-                             )                     
+myWorkspaceIndices = M.fromList $ zip myWorkspaces [1..] :: M.Map [Char] Integer
+
+clickable :: [Char] -> [Char] -> [Char]
+clickable icon ws = addActions [ (show i, 1), ("q", 2), ("Left", 4), ("Right", 5) ] icon 
+  where i = fromJust $ M.lookup ws myWorkspaceIndices
+
+myStatusBarSpawner :: Applicative f => ScreenId -> f StatusBarConfig
+myStatusBarSpawner (S s) = do
+  pure $ statusBarPropTo ("_XMONAD_LOG_" ++ show s)
+    ("xmobar -x " ++ show s ++ " ~/.config/xmonad/src/xmobar" ++ show s ++ ".hs")
+    (pure $ myXmobarPP (S s))
+
+myXmobarPP :: ScreenId -> PP
+myXmobarPP s = 
+  s $ def
+    { ppCurrent          = xmobarColor "#61AFEF" "" . clickable wsIconFull 
+    , ppVisible          = xmobarColor "#A9B1D6" "" . clickable wsIconFull
+    , ppVisibleNoWindows = Just (xmobarColor "#A9B1D6" "" . clickable wsIconFull)
+    , ppHidden           = xmobarColor "#ABB2BF" "" . clickable wsIconHidden
+    , ppHiddenNoWindows  = xmobarColor "#ABB2BF" "" . clickable wsIconEmpty
+    , ppUrgent           = xmobarColor "#E06C75" "" . clickable wsIconFull
+    , ppOrder            = \(ws : _ : _ : extras) -> ws : extras
+--  , ppCurrent          = xmobarColor "#61AFEF" "" . wrap "<box type=Bottom offset=C5 width=3 color=#61AFEF>" "</box>"
+--  , ppHidden           = xmobarColor "#ABB2BF" ""
+--  , ppVisibleNoWindows = Just (xmobarColor "#a9b1d6" "")
+--  , ppHiddenNoWindows  = xmobarColor "#6b7089" ""
+--  , ppUrgent           = xmobarColor "#F7768E" "" . wrap "!" "!"
+    , ppSep              = "<fc=#E06C75> > </fc> "
+    , ppTitle            = xmobarColor "#CCD0D8" "" . shorten 90
+--  , ppOrder            = \(ws : l : t : ex) -> [ws] ++ map (xmobarColor "#E06C75" "") ex ++ [xmobarColor "#ABB2BF" "" t]
+--  , ppExtras           = [ wrapL (actionPrefix ++ "n" ++ actionButton ++ "1>") actionSuffix ]
     }
-
-xmobar = statusBarProp myXmobar myXmobarPP :: StatusBarConfig
-
-myXmobar = ("xmobar " <> myHomeDir <> "/.config/xmonad/src/xmobar.hs") :: String
+    where
+      wsIconFull   = "  \xf111   "
+      wsIconHidden = "  \xf111   "
+      wsIconEmpty  = "  \xf10c   "
 
 myConfig = 
   def
@@ -264,6 +306,7 @@ myConfig =
     , manageHook         = myManageHook
     , handleEventHook    = myEventHook
     , workspaces         = myWorkspaces
+    , keys               = myKeys
     } `additionalKeysP` myAdditionalKeys
 
 main :: IO ()
@@ -274,5 +317,5 @@ main = do
     . fullscreenSupport
     . ewmh
     . Hacks.javaHack
-    . withEasySB xmobar def
+    . dynamicSBs myStatusBarSpawner 
     $ myConfig
