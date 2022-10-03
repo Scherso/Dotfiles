@@ -39,7 +39,7 @@ myTerminal = "alacritty" :: String
   -- Default Browser
 myBrowser = "firefox" :: String
   -- Workspaces
-myWorkspaces = map (wrap " " " " . show) [1..9] :: [String]
+myWorkspaces = map (wrap " " "" . show) [1..9] :: [String]
   -- Border Width
 myBorderWidth = 3 :: Dimension
   -- Formal Unfocused Color
@@ -130,6 +130,7 @@ myStartupHook = do
   traverse spawnOnce
     [ "~/.fehbg"
     , "picom"
+    , "dunst -conf $HOME/.config/dunst/dunstrc"
     ]
   setDefaultCursor xC_left_ptr
   setWMName "XMonad LG3D"
@@ -210,9 +211,10 @@ myManageHook = manageRules
       , title     ^? "Steam - News"                                       --> doHide -- I don't like the Steam news menu 
       ]
 
---    May be useful one day 
---    doClose = ask >>= liftX . killWindow >> mempty :: ManageHook
---    doForceKill = ask >>= liftX . forceKillWindow >> mempty :: ManageHook
+{- May be useful one day 
+doClose = ask >>= liftX . killWindow >> mempty :: ManageHook
+doForceKill = ask >>= liftX . forceKillWindow >> mempty :: ManageHook
+-}
 
 myEventHook :: Event -> X All
 myEventHook _ = return (All True)

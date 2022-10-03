@@ -21,6 +21,11 @@ myConfig =
     , borderColor      = "#544862"
     , border           = FullB 
     , borderWidth      = 1
+    {-
+    , position         = Static { xpos = 13, ypos = 1034, width = 1893, height = 32 } Bottom Padded
+    , position         = Static { xpos = 0, ypos = 1048, width = 1920, height = 32 } Bottom Flat
+    , position         = Static { xpos = 0, ypos = 0, width = 1920, height = 32 } Top Flat
+    -}
     , position         = Static { xpos = 13, ypos = 8, width = 1893, height = 32 }
     , alpha            = 255
     , overrideRedirect = False
