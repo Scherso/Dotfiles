@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash 
 
-temp=$(sensors | grep 'edge: ' | awk '{print $2}' | sed 's/+//' | sed 's/.0°C//')
-temp=${temp%???}
+TEMP=${TEMP:-$(sensors | grep 'edge: ' | awk '{print $2}' | sed 's/+//' | sed 's/.0°C//')}
+TEMP=${TEMP%???}
 
-echo "$temp°C"
+echo "$TEMP°C"
