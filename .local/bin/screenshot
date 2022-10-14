@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+#
+# Screenshot script, requires slop, shotgun screenshot utility, and xclip.  
+#
+# `set -eo pipefail` Ends the script immediately if any command or pipe exits with a non-zero status.
+# `pipefail` causes the pipeline to return the exit status of the ladder command to exit with a non-zero status.
+#
+# `-e` Exit immediately if a command exits with a non-zero status
+# `-o` set's the <option-name> flag. In this case, it setss the `pipefail` option.
+set -eo pipefail
+
+# Declaring clipboard, for a shortened codebase later
+declare CLIPBOARD=${CLIPBOARD:-"xclip -t image/png -selection clipboard"}
+
+# -s, or --selection, selects a region with `slop` and copies the region to the clipboard.
+# -f, or --fullscreen, copies the whole screen to the clipboard.
+case "$1" in
+	-s | --selection)
+		GRAB=$(slop -c 0.10,0.10,0.10,0.10 -l -f "-i %i -g %g")
+		shotgun $GRAB - | 
+			$CLIPBOARD
+		;;
+	-f | --fullscreen)
+		shotgun - |
+			$CLIPBOARD
+		;;
+	*)
+		tee -a <<-END
+
+		Usage:
+		  -s, --selection,   selects a region and copies the region to the clipboard.
+		  -f, --fullscreen,  copies the whole screen to the clipboard.
+		END
+	;;
+esac

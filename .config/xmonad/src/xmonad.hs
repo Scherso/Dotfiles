@@ -102,8 +102,8 @@ myAdditionalKeys =
       , ("M-p",          spawn "dmenu_run")
       ]
       where
-        screenShotSelection  = "xfce4-screenshooter -r -m -s /dev/stdout | xclip -i -selection clipboard -t image/png" :: String 
-        screenShotFullscreen = "xfce4-screenshooter -f -m -s /dev/stdout | xclip -i -selection clipboard -t image/png" :: String
+        screenShotSelection  = "screenshot -s" :: String 
+        screenShotFullscreen = "screenshot -f" :: String
   -- Multimedia keybinds.
     multimedia =
       [ ("<XF86AudioPlay>",        spawn "playerctl play-pause")
@@ -202,6 +202,7 @@ myManageHook = manageRules
       , className =? "firefox"    <&&> resource =? "Toolkit"     --> doFloat
       , className ^? "jetbrains-" <&&> title    ^? "Welcome to " --> doCenterFloat
       , className ^? "jetbrains-" <&&> title    =? "splash"      --> doFloat
+      , className ^? "Visual "    <&&> isDialog                  --> doCenterFloat
       , resource  =? "desktop_window"                            --> doIgnore
       , resource  =? "kdesktop"                                  --> doIgnore
       , isRole    ^? "About"      <||> isRole   ^? "about"       --> doFloat
@@ -247,7 +248,6 @@ myXmobarPP =
                                "Spacing Tall"        -> "<fn=2><fc=#31353F,#282C34:7>\xe0b6</fc></fn><icon=tiled.xpm/><fn=2><fc=#31353F,#282C34:7>\xe0b4</fc></fn>"
                                "Spacing Mirror Tall" -> "<fn=2><fc=#31353F,#282C34:7>\xe0b6</fc></fn><icon=mirrortiled.xpm/><fn=2><fc=#31353F,#282C34:7>\xe0b4</fc></fn>"
                                "Spacing Full"        -> "<fn=2><fc=#31353F,#282C34:7>\xe0b6</fc></fn><icon=full.xpm/><fn=2><fc=#31353F,#282C34:7>\xe0b4</fc></fn>"
-                               _                     -> "<fn=2><fc=#31353F,#282C34:7>\xe0b6</fc></fn><fc=#282C34,#31353F:7>?</fc><fc=#31353F,#282C34:7>\xe0b4</fc></fn>"
                              )                     
     }
 
