@@ -20,10 +20,8 @@ executables:
       - xmonad
       - containers
       - X11 >= 1.10
-      - filepath
   xmobar:
     main: xmobar.hs
     dependencies:
       - xmobar
-      - filepath
     ghc-options: -rtsopts -threaded -with-rtsopts=-N
