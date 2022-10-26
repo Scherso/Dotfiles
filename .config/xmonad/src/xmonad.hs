@@ -1,9 +1,12 @@
 {-# LANGUAGE 
-   MultiWayIf   -- Required for `toggleFull` in `myAdditionalKeys`
-   , LambdaCase -- Required for `(\case)` statement in `myXmobarPP`
-   , FlexibleContexts
+    MultiWayIf   -- Required for `toggleFull` in `myAdditionalKeys`
+    , LambdaCase -- Required for `(\case)` statement in `myXmobarPP`
+    , FlexibleContexts
 #-} 
-{-# OPTIONS_GHC -Wno-missing-signatures -Wno-orphans #-}
+{-# OPTIONS_GHC 
+    -Wno-missing-signatures 
+    -Wno-orphans 
+#-}
 
 -- Data Imports 
 import qualified Data.Map                   as M
@@ -219,6 +222,7 @@ myManageHook = manageRules
             , className =? "firefox"    <&&> title    =? "Library"     --> doCenterFloat
             , className =? "firefox"    <&&> title    ^? "Save"        --> doFloat
             , className =? "firefox"    <&&> resource =? "Toolkit"     --> doFloat
+            , className =? "firefox"    <&&> title    ^? "Sign in"     --> doFloat
             , className ^? "jetbrains-" <&&> title    ^? "Welcome to " --> doCenterFloat
             , className ^? "jetbrains-" <&&> title    =? "splash"      --> doFloat
             , className ^? "Visual "    <&&> isDialog                  --> doCenterFloat

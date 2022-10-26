@@ -1,6 +1,7 @@
 import System.Environment        (getEnv)
 import System.IO.Unsafe          (unsafeDupablePerformIO)
 
+import XMonad.Hooks.StatusBar.PP (wrap, xmobarColor, xmobarFont)
 import Xmobar
 
 main :: IO ()
@@ -13,40 +14,26 @@ myConfig :: IO Config
 myConfig =
     do
         pure baseConfig
-            { template = concat $ 
-                [ " <fn=2><fc=#31353F,#282C34:7>\xe0b6</fc></fn>\
-                  \<fn=4><fc=#C678DD,#31353F:5>\xf30d </fc></fn>\
-                  \<fn=2><fc=#31353F,#282C34:7>\xe0b4</fc></fn> "
-                ] 
-                <>
-                [ "<fn=5>%UnsafeXMonadLog%</fn>}{" ] 
-                <>
-                [ "<fn=2><fc=#31353F,#282C34:7>\xe0b6</fc></fn>\
-                  \<fn=4><fc=#E06C75,#31353F:5>%wlp5s0%</fc></fn>\
-                  \<fn=2><fc=#31353F,#282C34:7>\xe0b4</fc></fn> "
-                ] 
-                <>
-                [ "<fn=2><fc=#31353F,#282C34:7>\xe0b6</fc></fn>\
-                   \<fn=4><fc=#56B6C2,#31353F:5>%k10temp%</fc></fn>\
-                   \<fn=2><fc=#31353F,#282C34:7>\xe0b4</fc></fn> "
-                ] 
-                <>
-                [ "<fn=2><fc=#31353F,#282C34:7>\xe0b6</fc></fn>\
-                   \<fn=4><fc=#C678DD,#31353F:5>%gpu%</fc></fn>\
-                   \<fn=2><fc=#31353F,#282C34:7>\xe0b4</fc></fn> "
-                ] 
-                <>
-                [ "<fn=2><fc=#31353F,#282C34:7>\xe0b6</fc></fn>\
-                   \<fn=4><fc=#98C379,#31353F:5>%vol%</fc></fn>\
-                   \<fn=2><fc=#31353F,#282C34:7>\xe0b4</fc></fn> "
-                ] 
-                <>
-                [ "<fn=2><fc=#31353F,#282C34:7>\xe0b6</fc></fn>\
-                   \<fn=4><fc=#61AFEF,#31353F:5>%date%</fc></fn>\
-                   \<fn=2><fc=#31353F,#282C34:7>\xe0b4</fc></fn> "
-                ]
+            { template =
+                (wrap " " "" (inWrapper (magenta (xmobarFont 4 "\xf30d "))))
+                <> (xmobarFont 5 "%UnsafeXMonadLog%")
+                <> "}{"
+                <> concatMap
+                    inWrapper
+                    [ red     (xmobarFont 4 "%wlp5s0%")     -- Recieved and sent analytics
+                    , cyan    (xmobarFont 4 "%k10temp%")    -- CPU temperature 
+                    , magenta (xmobarFont 4 "%gpu%")        -- GPU temperature
+                    , green   (xmobarFont 4 "%vol%")        -- Volume percentage
+                    , blue    (xmobarFont 4 "%date%")       -- Time
+                    ]
             , commands = myCommands
             } 
+            where
+                inWrapper :: String -> String
+                inWrapper = 
+	                wrap 
+		                (xmobarColor "#31353F" "#282C34:7" (xmobarFont 2 "\xe0b6"))
+		                (xmobarColor "#31353F" "#282C34:7" (xmobarFont 2 "\xe0b4") <> " ")
 
 myCommands :: [Runnable]
 myCommands = 
@@ -97,3 +84,14 @@ baseConfig =
         , sepChar  = "%"
         , alignSep = "}{"
         }
+
+foreground, background :: String
+foreground = "#31353F" <> ":5"
+background = "#282C34"
+
+red, blue, green, magenta, cyan :: String -> String
+red     = xmobarColor "#E06C75" foreground 
+blue    = xmobarColor "#61AFEF" foreground 
+green   = xmobarColor "#98C379" foreground 
+magenta = xmobarColor "#C678DD" foreground 
+cyan    = xmobarColor "#56B6C2" foreground 
