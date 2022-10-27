@@ -33,7 +33,7 @@ myConfig =
                 inWrapper = 
 	                wrap 
 						(xmobarColor "#31353F" "#282C34:7" (xmobarFont 2 "\xe0b6"))
-		                (xmobarColor "#31353F" "#282C34:7" (xmobarFont 2 "\xe0b4") <> " ")
+						(xmobarColor "#31353F" "#282C34:7" (xmobarFont 2 "\xe0b4") <> " ")
 
 myCommands :: [Runnable]
 myCommands = 
