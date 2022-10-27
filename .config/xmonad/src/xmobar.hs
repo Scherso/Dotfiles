@@ -16,7 +16,7 @@ myConfig =
         pure baseConfig
             { template =
                 (wrap " " "" (inWrapper (magenta (xmobarFont 4 "\xf30d "))))
-                <> (xmobarFont 5 "%UnsafeXMonadLog%")
+                <> (inWrapper (xmobarFont 5 "%UnsafeXMonadLog%"))
                 <> "}{"
                 <> concatMap
                     inWrapper
@@ -62,9 +62,9 @@ baseConfig =
                             , "xft:SF Mono Nerd Font:pixelsize=13:antialias=true:hinting=true"
                             ]
         , textOffsets      = [20, 22, 21, 21, 20]
-        , bgColor          = "#282C34"
-        , fgColor          = "#AAB2BF"
-        , borderColor      = "#544862"
+        , bgColor          = background 
+        , fgColor          = foreground
+        , borderColor      = borderc
         , border           = FullB 
         , borderWidth      = 1
         {-
@@ -85,13 +85,15 @@ baseConfig =
         , alignSep = "}{"
         }
 
-foreground, background :: String
-foreground = "#31353F" <> ":5"
-background = "#282C34"
+formatbg, foreground, borderc, background :: String
+formatbg   = "#31353F" <> ":5" -- Lighter Grey
+foreground = "#ABB2BF"         -- White
+background = "#282C34"         -- Grey
+borderc    = "#544862"         -- Dark Purple
 
 red, blue, green, magenta, cyan :: String -> String
-red     = xmobarColor "#E06C75" foreground 
-blue    = xmobarColor "#61AFEF" foreground 
-green   = xmobarColor "#98C379" foreground 
-magenta = xmobarColor "#C678DD" foreground 
-cyan    = xmobarColor "#56B6C2" foreground 
+red     = xmobarColor "#E06C75" formatbg
+blue    = xmobarColor "#61AFEF" formatbg 
+green   = xmobarColor "#98C379" formatbg 
+magenta = xmobarColor "#C678DD" formatbg
+cyan    = xmobarColor "#56B6C2" formatbg 

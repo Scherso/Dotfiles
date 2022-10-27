@@ -59,7 +59,7 @@ myBrowser :: String
 myBrowser = "firefox" 
   -- Workspaces
 myWorkspaces :: [String]
-myWorkspaces = map (wrap " " "" . show) [1 .. 9] 
+myWorkspaces = map show [1 .. 9] 
   -- Border Width
 myBorderWidth :: Dimension
 myBorderWidth = 3 
@@ -259,21 +259,28 @@ myLayoutHook =
 myXmobarPP :: X PP
 myXmobarPP =
     clickablePP $ def
-        { ppCurrent          = xmobarColor "#61AFEF" ""
+        { ppCurrent          = xmobarColor "#61AFEF" "#31353F:5" . xmobarFont 5
         , ppVisibleNoWindows = Just (xmobarColor "#A9B1D6" "")
-        , ppHidden           = xmobarColor "#ABB2BF" ""
-        , ppHiddenNoWindows  = xmobarColor "#6B7089" ""
-        , ppUrgent           = xmobarColor "#F7768E" "" . wrap "!" "!"
-        , ppTitle            = xmobarColor "#CCD0D8" "" . shorten 49 
-        , ppSep              = " "
-        , ppWsSep            = xmobarColor "" "#282C34:5" "  "
+        , ppHidden           = xmobarColor "#ABB2BF" "#31353F:5"
+        , ppHiddenNoWindows  = xmobarColor "#6B7089" "#31353F:5"
+        , ppUrgent           = xmobarColor "#F7768E" "#31353F:5" . wrap "!" "!"
+        , ppTitle            = xmobarColor "#98C379" "#31353F:5" . shorten 49 
+        , ppSep              = wrapSep " "
+        , ppTitleSanitize    = xmobarStrip
+        , ppWsSep            = xmobarColor "" "#31353F:5" "  "
         , ppLayout           = xmobarColor "#31353F" "" 
                                . (\case
-                                   "Spacing Tall"        -> "<fn=2><fc=#31353F,#282C34:7>\xe0b6</fc></fn><icon=tiled.xpm/><fn=2><fc=#31353F,#282C34:7>\xe0b4</fc></fn>"
-                                   "Spacing Mirror Tall" -> "<fn=2><fc=#31353F,#282C34:7>\xe0b6</fc></fn><icon=mirrortiled.xpm/><fn=2><fc=#31353F,#282C34:7>\xe0b4</fc></fn>"
-                                   "Spacing Full"        -> "<fn=2><fc=#31353F,#282C34:7>\xe0b6</fc></fn><icon=full.xpm/><fn=2><fc=#31353F,#282C34:7>\xe0b4</fc></fn>"
+                                   "Spacing Tall"        -> "<icon=tiled.xpm/>"
+                                   "Spacing Mirror Tall" -> "<icon=mirrortiled.xpm/>"
+                                   "Spacing Full"        -> "<icon=full.xpm/>"
                                  )                     
         }
+        where
+            wrapSep :: String -> String
+            wrapSep = 
+                wrap 
+                    (xmobarColor "#31353F" "#282C34:7" (xmobarFont 2 "\xe0b4"))
+                    (xmobarColor "#31353F" "#282C34:7" (xmobarFont 2 "\xe0b6"))
 
 xmobar :: StatusBarConfig
 xmobar = statusBarProp myXmobar myXmobarPP 
