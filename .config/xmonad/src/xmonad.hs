@@ -208,10 +208,10 @@ myManageHook = manageRules
                     , message
                     , obs
                     ]      -?> doFloat
-                    , match [ steam
+            , match [ steam
                     , multimc
                     ]      -?> doCenterFloat
-                    , anyOf [ isFileChooserDialog
+            , anyOf [ isFileChooserDialog
                     , isDialog
                     , isPopup
                     , isSplash
