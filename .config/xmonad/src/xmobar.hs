@@ -33,7 +33,7 @@ myConfig =
                 inWrapper = 
                     wrap 
                         (xmobarColor "#31353F" "#282C34:7" (xmobarFont 2 "\xe0b6"))
-                        (xmobarColor "#31353F" "#282C34:7" (xmobarFont 2 "\xe0b4") <> " ")
+		                    (xmobarColor "#31353F" "#282C34:7" (xmobarFont 2 "\xe0b4") <> " ")
 
 myCommands :: [Runnable]
 myCommands = 
@@ -61,7 +61,7 @@ baseConfig =
                             , "xft:SF Mono Nerd Font:size=11:antialias=true:hinting=true"
                             , "xft:SF Mono Nerd Font:pixelsize=13:antialias=true:hinting=true"
                             ]
-        , textOffsets      = [20, 22, 21, 21, 20]
+        , textOffsets      = [22, 22, 24, 21, 20]
         , bgColor          = background 
         , fgColor          = foreground
         , borderColor      = borderc

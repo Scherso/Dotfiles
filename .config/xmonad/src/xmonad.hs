@@ -59,7 +59,7 @@ myBrowser :: String
 myBrowser = "firefox" 
   -- Workspaces
 myWorkspaces :: [String]
-myWorkspaces = map show [1 .. 9] 
+myWorkspaces = map show [1 .. 9]
   -- Border Width
 myBorderWidth :: Dimension
 myBorderWidth = 3 
@@ -197,6 +197,8 @@ myManageHook = manageRules
         isPopup = isRole =? "pop-up"
     -- Checking for file chooser dialog.
         isFileChooserDialog = isRole =? "GtkFileChooserDialog" 
+    -- Checking for system info dialogs. 
+        isSysInfoDialog = title =? "System information"
     -- Managing rules for applications.
         manageRules = composeOne
             [ transience
@@ -215,16 +217,16 @@ myManageHook = manageRules
                     , isDialog
                     , isPopup
                     , isSplash
+                    , isSysInfoDialog
                     ]      -?> doCenterFloat
             ] <> composeAll
             [ manageDocks
+        -- Firefox class helpers 
             , className =? "firefox"    <&&> title    =? "File Upload" --> doFloat
             , className =? "firefox"    <&&> title    =? "Library"     --> doCenterFloat
             , className =? "firefox"    <&&> title    ^? "Save"        --> doFloat
             , className =? "firefox"    <&&> resource =? "Toolkit"     --> doFloat
             , className =? "firefox"    <&&> title    ^? "Sign in"     --> doFloat
-            , className ^? "jetbrains-" <&&> title    ^? "Welcome to " --> doCenterFloat
-            , className ^? "jetbrains-" <&&> title    =? "splash"      --> doFloat
             , className ^? "Visual "    <&&> isDialog                  --> doCenterFloat
             , resource  =? "desktop_window"                            --> doIgnore
             , resource  =? "kdesktop"                                  --> doIgnore
@@ -234,6 +236,16 @@ myManageHook = manageRules
             , className =? "steam_app_1551360" <&&> title /=? "Forza Horizon 5" --> doHide -- Prevents black screen when fullscreening.
             , title     =? "Wine System Tray"                                   --> doHide -- Prevents Wine System Trays from taking input focus.
             , title     ^? "Steam - News"                                       --> doHide -- I don't like the Steam news menu 
+        -- Jetbrains class helpers
+            , className ^? "jetbrains-" <&&> title ^? "Welcome to " --> doCenterFloat
+            , className ^? "jetbrains-" <&&> title =? "splash"      --> (doFloat <+> hasBorder False) 
+        -- Recaf class helpers
+            , className =? "java" <&&> title ^? "Search"         --> doCenterFloat
+            , className =? "java" <&&> title =? "Config"         --> doCenterFloat
+            , className =? "java" <&&> title =? "History"        --> doCenterFloat
+            , className =? "java" <&&> title =? "Contact"        --> doCenterFloat
+            , className =? "java" <&&> title =? "Attach"         --> doCenterFloat
+            , className =? "java" <&&> title =? "Create new JVM" --> doCenterFloat
             ]
 
 {- May be useful one day 
@@ -267,7 +279,7 @@ myXmobarPP =
         , ppTitle            = xmobarColor "#98C379" "#31353F:5" . shorten 49 
         , ppSep              = wrapSep " "
         , ppTitleSanitize    = xmobarStrip
-        , ppWsSep            = xmobarColor "" "#31353F:5" "  "
+        , ppWsSep            = xmobarColor "" "#31353F:5" "   "
         , ppLayout           = xmobarColor "#31353F" "" 
                                . (\case
                                    "Spacing Tall"        -> "<icon=tiled.xpm/>"
