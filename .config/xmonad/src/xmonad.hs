@@ -1,24 +1,17 @@
-{-# LANGUAGE 
-    MultiWayIf   -- Required for `toggleFull` in `myAdditionalKeys`
-    , LambdaCase -- Required for `(\case)` statement in `myXmobarPP`
-    , FlexibleContexts
-#-} 
-{-# OPTIONS_GHC 
-    -Wno-missing-signatures 
-    -Wno-orphans 
-#-}
+{-# LANGUAGE MultiWayIf, LambdaCase, FlexibleContexts #-}
+{-# OPTIONS_GHC -Wno-missing-signatures -Wno-orphans  #-}
 
--- Data Imports 
+{- Data Imports -} 
 import qualified Data.Map                   as M
 import           Data.Functor
 import           Data.Monoid
 
--- Used in io exitSuccess 
+{- System Imports -} 
 import           System.Exit
 import           System.Environment         (getEnv)
 import           System.IO.Unsafe           (unsafeDupablePerformIO)
 
--- XMonad imports 
+{- XMonad imports -} 
 import           XMonad
 import           XMonad.Actions.NoBorders   (toggleBorder)
 import           XMonad.Hooks.EwmhDesktops
@@ -48,30 +41,36 @@ main = do
     . withEasySB xmobar def
     $ myConfig
 
-  -- Windows key/Super key
+{- Windows key/Super key -}
 myModMask :: KeyMask
 myModMask = mod4Mask 
-  -- Default Terminal
+{- Default Terminal -}
 myTerminal :: String
 myTerminal = "alacritty" 
-  -- Default Browser
+{- Default Browser -}
 myBrowser :: String
 myBrowser = "firefox" 
-  -- Workspaces
+{- Workspaces -}
 myWorkspaces :: [String]
 myWorkspaces = map show [1 .. 9]
-  -- Border Width
+{- Border Width -}
 myBorderWidth :: Dimension
 myBorderWidth = 3 
-  -- Formal Unfocused Color
+{- Formal Unfocused Color -}
 myNormColor :: String
 myNormColor = "#544862" 
-  -- Focused Color
+{- Focused Color -}
 myFocusColor :: String
 myFocusColor = "#61AFEF" 
-  -- Home Directory
+{- Home Directory -}
 myHomeDir :: String
 myHomeDir = unsafeDupablePerformIO (getEnv "HOME") 
+{- XMobar proprerty variable declaration -}
+xmobar :: StatusBarConfig
+xmobar = statusBarProp myXmobar myXmobarPP 
+{- My XMobar directory -}
+myXmobar :: String
+myXmobar = ("xmobar " ++ myHomeDir ++ "/.config/xmonad/src/xmobar.hs")
 
 myAdditionalKeys :: [(String, X ())]
 myAdditionalKeys = 
@@ -80,45 +79,45 @@ myAdditionalKeys =
         ++ applications
         ++ multimedia
     where 
-    -- Force killing a frozen window.
+        {- Force killing a frozen window. -}
         forceKillWindow :: Window -> X ()
         forceKillWindow w = withDisplay $ \d ->
             io $ void $ killClient d w
-    -- Making a window have a full float over a workspace.
+        {- Making a window have a full float over a workspace. -}
         toggleFull :: Window -> X () 
-        toggleFull w = windows $ \s -> if 
-            | M.lookup w (W.floating s) == Just fullscreen -> W.sink w s 
+        toggleFull w = windows $ \s -> if
+            | M.lookup w (W.floating s) == Just fullscreen -> W.sink w s
             | otherwise -> W.float w fullscreen s 
                 where
                     fullscreen = W.RationalRect 0 0 1 1
-    -- Screenshots
+        {- Screenshots -}
         screenShotSelection  = "screenshot -s" :: String 
         screenShotFullscreen = "screenshot -f" :: String
-    -- XMonad base keybinds.
+        {- XMonad base keybinds. -}
         base = 
-            [ ("M-g",       withFocused toggleBorder)
-            , ("M-S-c",     kill)
-            , ("M-S-x",     withFocused forceKillWindow)
-            , ("M-<Space>", sendMessage NextLayout)
-            , ("M-n",       refresh)
-            , ("M-S-q",     io exitSuccess)
-            , ("M-q",       spawn "xmonad --recompile ; killall xmobar ; xmonad --restart")
+            [ ("M-g",          withFocused toggleBorder)
+            , ("M-S-c",        kill)
+            , ("M-S-x",        withFocused forceKillWindow)
+            , ("M-<Space>",    sendMessage NextLayout)
+            , ("M-n",          refresh)
+            , ("M-S-q",        io exitSuccess)
+            , ("M-q",          spawn "xmonad --recompile ; killall xmobar ; xmonad --restart")
             ]
-    -- Window management keybinds.
+        {- Window management keybinds. -}
         window = 
-            [ ("M-<Tab>",    windows W.focusDown)
-            , ("M-j",        windows W.focusDown)
-            , ("M-k",        windows W.focusUp)
-            , ("M-m",        windows W.focusMaster)
-            , ("M-<Return>", windows W.swapMaster)
-            , ("M-S-j",      windows W.swapDown)
-            , ("M-S-k",      windows W.swapUp)
-            , ("M-h",        sendMessage Shrink)
-            , ("M-l",        sendMessage Expand)
-            , ("M-t",        withFocused $ windows . W.sink)
-            , ("M-S-f",      withFocused toggleFull)
+            [ ("M-<Tab>",      windows W.focusDown)
+            , ("M-j",          windows W.focusDown)
+            , ("M-k",          windows W.focusUp)
+            , ("M-m",          windows W.focusMaster)
+            , ("M-<Return>",   windows W.swapMaster)
+            , ("M-S-j",        windows W.swapDown)
+            , ("M-S-k",        windows W.swapUp)
+            , ("M-h",          sendMessage Shrink)
+            , ("M-l",          sendMessage Expand)
+            , ("M-t",          withFocused $ windows . W.sink)
+            , ("M-S-f",        withFocused toggleFull)
             ]
-    -- Spawning applications.
+        {- Spawning applications. -}
         applications =
             [ ("M-S-<Return>", spawn myTerminal)
             , ("M-f",          spawn myBrowser)
@@ -126,7 +125,7 @@ myAdditionalKeys =
             , ("<Print>",      spawn screenShotFullscreen)
             , ("M-p",          spawn "dmenu_run")
             ]
-    -- Multimedia keybinds.
+        {- Multimedia keybinds. -}
         multimedia =
             [ ("<XF86AudioPlay>",        spawn "playerctl play-pause")
             , ("<XF86AudioPrev>",        spawn "playerctl previous")
@@ -139,18 +138,18 @@ myAdditionalKeys =
 
 myMouseBindings :: XConfig l -> M.Map (KeyMask, Button) (Window -> X ())
 myMouseBindings XConfig {XMonad.modMask = modm} = M.fromList
-  -- Set the window to floating mode and move by dragging.
+    {- Set the window to floating mode and move by dragging. -}
     [ ((modm, button1), \w -> focus w >> mouseMoveWindow w      >> windows W.shiftMaster)
-  -- Raise the window to the top of the stack.
+    {- Raise the window to the top of the stack. -}
     , ((modm, button2), \w -> focus w >> windows W.shiftMaster)
-  -- Set the window to floating mode and resize by dragging.
+    {- Set the window to floating mode and resize by dragging. -}
     , ((modm, button3), \w -> focus w >> mouseResizeWindow w    >> windows W.shiftMaster)
     ]
 
 myStartupHook :: X ()
 myStartupHook = do
-    traverse spawnOnce
-        [ "~/.fehbg"
+    _ <- traverse spawnOnce
+        [ "$HOME/.fehbg"
         , "picom"
         , "dunst -conf $HOME/.config/dunst/dunstrc"
         ]
@@ -183,23 +182,23 @@ obs     = ClassApp "obs"                   "obs"
 myManageHook :: XMonad.Query (Data.Monoid.Endo WindowSet)
 myManageHook = manageRules
     where
-    -- Hides windows without ignoring it, see doHideIgnore in XMonad contrib.
+        {- Hides windows without ignoring it, see doHideIgnore in XMonad contrib. -}
         doHide = ask >>= doF . W.delete :: ManageHook
-    -- WM_WINDOW_ROLE will be parsed with the role variable.
+        {- WM_WINDOW_ROLE will be parsed with the role variable. -}
         isRole = stringProperty "WM_WINDOW_ROLE"
-    -- To match multiple properties with one operator.
+        {- To match multiple properties with one operator. -}
         anyOf = foldl (<||>) (pure False) :: [Query Bool] -> Query Bool
-    -- To match multiple classNames with one operator.
+        {- To match multiple classNames with one operator. -}
         match = anyOf . fmap isInstance :: [App] -> Query Bool
-    -- Checking for splash dialogs.
+        {- Checking for splash dialogs. -}
         isSplash = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_SPLASH"
-    -- Checking for pop-ups.
+        {- Checking for pop-ups. -}
         isPopup = isRole =? "pop-up"
-    -- Checking for file chooser dialog.
+        {- Checking for file chooser dialog. -}
         isFileChooserDialog = isRole =? "GtkFileChooserDialog" 
-    -- Checking for system info dialogs. 
+        {- Checking for system info dialogs. -} 
         isSysInfoDialog = title =? "System information"
-    -- Managing rules for applications.
+        {- Managing rules for applications. -}
         manageRules = composeOne
             [ transience
             , isDialog     -?> doCenterFloat
@@ -209,19 +208,19 @@ myManageHook = manageRules
                     , about
                     , message
                     , obs
-                    ]      -?> doFloat
+                    ] -?> doFloat
             , match [ steam
                     , multimc
-                    ]      -?> doCenterFloat
+                    ] -?> doCenterFloat
             , anyOf [ isFileChooserDialog
                     , isDialog
                     , isPopup
                     , isSplash
                     , isSysInfoDialog
-                    ]      -?> doCenterFloat
+                    ] -?> doCenterFloat
             ] <> composeAll
             [ manageDocks
-        -- Firefox class helpers 
+            {- Firefox class helpers -}
             , className =? "firefox"    <&&> title    =? "File Upload" --> doFloat
             , className =? "firefox"    <&&> title    =? "Library"     --> doCenterFloat
             , className =? "firefox"    <&&> title    ^? "Save"        --> doFloat
@@ -232,14 +231,14 @@ myManageHook = manageRules
             , resource  =? "kdesktop"                                  --> doIgnore
             , isRole    ^? "About"      <||> isRole   ^? "about"       --> doFloat
             , "_NET_WM_WINDOW_TYPE" `isInProperty` "_KDE_NET_WM_WINDOW_TYPE_OVERRIDE" --> doIgnore <> doRaise
-        -- Steam Game Fixes 
+            {- Steam Game Fixes -} 
             , className =? "steam_app_1551360" <&&> title /=? "Forza Horizon 5" --> doHide -- Prevents black screen when fullscreening.
             , title     =? "Wine System Tray"                                   --> doHide -- Prevents Wine System Trays from taking input focus.
             , title     ^? "Steam - News"                                       --> doHide -- I don't like the Steam news menu 
-        -- Jetbrains class helpers
+            {- Jetbrains class helpers -}
             , className ^? "jetbrains-" <&&> title ^? "Welcome to " --> doCenterFloat
             , className ^? "jetbrains-" <&&> title =? "splash"      --> (doFloat <+> hasBorder False) 
-        -- Recaf class helpers
+            {- Recaf class helpers -}
             , className =? "java" <&&> title ^? "Search"         --> doCenterFloat
             , className =? "java" <&&> title =? "Config"         --> doCenterFloat
             , className =? "java" <&&> title =? "History"        --> doCenterFloat
@@ -263,10 +262,10 @@ myLayoutHook =
     $ tiled ||| Mirror tiled ||| Full
     where
         tiled = Tall nmaster delta ratio
-        nmaster = 1     -- Default number of windows in the master pane.
-        ratio = 1 / 2   -- Default proportion of screen occupied by master panes.
-        delta = 3 / 100 -- Percent of screen increment by when resizing panes.
-        w = 7           -- Width of pixel size between windows while tiled. 
+        nmaster = 1     {- Default number of windows in the master pane. -}
+        ratio = 1 / 2   {- Default proportion of screen occupied by master panes. -}
+        delta = 3 / 100 {- Percent of screen increment by when resizing panes. -}
+        w = 7           {- Width of pixel size between windows while tiled. -} 
 
 myXmobarPP :: X PP
 myXmobarPP =
@@ -281,7 +280,7 @@ myXmobarPP =
         , ppTitleSanitize    = xmobarStrip
         , ppWsSep            = xmobarColor "" "#31353F:5" "   "
         , ppLayout           = xmobarColor "#31353F" "" 
-                               . (\case
+                               . (\case 
                                    "Spacing Tall"        -> "<icon=tiled.xpm/>"
                                    "Spacing Mirror Tall" -> "<icon=mirrortiled.xpm/>"
                                    "Spacing Full"        -> "<icon=full.xpm/>"
@@ -294,13 +293,7 @@ myXmobarPP =
                     (xmobarColor "#31353F" "#282C34:7" (xmobarFont 2 "\xe0b4"))
                     (xmobarColor "#31353F" "#282C34:7" (xmobarFont 2 "\xe0b6"))
 
-xmobar :: StatusBarConfig
-xmobar = statusBarProp myXmobar myXmobarPP 
-
-myXmobar :: String
-myXmobar = ("xmobar " ++ myHomeDir ++ "/.config/xmonad/src/xmobar.hs")
-
-myConfig = 
+myConfig =
     def
         { modMask            = myModMask
         , terminal           = myTerminal

@@ -20,18 +20,18 @@ myConfig =
                 <> "}{"
                 <> concatMap
                     inWrapper
-                    [ red     (xmobarFont 4 "%wlp5s0%")     -- Recieved and sent analytics
+                    [ red     (xmobarFont 4 "%wlp5s0%")     -- Received and sent analytics
                     , cyan    (xmobarFont 4 "%k10temp%")    -- CPU temperature 
                     , magenta (xmobarFont 4 "%gpu%")        -- GPU temperature
                     , green   (xmobarFont 4 "%vol%")        -- Volume percentage
                     , blue    (xmobarFont 4 "%date%")       -- Time
                     ]
-            , commands = myCommands
-            } 
+              , commands = myCommands
+            }
             where
                 inWrapper :: String -> String
-                inWrapper = 
-                    wrap 
+                inWrapper =
+                    wrap
                         (xmobarColor "#31353F" "#282C34:7" (xmobarFont 2 "\xe0b6"))
                         (xmobarColor "#31353F" "#282C34:7" (xmobarFont 2 "\xe0b4") <> " ")
 
