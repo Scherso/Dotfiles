@@ -183,20 +183,28 @@ myManageHook :: XMonad.Query (Data.Monoid.Endo WindowSet)
 myManageHook = manageRules
     where
         {- Hides windows without ignoring it, see doHideIgnore in XMonad contrib. -}
-        doHide = ask >>= doF . W.delete :: ManageHook
+        doHide :: ManageHook
+        doHide = ask >>= doF . W.delete 
         {- WM_WINDOW_ROLE will be parsed with the role variable. -}
-        isRole = stringProperty "WM_WINDOW_ROLE"
+        isRole :: Query String 
+        isRole = stringProperty "WM_WINDOW_ROLE" 
         {- To match multiple properties with one operator. -}
-        anyOf = foldl (<||>) (pure False) :: [Query Bool] -> Query Bool
+        anyOf :: [Query Bool] -> Query Bool
+        anyOf = foldl (<||>) (pure False) 
         {- To match multiple classNames with one operator. -}
-        match = anyOf . fmap isInstance :: [App] -> Query Bool
+        match :: [App] -> Query Bool
+        match = anyOf . fmap isInstance 
         {- Checking for splash dialogs. -}
+        isSplash :: Query Bool 
         isSplash = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_SPLASH"
         {- Checking for pop-ups. -}
+        isPopup :: Query Bool 
         isPopup = isRole =? "pop-up"
         {- Checking for file chooser dialog. -}
+        isFileChooserDialog :: Query Bool 
         isFileChooserDialog = isRole =? "GtkFileChooserDialog" 
         {- Checking for system info dialogs. -} 
+        isSysInfoDialog :: Query Bool 
         isSysInfoDialog = title =? "System information"
         {- Managing rules for applications. -}
         manageRules = composeOne
