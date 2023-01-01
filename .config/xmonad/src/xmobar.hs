@@ -16,15 +16,15 @@ myConfig =
         pure baseConfig
             { template =
                 (wrap " " "" (inWrapper (magenta (xmobarFont 4 "\xf30d "))))
-                <> (inWrapper (xmobarFont 5 "%UnsafeXMonadLog%"))
+                <> (inWrapper (xmobarFont 4 "%UnsafeXMonadLog%"))
                 <> "}{"
                 <> concatMap
                     inWrapper
-                    [ red     (xmobarFont 4 "%wlp5s0%")     -- Received and sent analytics
-                    , cyan    (xmobarFont 4 "%k10temp%")    -- CPU temperature 
-                    , magenta (xmobarFont 4 "%gpu%")        -- GPU temperature
-                    , green   (xmobarFont 4 "%vol%")        -- Volume percentage
-                    , blue    (xmobarFont 4 "%date%")       -- Time
+                    [ red     (xmobarFont 4 "%wlp5s0%")     {- Received and sent analytics -}
+                    , cyan    (xmobarFont 4 "%k10temp%")    {- CPU temperature -} 
+                    , magenta (xmobarFont 4 "%gpu%")        {- GPU temperature -}
+                    , green   (xmobarFont 4 "%vol%")        {- Volume percentage -}
+                    , blue    (xmobarFont 4 "%date%")       {- Time -}
                     ]
               , commands = myCommands
             }
@@ -59,9 +59,9 @@ baseConfig =
                             , "xft:SF Mono Nerd Font:size=13:antialias=true:hinting=true"
                             , "xft:SF Mono Nerd Font:size=11:antialias=true:hinting=true"
                             , "xft:SF Mono Nerd Font:size=11:antialias=true:hinting=true"
-                            , "xft:SF Mono Nerd Font:pixelsize=13:antialias=true:hinting=true"
-                            ]
-        , textOffsets      = [22, 22, 24, 21, 20]
+                            , "xft:SF Mono Nerd Font:pixelsize=10:antialias=true:hinting=true"
+                            ]     --      --    
+        , textOffsets      = [20, 22, 22, 21, 22]
         , bgColor          = background 
         , fgColor          = foreground
         , borderColor      = borderc
@@ -72,7 +72,8 @@ baseConfig =
         , position         = Static { xpos = 0, ypos = 1048, width = 1920, height = 32 } Bottom Flat
         , position         = Static { xpos = 0, ypos = 0, width = 1920, height = 32 } Top Flat
         -}
-        , position         = Static { xpos = 13, ypos = 8, width = 1893, height = 32 }
+        , position         = Static { xpos = 13, ypos = 8, width = 2533, height = 32 }
+        -- , position         = Static { xpos = 0, ypos = 0, width = 2560, height = 32 }
         , alpha            = 255
         , overrideRedirect = False
         , lowerOnStart     = True
@@ -86,10 +87,10 @@ baseConfig =
         }
 
 formatbg, foreground, borderc, background :: String
-formatbg   = "#31353F" <> ":5" -- Lighter Grey
-foreground = "#ABB2BF"         -- White
-background = "#282C34"         -- Grey
-borderc    = "#544862"         -- Dark Purple
+formatbg   = "#31353F" <> ":5" {- Lighter Grey -}
+foreground = "#ABB2BF"         {- White -}
+background = "#282C34"         {- Grey -}
+borderc    = "#544862"         {- Dark Purple -}
 
 red, blue, green, magenta, cyan :: String -> String
 red     = xmobarColor "#E06C75" formatbg

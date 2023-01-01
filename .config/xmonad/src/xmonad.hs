@@ -149,9 +149,10 @@ myMouseBindings XConfig {XMonad.modMask = modm} = M.fromList
 myStartupHook :: X ()
 myStartupHook = do
     _ <- traverse spawnOnce
-        [ "$HOME/.fehbg"
+        [ myHomeDir ++ "/.fehbg"
         , "picom"
-        , "dunst -conf $HOME/.config/dunst/dunstrc"
+        , "dunst -conf " ++ myHomeDir ++ "/.config/dunst/dunstrc"
+        , "gentoo-pipewire-launcher"
         ]
     setDefaultCursor xC_left_ptr
     setWMName "XMonad LG3D"
@@ -239,10 +240,12 @@ myManageHook = manageRules
             , resource  =? "kdesktop"                                  --> doIgnore
             , isRole    ^? "About"      <||> isRole   ^? "about"       --> doFloat
             , "_NET_WM_WINDOW_TYPE" `isInProperty` "_KDE_NET_WM_WINDOW_TYPE_OVERRIDE" --> doIgnore <> doRaise
+            , className ~? "enigma" <&&> "_NET_WM_WINDOW_TYPE" `isInProperty` "_NET_WM_WINDOW_TYPE_DIALOG" --> hasBorder False
             {- Steam Game Fixes -} 
-            , className =? "steam_app_1551360" <&&> title /=? "Forza Horizon 5" --> doHide -- Prevents black screen when fullscreening.
+            , className =? "Steam"      <&&> title =? "hover"                   --> (doF W.focusDown <+> doFloat <+> hasBorder False)
+--          , className =? "steam_app_1551360" <&&> title /=? "Forza Horizon 5" --> doHide -- Prevents black screen when fullscreening.
             , title     =? "Wine System Tray"                                   --> doHide -- Prevents Wine System Trays from taking input focus.
-            , title     ^? "Steam - News"                                       --> doHide -- I don't like the Steam news menu 
+--          , title     ^? "Steam - News"                                       --> doHide -- I don't like the Steam news menu 
             {- Jetbrains class helpers -}
             , className ^? "jetbrains-" <&&> title ^? "Welcome to " --> doCenterFloat
             , className ^? "jetbrains-" <&&> title =? "splash"      --> (doFloat <+> hasBorder False) 
@@ -278,7 +281,7 @@ myLayoutHook =
 myXmobarPP :: X PP
 myXmobarPP =
     clickablePP $ def
-        { ppCurrent          = xmobarColor "#61AFEF" "#31353F:5" . xmobarFont 5
+        { ppCurrent          = xmobarColor "#61AFEF" "#31353F:5" . xmobarFont 4
         , ppVisibleNoWindows = Just (xmobarColor "#A9B1D6" "")
         , ppHidden           = xmobarColor "#ABB2BF" "#31353F:5"
         , ppHiddenNoWindows  = xmobarColor "#6B7089" "#31353F:5"
@@ -298,8 +301,8 @@ myXmobarPP =
             wrapSep :: String -> String
             wrapSep = 
                 wrap 
-                    (xmobarColor "#31353F" "#282C34:7" (xmobarFont 2 "\xe0b4"))
-                    (xmobarColor "#31353F" "#282C34:7" (xmobarFont 2 "\xe0b6"))
+                    (xmobarColor "#31353F" "#282C34:6" (xmobarFont 2 "\xe0b4"))
+                    (xmobarColor "#31353F" "#282C34:6" (xmobarFont 2 "\xe0b6"))
 
 myConfig =
     def
