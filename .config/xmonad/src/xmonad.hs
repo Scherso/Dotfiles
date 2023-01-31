@@ -130,9 +130,9 @@ myAdditionalKeys =
             [ ("<XF86AudioPlay>",        spawn "playerctl play-pause")
             , ("<XF86AudioPrev>",        spawn "playerctl previous")
             , ("<XF86AudioNext>",        spawn "playerctl next")
-            , ("<XF86AudioMute>",        spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle")
-            , ("<XF86AudioLowerVolume>", spawn "pactl set-sink-volume @DEFAULT_SINK@ -1.5%")
-            , ("<XF86AudioRaiseVolume>", spawn "pactl set-sink-volume @DEFAULT_SINK@ +1.5%")
+            , ("<XF86AudioMute>",        spawn "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle")
+            , ("<XF86AudioLowerVolume>", spawn "wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%-")
+            , ("<XF86AudioRaiseVolume>", spawn "wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%+")
             , ("<Pause>",                spawn "amixer sset Capture toggle")
             ]
 
@@ -149,10 +149,11 @@ myMouseBindings XConfig {XMonad.modMask = modm} = M.fromList
 myStartupHook :: X ()
 myStartupHook = do
     _ <- traverse spawnOnce
-        [ myHomeDir ++ "/.fehbg"
-        , "picom"
+        [ "xrandr --output DisplayPort-1 --left-of DisplayPort-0 --output DisplayPort-0 --primary"
+        , "picom &"
         , "dunst -conf " ++ myHomeDir ++ "/.config/dunst/dunstrc"
-        , "gentoo-pipewire-launcher"
+--      , "gentoo-pipewire-launcher &"
+        , myHomeDir ++ "/.fehbg"
         ]
     setDefaultCursor xC_left_ptr
     setWMName "XMonad LG3D"
@@ -166,11 +167,10 @@ type AppTitle     = String
 type AppClassName = String
 type AppCommand   = String
 
-data App
-  = ClassApp AppClassName AppCommand
-  | TitleApp AppTitle AppCommand
-  | NameApp AppName AppCommand
-  deriving Show
+data App = ClassApp AppClassName AppCommand
+    | TitleApp AppTitle AppCommand
+    | NameApp AppName AppCommand
+    deriving Show
 
 gimp    = ClassApp "Gimp"                  "gimp"
 gimp2   = ClassApp "Gimp-2.99"             "gimp-2.99"
@@ -240,22 +240,22 @@ myManageHook = manageRules
             , resource  =? "kdesktop"                                  --> doIgnore
             , isRole    ^? "About"      <||> isRole   ^? "about"       --> doFloat
             , "_NET_WM_WINDOW_TYPE" `isInProperty` "_KDE_NET_WM_WINDOW_TYPE_OVERRIDE" --> doIgnore <> doRaise
-            , className ~? "enigma" <&&> "_NET_WM_WINDOW_TYPE" `isInProperty` "_NET_WM_WINDOW_TYPE_DIALOG" --> hasBorder False
             {- Steam Game Fixes -} 
             , className =? "Steam"      <&&> title =? "hover"                   --> (doF W.focusDown <+> doFloat <+> hasBorder False)
 --          , className =? "steam_app_1551360" <&&> title /=? "Forza Horizon 5" --> doHide -- Prevents black screen when fullscreening.
             , title     =? "Wine System Tray"                                   --> doHide -- Prevents Wine System Trays from taking input focus.
---          , title     ^? "Steam - News"                                       --> doHide -- I don't like the Steam news menu 
+            , title     ^? "Steam - News"                                       --> doHide -- I don't like the Steam news menu 
             {- Jetbrains class helpers -}
             , className ^? "jetbrains-" <&&> title ^? "Welcome to " --> doCenterFloat
             , className ^? "jetbrains-" <&&> title =? "splash"      --> (doFloat <+> hasBorder False) 
-            {- Recaf class helpers -}
-            , className =? "java" <&&> title ^? "Search"         --> doCenterFloat
-            , className =? "java" <&&> title =? "Config"         --> doCenterFloat
-            , className =? "java" <&&> title =? "History"        --> doCenterFloat
-            , className =? "java" <&&> title =? "Contact"        --> doCenterFloat
-            , className =? "java" <&&> title =? "Attach"         --> doCenterFloat
-            , className =? "java" <&&> title =? "Create new JVM" --> doCenterFloat
+            {- Java application helpers -}
+            , className =? "java"   <&&> title ^? "Search"         --> doCenterFloat
+            , className =? "java"   <&&> title =? "Config"         --> doCenterFloat
+            , className =? "java"   <&&> title =? "History"        --> doCenterFloat
+            , className =? "java"   <&&> title =? "Contact"        --> doCenterFloat
+            , className =? "java"   <&&> title =? "Attach"         --> doCenterFloat
+            , className =? "java"   <&&> title =? "Create new JVM" --> doCenterFloat
+            , className ~? "enigma" <&&> "_NET_WM_WINDOW_TYPE" `isInProperty` "_NET_WM_WINDOW_TYPE_DIALOG" --> hasBorder False
             ]
 
 {- May be useful one day 
@@ -282,7 +282,8 @@ myXmobarPP :: X PP
 myXmobarPP =
     clickablePP $ def
         { ppCurrent          = xmobarColor "#61AFEF" "#31353F:5" . xmobarFont 4
-        , ppVisibleNoWindows = Just (xmobarColor "#A9B1D6" "")
+        , ppVisibleNoWindows = Just (xmobarColor "#A9B1D6" "#31353F:5")
+        , ppVisible          = xmobarColor "#61AFEF" "#31353F:5"
         , ppHidden           = xmobarColor "#ABB2BF" "#31353F:5"
         , ppHiddenNoWindows  = xmobarColor "#6B7089" "#31353F:5"
         , ppUrgent           = xmobarColor "#F7768E" "#31353F:5" . wrap "!" "!"
