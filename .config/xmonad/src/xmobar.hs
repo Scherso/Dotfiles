@@ -73,7 +73,7 @@ baseConfig =
         , position         = Static { xpos = 0, ypos = 0, width = 1920, height = 32 } Top Flat
         -}
         , position         = Static { xpos = 1933, ypos = 8, width = 2533, height = 32 }
-        -- , position         = Static { xpos = 0, ypos = 0, width = 2560, height = 32 }
+--      , position         = Static { xpos = 0, ypos = 0, width = 2560, height = 32 }
         , alpha            = 255
         , overrideRedirect = False
         , lowerOnStart     = True
