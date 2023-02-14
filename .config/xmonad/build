@@ -4,4 +4,4 @@
 cd "$XMONAD_CONFIG_DIR" && stack install || exit
 
 # Create a hard link at the requested destination, replacing any existing one.
-ln -f -T "$(stack exec -- which xmonad)" "$1"
+ln -f -T "$(stack exec -- which xmonad)" "${1}"
