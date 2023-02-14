@@ -11,7 +11,7 @@ function main() {
     local STACK="${STACK:-"${HOME}/.config/xmonad/stack.yaml"}"
     local CURRENT_XMONAD="${CURRENT_XMONAD:-$(awk '/xmonad[/]xmonad$/{getline;print $2}' "${STACK}")}"
     local CURRENT_CONTRIB="${CURRENT_CONTRIB:-$(awk '/xmonad[/]xmonad-contrib$/{getline;print $2}' "${STACK}")}"
-    local CURRENT_X11="${CURRENT_X11:-$(awk '/xmonad[/]x11$/{getline; print$2}' "${STACK}")}"
+    local CURRENT_X11="${CURRENT_X11:-$(awk '/xmonad[/]x11$/{getline;print $2}' "${STACK}")}"
 
     if [[ "${LATEST_XMONAD}" != "${CURRENT_XMONAD}" ]] ; then
         sed -i "s/${CURRENT_XMONAD}/${LATEST_XMONAD}/" "${STACK}"
