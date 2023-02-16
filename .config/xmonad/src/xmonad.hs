@@ -30,17 +30,6 @@ import           XMonad.Util.EZConfig       (additionalKeysP)
 import qualified XMonad.Util.Hacks          as Hacks
 import           XMonad.Util.SpawnOnce
 
-main :: IO ()
-main = do
-    xmonad
-    . docks
-    . ewmhFullscreen
-    . fullscreenSupport
-    . ewmh
-    . Hacks.javaHack
-    . withEasySB xmobar def
-    $ myConfig
-
 {- Windows key/Super key -}
 myModMask :: KeyMask
 myModMask = mod4Mask 
@@ -71,6 +60,17 @@ xmobar = statusBarProp myXmobar myXmobarPP
 {- My XMobar directory -}
 myXmobar :: String
 myXmobar = ("xmobar " ++ myHomeDir ++ "/.config/xmonad/src/xmobar.hs")
+
+main :: IO ()
+main = do
+    xmonad
+    . docks
+    . ewmhFullscreen
+    . fullscreenSupport
+    . ewmh
+    . Hacks.javaHack
+    . withEasySB xmobar def
+    $ myConfig
 
 myAdditionalKeys :: [(String, X ())]
 myAdditionalKeys = base
