@@ -73,11 +73,10 @@ myXmobar :: String
 myXmobar = ("xmobar " ++ myHomeDir ++ "/.config/xmonad/src/xmobar.hs")
 
 myAdditionalKeys :: [(String, X ())]
-myAdditionalKeys = 
-    base
-        ++ window
-        ++ applications
-        ++ multimedia
+myAdditionalKeys = base
+    ++ window
+    ++ applications
+    ++ multimedia
     where 
         {- Force killing a frozen window. -}
         forceKillWindow :: Window -> X ()
@@ -279,43 +278,40 @@ myLayoutHook =
         w = 7           {- Width of pixel size between windows while tiled. -} 
 
 myXmobarPP :: X PP
-myXmobarPP =
-    clickablePP $ def
-        { ppCurrent          = xmobarColor "#61AFEF" "#31353F:5" . xmobarFont 4
-        , ppVisibleNoWindows = Just (xmobarColor "#A9B1D6" "#31353F:5")
-        , ppVisible          = xmobarColor "#61AFEF" "#31353F:5"
-        , ppHidden           = xmobarColor "#ABB2BF" "#31353F:5"
-        , ppHiddenNoWindows  = xmobarColor "#6B7089" "#31353F:5"
-        , ppUrgent           = xmobarColor "#F7768E" "#31353F:5" . wrap "!" "!"
-        , ppTitle            = xmobarColor "#98C379" "#31353F:5" . shorten 49 
-        , ppSep              = wrapSep " "
-        , ppTitleSanitize    = xmobarStrip
-        , ppWsSep            = xmobarColor "" "#31353F:5" "   "
-        , ppLayout           = xmobarColor "#31353F" "" 
-                               . (\case 
-                                   "Spacing Tall"        -> "<icon=tiled.xpm/>"
-                                   "Spacing Mirror Tall" -> "<icon=mirrortiled.xpm/>"
-                                   "Spacing Full"        -> "<icon=full.xpm/>"
-                                 )                     
-        }
-        where
-            wrapSep :: String -> String
-            wrapSep = 
-                wrap 
-                    (xmobarColor "#31353F" "#282C34:6" (xmobarFont 2 "\xe0b4"))
-                    (xmobarColor "#31353F" "#282C34:6" (xmobarFont 2 "\xe0b6"))
+myXmobarPP = clickablePP $ def
+    { ppCurrent          = xmobarColor "#61AFEF" "#31353F:5" . xmobarFont 4
+    , ppVisibleNoWindows = Just (xmobarColor "#A9B1D6" "#31353F:5")
+    , ppVisible          = xmobarColor "#61AFEF" "#31353F:5"
+    , ppHidden           = xmobarColor "#ABB2BF" "#31353F:5"
+    , ppHiddenNoWindows  = xmobarColor "#6B7089" "#31353F:5"
+    , ppUrgent           = xmobarColor "#F7768E" "#31353F:5" . wrap "!" "!"
+    , ppTitle            = xmobarColor "#98C379" "#31353F:5" . shorten 49 
+    , ppSep              = wrapSep " "
+    , ppTitleSanitize    = xmobarStrip
+    , ppWsSep            = xmobarColor "" "#31353F:5" "   "
+    , ppLayout           = xmobarColor "#31353F" "" 
+                           . (\case 
+                               "Spacing Tall"        -> "<icon=tiled.xpm/>"
+                               "Spacing Mirror Tall" -> "<icon=mirrortiled.xpm/>"
+                               "Spacing Full"        -> "<icon=full.xpm/>"
+                             )
+    }
+    where
+        wrapSep :: String -> String
+        wrapSep = wrap 
+            (xmobarColor "#31353F" "#282C34:6" (xmobarFont 2 "\xe0b4"))
+            (xmobarColor "#31353F" "#282C34:6" (xmobarFont 2 "\xe0b6"))
 
-myConfig =
-    def
-        { modMask            = myModMask
-        , terminal           = myTerminal
-        , mouseBindings      = myMouseBindings
-        , borderWidth        = myBorderWidth
-        , normalBorderColor  = myNormColor
-        , focusedBorderColor = myFocusColor
-        , layoutHook         = myLayoutHook
-        , startupHook        = myStartupHook
-        , manageHook         = myManageHook
-        , handleEventHook    = myEventHook
-        , workspaces         = myWorkspaces
+myConfig = def
+    { modMask            = myModMask
+    , terminal           = myTerminal
+    , mouseBindings      = myMouseBindings
+    , borderWidth        = myBorderWidth
+    , normalBorderColor  = myNormColor
+    , focusedBorderColor = myFocusColor
+    , layoutHook         = myLayoutHook
+    , startupHook        = myStartupHook
+    , manageHook         = myManageHook
+    , handleEventHook    = myEventHook
+    , workspaces         = myWorkspaces
         } `additionalKeysP` myAdditionalKeys
