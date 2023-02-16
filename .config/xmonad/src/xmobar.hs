@@ -48,39 +48,38 @@ myCommands =
     ] 
 
 baseConfig :: Config
-baseConfig =
-    defaultConfig
-        { font            =   "xft:SF Mono Nerd Font:pixelsize=11:antialias=true:hinting=true" 
-        , additionalFonts = [ "xft:SF Mono Nerd Font:pixelsize=10:antialias=true:hinting=true"
-                            , "xft:SF Mono Nerd Font:size=13:antialias=true:hinting=true"
-                            , "xft:SF Mono Nerd Font:size=11:antialias=true:hinting=true"
-                            , "xft:SF Mono Nerd Font:size=11:antialias=true:hinting=true"
-                            , "xft:SF Mono Nerd Font:pixelsize=10:antialias=true:hinting=true"
-                            ]     --      --    
-        , textOffsets      = [20, 22, 22, 21, 22]
-        , bgColor          = background 
-        , fgColor          = foreground
-        , borderColor      = borderc
-        , border           = FullB 
-        , borderWidth      = 1
-        {-
-        , position         = Static { xpos = 13, ypos = 1034, width = 1893, height = 32 } Bottom Padded
-        , position         = Static { xpos = 0, ypos = 1048, width = 1920, height = 32 } Bottom Flat
-        , position         = Static { xpos = 0, ypos = 0, width = 1920, height = 32 } Top Flat
-        -}
-        , position         = Static { xpos = 1933, ypos = 8, width = 2533, height = 32 }
---      , position         = Static { xpos = 0, ypos = 0, width = 2560, height = 32 }
-        , alpha            = 255
-        , overrideRedirect = False
-        , lowerOnStart     = True
-        , hideOnStart      = False
-        , allDesktops      = False
-        , persistent       = True
-        , iconRoot         = myHomeDir ++ "/.config/xmonad/icons"
-        , iconOffset       = -1
-        , sepChar  = "%"
-        , alignSep = "}{"
-        }
+baseConfig = defaultConfig
+    { font            =   "xft:SF Mono Nerd Font:pixelsize=11:antialias=true:hinting=true" 
+    , additionalFonts = [ "xft:SF Mono Nerd Font:pixelsize=10:antialias=true:hinting=true"
+                        , "xft:SF Mono Nerd Font:size=13:antialias=true:hinting=true"
+                        , "xft:SF Mono Nerd Font:size=11:antialias=true:hinting=true"
+                        , "xft:SF Mono Nerd Font:size=11:antialias=true:hinting=true"
+                        , "xft:SF Mono Nerd Font:pixelsize=10:antialias=true:hinting=true"
+                        ]     --      --    
+    , textOffsets      = [20, 22, 22, 21, 22]
+    , bgColor          = background 
+    , fgColor          = foreground
+    , borderColor      = borderc
+    , border           = FullB 
+    , borderWidth      = 1
+    {-
+    , position         = Static { xpos = 13, ypos = 1034, width = 1893, height = 32 } Bottom Padded
+    , position         = Static { xpos = 0, ypos = 1048, width = 1920, height = 32 } Bottom Flat
+    , position         = Static { xpos = 0, ypos = 0, width = 1920, height = 32 } Top Flat
+    -}
+    , position         = Static { xpos = 1933, ypos = 8, width = 2533, height = 32 }
+--  , position         = Static { xpos = 0, ypos = 0, width = 2560, height = 32 }
+    , alpha            = 255
+    , overrideRedirect = False
+    , lowerOnStart     = True
+    , hideOnStart      = False
+    , allDesktops      = False
+    , persistent       = True
+    , iconRoot         = myHomeDir ++ "/.config/xmonad/icons"
+    , iconOffset       = -1
+    , sepChar  = "%"
+    , alignSep = "}{"
+    }
 
 formatbg, foreground, borderc, background :: String
 formatbg   = "#31353F" <> ":5" {- Lighter Grey -}
