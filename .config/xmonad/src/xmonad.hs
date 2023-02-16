@@ -229,32 +229,32 @@ myManageHook = manageRules
             ] <> composeAll
             [ manageDocks
             {- Firefox class helpers -}
-            , className =? "firefox"    <&&> title    =? "File Upload" --> doFloat
-            , className =? "firefox"    <&&> title    =? "Library"     --> doCenterFloat
-            , className =? "firefox"    <&&> title    ^? "Save"        --> doFloat
-            , className =? "firefox"    <&&> resource =? "Toolkit"     --> doFloat
-            , className =? "firefox"    <&&> title    ^? "Sign in"     --> doFloat
-            , className ^? "Visual "    <&&> isDialog                  --> doCenterFloat
-            , resource  =? "desktop_window"                            --> doIgnore
-            , resource  =? "kdesktop"                                  --> doIgnore
-            , isRole    ^? "About"      <||> isRole   ^? "about"       --> doFloat
+            , className =? "firefox"    <&&> title    =? "File Upload"                --> doFloat
+            , className =? "firefox"    <&&> title    =? "Library"                    --> doCenterFloat
+            , className =? "firefox"    <&&> title    ^? "Save"                       --> doFloat
+            , className =? "firefox"    <&&> resource =? "Toolkit"                    --> doFloat
+            , className =? "firefox"    <&&> title    ^? "Sign in"                    --> doFloat
+            , className ^? "Visual "    <&&> isDialog                                 --> doCenterFloat
+            , resource  =? "desktop_window"                                           --> doIgnore
+            , resource  =? "kdesktop"                                                 --> doIgnore
+            , isRole    ^? "About"      <||> isRole   ^? "about"                      --> doFloat
             , "_NET_WM_WINDOW_TYPE" `isInProperty` "_KDE_NET_WM_WINDOW_TYPE_OVERRIDE" --> doIgnore <> doRaise
             {- Steam Game Fixes -} 
-            , className =? "Steam"      <&&> title =? "hover"                   --> (doF W.focusDown <+> doFloat <+> hasBorder False)
---          , className =? "steam_app_1551360" <&&> title /=? "Forza Horizon 5" --> doHide -- Prevents black screen when fullscreening.
-            , title     =? "Wine System Tray"                                   --> doHide -- Prevents Wine System Trays from taking input focus.
-            , title     ^? "Steam - News"                                       --> doHide -- I don't like the Steam news menu 
+            , className =? "Steam"      <&&> title =? "hover"                         --> (doF W.focusDown <+> doFloat <+> hasBorder False)
+--          , className =? "steam_app_1551360" <&&> title /=? "Forza Horizon 5"       --> doHide -- Prevents black screen when fullscreening.
+            , title     =? "Wine System Tray"                                         --> doHide -- Prevents Wine System Trays from taking input focus.
+            , title     ^? "Steam - News"                                             --> doHide -- I don't like the Steam news menu 
             {- Jetbrains class helpers -}
-            , className ^? "jetbrains-" <&&> title ^? "Welcome to " --> doCenterFloat
-            , className ^? "jetbrains-" <&&> title =? "splash"      --> (doFloat <+> hasBorder False) 
+            , className ^? "jetbrains-" <&&> title ^? "Welcome to "                   --> doCenterFloat
+            , className ^? "jetbrains-" <&&> title =? "splash"                        --> (doFloat <+> hasBorder False) 
             {- Java application helpers -}
-            , className =? "java"   <&&> title ^? "Search"         --> doCenterFloat
-            , className =? "java"   <&&> title =? "Config"         --> doCenterFloat
-            , className =? "java"   <&&> title =? "History"        --> doCenterFloat
-            , className =? "java"   <&&> title =? "Contact"        --> doCenterFloat
-            , className =? "java"   <&&> title =? "Attach"         --> doCenterFloat
-            , className =? "java"   <&&> title =? "Create new JVM" --> doCenterFloat
-            , className ~? "enigma" <&&> "_NET_WM_WINDOW_TYPE" `isInProperty` "_NET_WM_WINDOW_TYPE_DIALOG" --> hasBorder False
+            , className =? "java"       <&&> title ^? "Search"                        --> doCenterFloat
+            , className =? "java"       <&&> title =? "Config"                        --> doCenterFloat
+            , className =? "java"       <&&> title =? "History"                       --> doCenterFloat
+            , className =? "java"       <&&> title =? "Contact"                       --> doCenterFloat
+            , className =? "java"       <&&> title =? "Attach"                        --> doCenterFloat
+            , className =? "java"       <&&> title =? "Create new JVM"                --> doCenterFloat
+            , className ~? "enigma"     <&&> "_NET_WM_WINDOW_TYPE" `isInProperty` "_NET_WM_WINDOW_TYPE_DIALOG" --> hasBorder False
             ]
 
 {- May be useful one day 
@@ -314,4 +314,4 @@ myConfig = def
     , manageHook         = myManageHook
     , handleEventHook    = myEventHook
     , workspaces         = myWorkspaces
-        } `additionalKeysP` myAdditionalKeys
+    } `additionalKeysP` myAdditionalKeys
