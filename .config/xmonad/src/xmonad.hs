@@ -158,8 +158,8 @@ myStartupHook = do
     setWMName "XMonad LG3D"
 
 isInstance (ClassApp c _) = className =? c
-isInstance (TitleApp t _) = title =? t
-isInstance (NameApp n _)  = appName =? n
+isInstance (TitleApp t _) = title     =? t
+isInstance (NameApp n  _) = appName   =? n
 
 type AppName      = String
 type AppTitle     = String
@@ -175,9 +175,16 @@ gimp    = ClassApp "Gimp"                  "gimp"
 gimp2   = ClassApp "Gimp-2.99"             "gimp-2.99"
 multimc = ClassApp "MultiMC"               "MultiMC"
 about   = TitleApp "About Mozilla Firefox" "About Mozilla Firefox"
+signin  = TitleApp "Sign In"               "Sign In"
+toolkit = TitleApp "Toolkit"               "Toolkit"
+file    = TitleApp "File Upload"           "File Upload"
+save    = TitleApp "Save"                  "Save"
+library = TitleApp "Library"               "Library"
 message = ClassApp "Xmessage"              "Xmessage"
 steam   = ClassApp "Steam"                 "Steam"
 obs     = ClassApp "obs"                   "obs"
+wine    = TitleApp "Wine System Tray"      "Wine System Tray"
+news    = TitleApp "Steam - News"          "Steam - News"
 
 myManageHook :: XMonad.Query (Data.Monoid.Endo WindowSet)
 myManageHook = manageRules
@@ -216,10 +223,18 @@ myManageHook = manageRules
                     , about
                     , message
                     , obs
+                    , file
+                    , save
+                    , signin
+                    , toolkit
                     ] -?> doFloat
             , match [ steam
                     , multimc
+                    , library
                     ] -?> doCenterFloat
+            , match [ wine 
+                    , news
+                    ] -?> doHide
             , anyOf [ isFileChooserDialog
                     , isDialog
                     , isPopup
@@ -228,22 +243,13 @@ myManageHook = manageRules
                     ] -?> doCenterFloat
             ] <> composeAll
             [ manageDocks
-            {- Firefox class helpers -}
-            , className =? "firefox"    <&&> title    =? "File Upload"                --> doFloat
-            , className =? "firefox"    <&&> title    =? "Library"                    --> doCenterFloat
-            , className =? "firefox"    <&&> title    ^? "Save"                       --> doFloat
-            , className =? "firefox"    <&&> resource =? "Toolkit"                    --> doFloat
-            , className =? "firefox"    <&&> title    ^? "Sign in"                    --> doFloat
-            , className ^? "Visual "    <&&> isDialog                                 --> doCenterFloat
             , resource  =? "desktop_window"                                           --> doIgnore
             , resource  =? "kdesktop"                                                 --> doIgnore
             , isRole    ^? "About"      <||> isRole   ^? "about"                      --> doFloat
             , "_NET_WM_WINDOW_TYPE" `isInProperty` "_KDE_NET_WM_WINDOW_TYPE_OVERRIDE" --> doIgnore <> doRaise
             {- Steam Game Fixes -} 
-            , className =? "Steam"      <&&> title =? "hover"                         --> (doF W.focusDown <+> doFloat <+> hasBorder False)
+--          , className =? "Steam"      <&&> title =? "hover"                         --> (doF W.focusDown <+> doFloat <+> hasBorder False)
 --          , className =? "steam_app_1551360" <&&> title /=? "Forza Horizon 5"       --> doHide -- Prevents black screen when fullscreening.
-            , title     =? "Wine System Tray"                                         --> doHide -- Prevents Wine System Trays from taking input focus.
-            , title     ^? "Steam - News"                                             --> doHide -- I don't like the Steam news menu 
             {- Jetbrains class helpers -}
             , className ^? "jetbrains-" <&&> title ^? "Welcome to "                   --> doCenterFloat
             , className ^? "jetbrains-" <&&> title =? "splash"                        --> (doFloat <+> hasBorder False) 
