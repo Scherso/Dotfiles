@@ -11,20 +11,21 @@ myHomeDir :: String
 myHomeDir = unsafeDupablePerformIO (getEnv "HOME") 
 
 myConfig :: IO Config
-myConfig = do pure baseConfig
-    { template = 
-        (wrap " " "" (inWrapper (magenta (xmobarFont 4 "\xf30d "))))
-        <> (inWrapper (xmobarFont 4 "%UnsafeXMonadLog%"))
-        <> "}{"
-        <> concatMap inWrapper
-            [ red     (xmobarFont 4 "%wlp5s0%")     {- Received and sent analytics -}
-            , cyan    (xmobarFont 4 "%k10temp%")    {- CPU temperature             -} 
-            , magenta (xmobarFont 4 "%gpu%")        {- GPU temperature             -}
-            , green   (xmobarFont 4 "%vol%")        {- Volume percentage           -}
-            , blue    (xmobarFont 4 "%date%")       {- Time                        -}
-            ]
-    , commands = myCommands
-    }
+myConfig = do 
+    pure baseConfig
+        { template = 
+            (wrap "  " " " (xmobarColor "#C678DD" "" (xmobarFont 4 "\xf30d ")))
+            <> (inWrapper (xmobarFont 4 "%UnsafeXMonadLog%"))
+            <> "}{"
+            <> concatMap inWrapper
+                [ red     (xmobarFont 4 "%wlp5s0%")     {- Received and sent analytics -}
+                , cyan    (xmobarFont 4 "%k10temp%")    {- CPU temperature             -} 
+                , magenta (xmobarFont 4 "%gpu%")        {- GPU temperature             -}
+                , green   (xmobarFont 4 "%vol%")        {- Volume percentage           -}
+                , blue    (xmobarFont 4 "%date%")       {- Time                        -}
+                ]
+        , commands = myCommands
+        }
     where
         inWrapper :: String -> String
         inWrapper = wrap 
