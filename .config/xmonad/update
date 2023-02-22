@@ -5,13 +5,32 @@
 # SCRIPT BEGINS
 
 function main() {
-    # Calling our function to store our latest commits.
-    get_latest
+    # Instantiating our local variable.
+    local COMMIT="${COMMIT:-}"
+    # Assigning our first value to that variable, in 
+    # this case, XMonads latest commit.
+    COMMIT="$(git ls-remote https://github.com/xmonad/xmonad.git HEAD)"
+    # Declaring that our value 'LATEST_XMONAD' is the 
+    # output of 'COMMIT', but substituted to replace 
+    # 'HEAD' with nothing. 
+    local LATEST_XMONAD="${COMMIT/HEAD/}"
+    # Assigning XMonad Contribs latest commit
+    # to our local 'COMMIT' variable.
+    COMMIT="$(git ls-remote https://github.com/xmonad/xmonad-contrib.git HEAD)"
+    # Declaring that our value 'LATEST_CONTRIB' is the
+    # output of 'COMMIT', substituted the same as before.
+    local declare -r LATEST_CONTRIB="${COMMIT/HEAD/}"
+    # Assigning the latest commit in XMonad's X11 
+    # to the value in 'COMMIT'.
+    COMMIT="$(git ls-remote https://github.com/xmonad/x11.git HEAD)"
+    # Declaring that our value 'LATEST_X11' is the
+    # output of 'COMMIT', substituted the same as before.
+    local LATEST_X11="${COMMIT/HEAD/}"
     # Declaring our locations and other variables.
     local STACK="${STACK:-"${HOME}/.config/xmonad/stack.yaml"}"
-    local CURRENT_XMONAD="${CURRENT_XMONAD:-$(awk '/xmonad[/]xmonad$/{getline;print $2}' "${STACK}")}"
-    local CURRENT_CONTRIB="${CURRENT_CONTRIB:-$(awk '/xmonad[/]xmonad-contrib$/{getline;print $2}' "${STACK}")}"
-    local CURRENT_X11="${CURRENT_X11:-$(awk '/xmonad[/]x11$/{getline;print $2}' "${STACK}")}"
+    local CURRENT_XMONAD="$(awk '/xmonad[/]xmonad$/{getline;print $2}' "${STACK}")"
+    local CURRENT_CONTRIB="$(awk '/xmonad[/]xmonad-contrib$/{getline;print $2}' "${STACK}")"
+    local CURRENT_X11="$(awk '/xmonad[/]x11$/{getline;print $2}' "${STACK}")"
 
     if [[ "${LATEST_XMONAD}" != "${CURRENT_XMONAD}" ]] ; then
         sed -i "s/${CURRENT_XMONAD}/${LATEST_XMONAD}/" "${STACK}"
@@ -24,30 +43,6 @@ function main() {
     if [[ "${LATEST_X11}" != "${CURRENT_X11}" ]] ; then
         sed -i "s/${CURRENT_X11}/${LATEST_X11}/" "${STACK}"
     fi
-}
-
-function get_latest() {
-    # Instantiating our local variable.
-    local COMMIT="${COMMIT:-}"
-    # Assigning our first value to that variable, in 
-    # this case, XMonads latest commit.
-    COMMIT="$(git ls-remote https://github.com/xmonad/xmonad.git HEAD)"
-    # Declaring that our value 'LATEST_XMONAD' is the 
-    # output of 'COMMIT', but substituted to replace 
-    # 'HEAD' with nothing. 
-    declare -xr LATEST_XMONAD="${COMMIT/HEAD/}"
-    # Assigning XMonad Contribs latest commit
-    # to our local 'COMMIT' variable.
-    COMMIT="$(git ls-remote https://github.com/xmonad/xmonad-contrib.git HEAD)"
-    # Declaring that our value 'LATEST_CONTRIB' is the
-    # output of 'COMMIT', substituted the same as before.
-    declare -xr LATEST_CONTRIB="${COMMIT/HEAD/}"
-    # Assigning the latest commit in XMonad's X11 
-    # to the value in 'COMMIT'.
-    COMMIT="$(git ls-remote https://github.com/xmonad/x11.git HEAD)"
-    # Declaring that our value 'LATEST_X11' is the
-    # output of 'COMMIT', substituted the same as before.
-    declare -xr LATEST_X11="${COMMIT/HEAD/}"
 }
 
 main "${@}"
