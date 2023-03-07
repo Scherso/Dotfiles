@@ -1,38 +1,39 @@
 <img 
-     align="right" width="200px"
-     src="https://wiki.gentoo.org/images/b/b8/Larry-nefarius-v2.svg"
+    align="right" width="200px"
+    src="https://wiki.gentoo.org/images/b/b8/Larry-nefarius-v2.svg"
 />
 
 ### My [Gentoo][gentoo] Dotfiles, installation for [Arch][arch] and [Gentoo][gentoo] Linux.
 
 <a href="https://xmonad.org">
-  <img 
-       align="left" width="20px" 
-       src="https://xmonad.org/images/logo.svg" 
-  />
+    <img 
+        align="left" width="20px" 
+        src="https://xmonad.org/images/logo.svg" 
+    />
 </a>
 
 <a href="https://suckless.org/">
-  <img
-       align="left" width="20px" height="20px" 
-       src="https://suckless.org/logo.svg" 
-  />
+    <img
+        align="left" width="20px" height="20px" 
+        src="https://suckless.org/logo.svg" 
+    />
 </a>
 
 ---
 
 <p align="right">
-  Larry :two_hearts:
+    Larry :two_hearts:
 </p>
 
 ## Dependencies 
 
 <img
-     align="right" width="30px"
-     src="http://www.archlinux.org/logos/archlinux-icon-crystal-64.svg" 
+    align="right" width="30px"
+    src="http://www.archlinux.org/logos/archlinux-icon-crystal-64.svg" 
 />
 
 - **Arch Linux**
+
 ```bash
 pacman -S \ 
 > git \
@@ -44,11 +45,12 @@ pacman -S \
 - **Gentoo Linux**
 
 <img
-     align="right" width="30px"
-     src="https://gentoo.org/assets/img/logo/gentoo-signet.svg"
+    align="right" width="30px"
+    src="https://gentoo.org/assets/img/logo/gentoo-signet.svg"
 />
 
 1. **Add `X`, `elogind` and `dbus` to your `USE` flag.**
+
 ```bash
 USE="X elongind dbus"
 ```
@@ -56,11 +58,13 @@ USE="X elongind dbus"
 2. **Configure your `VIDEO_CARDS` flag, mine for example is `radeonsi amdgpu`, more info can be found [here][xgwiki].**
 
 3. **Perform a world update to apply these changes.**
+
 ```bash
 emerge --ask --verbose --update --newuse --deep @world
 ```
 
 4. **Install the necessary x11 dependencies.**
+
 ```bash
 emerge -a \
 > dev-vcs/git \
@@ -76,20 +80,22 @@ emerge -a \
 ### Installing [XMonad][xmonad] and [XMobar][xmobar] with [Stack][stack]
 
 <img 
-     align="right" width="30px" 
-     src="https://xmonad.org/images/logo.svg" 
+    align="right" width="30px" 
+    src="https://xmonad.org/images/logo.svg" 
 />
 
-1. **Make `$HOME/.local/bin` binaries executables.**
+1. **Make `${HOME}/.local/bin` binaries executables.**
 
 - Bash
+
 ```bash
-echo 'PATH="$HOME/.local/bin/:$PATH"' >> $HOME/.bashrc
+echo 'PATH="${HOME}/.local/bin/:${PATH}"' >> "${HOME}/.bashrc"
 ```
 
-- Zsh
+- Z-Shell
+
 ```bash
-echo 'PATH="$HOME/.local/bin/:$PATH"' >> $HOME/.zshrc
+echo 'PATH="${HOME}/.local/bin/:${PATH}"' >> "${HOME}/.zshrc"
 ```
 
 2. **Installing [Stack][stack].**
@@ -121,36 +127,42 @@ stack setup
 
 > NOTE: You can run `stack ghc` to configure GHC actions, and `stack ghci` to use an interactive environment. 
 
-4. **Make a `$HOME/.config/xmonad/` directory.**
+4. **Make a `${HOME}/.config/xmonad/` directory.**
+
 ```bash
-[[ ! -d "$HOME/.config/xmonad" ]] && mkdir $HOME/.config/xmonad/ || cd $HOME/.config/xmonad ; cd $_
+[[ ! -d "${HOME}/.config/xmonad" ]] && mkdir "${HOME}/.config/xmonad/" || cd "${HOME}/.config/xmonad" ; cd "${_}"
 ```
 
 5. **Copying the XMonad directory from this respository.**
 
-- Cloning the repository to `$HOME/.sources/`
+- Cloning the repository to `${HOME}/.sources/`
+
 ```bash
-[[ -d "$HOME/.sources" ]] || mkdir $HOME/.sources/ ; git clone https://github.com/Scherso/Dotfiles $HOME/.sources/
+[[ -d "${HOME}/.sources" ]] || mkdir "${HOME}/.sources/" ; git clone "https://github.com/Scherso/Dotfiles" "${HOME}/.sources/"
 ```
 
-- Moving the XMonad directory to `$HOME/.config/xmonad`
+- Moving the XMonad directory to `${HOME}/.config/xmonad`
+
 ```bash
-mv $HOME/.sources/.config/xmonad/* $HOME/.config/xmonad
+mv $HOME/.sources/.config/xmonad/* "${HOME}/.config/xmonad/"
 ```
 
 6. **Building and Installing XMonad binaries.**
 
-- While still in `$HOME/.config/xmonad/`
+- While still in `${HOME}/.config/xmonad/`
+
 ```bash 
 stack install
 ```
 
-- Once completed, run the following while still in the `$HOME/.config/xmonad/` as your working directory.
+- Once completed, run the following while still in the `${HOME}/.config/xmonad/` as your working directory.
+
 ```bash
 ./build
 ```
 
-- Once `XMonad` and `XMobar` have been compiled and installed to `$HOME/.local/bin/`, you can test the binaries by running:
+- Once `XMonad` and `XMobar` have been compiled and installed to `${HOME}/.local/bin/`, you can test the binaries by running:
+
 ```bash
 xmonad --version
 ```
@@ -158,6 +170,7 @@ xmonad --version
 8. **Verifying and debugging XMonad**
 
 - To test if XMonad will compile and run:
+
 ```bash
 xmonad --recompile
 ```
@@ -165,13 +178,14 @@ xmonad --recompile
 9. **Adding XMonad to your `.xinitrc` file**
 
 - Make a `.xinitrc` file if you haven't already
+
 ```bash
-[[ -f "$HOME/.xinitrc" ]] || touch $HOME/.xinitrc
+[[ -f "${HOME}/.xinitrc" ]] || touch "${HOME}/.xinitrc"
 ```
 
 - Add the `dbus-launch` command to your `.xinitrc` file to start XMonad on `startx`
 ```bash
-echo "dbus-launch --exit-with-session xmonad > $HOME/.config/xmonad/log.txt" > $HOME/.xinitrc
+echo "dbus-launch --exit-with-session xmonad > ${HOME}/.config/xmonad/log.txt" > "${HOME}/.xinitrc"
 ```
 
 10. **Launch into XMonad**
@@ -179,6 +193,7 @@ echo "dbus-launch --exit-with-session xmonad > $HOME/.config/xmonad/log.txt" > $
 - **BEFORE LAUNCHING** XMonad's default terminal in this configuration is Alacritty, you can change this by editing the file's `myTerminal` string. Contrary, you can install Alacritty with the this repository's configuration [below](https://github.com/Scherso/dotfiles#installing-and-configuring-alacritty).
 
 - While in a tty, run 
+
 ```bash
 startx
 ```
@@ -263,11 +278,13 @@ startx
 1. **Cloning this repository to `$HOME/.sources/`**
 
 - **NOTE** If you have already cloned this repository before, do not follow this step.**
+
 ```bash
 [[ -d "$HOME/.sources" ]] || mkdir $HOME/.sources/ ; git clone https://github.com/Scherso/Dotfiles $HOME/.sources/
 ```
 
 2. Move the dmenu directory to `$HOME/.config/`
+
 ```bash
 mv $HOME/.sources/Dotfiles/.config/dmenu/ $HOME/.config/
 ```
@@ -275,6 +292,7 @@ mv $HOME/.sources/Dotfiles/.config/dmenu/ $HOME/.config/
 3. Change your working directory to `$HOME/.config/dmenu/`, then compile and install.
 
 - Changing your working directory.
+
 ```bash
 cd $HOME/.config/dmenu
 ```
@@ -296,21 +314,25 @@ make clean install
 1. **Install NeoVim.**
 
 - Gentoo
+
 ```bash
 emerge -a app-editors/neovim
 ```
 
 - Arch 
+
 ```bash
 pacman -S app-editors/neovim
 ```
 
 2. **Make a `$HOME/.config/nvim/` directory.**
+
 ```bash
 [[ -d "$HOME/.config/nvim ]] || mkdir $HOME/.config/nvim/
 ```
 
 3. **Fetch Vim-Plugged and its directories.**
+
 ```bash
 sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
@@ -319,12 +341,14 @@ sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.
 4. **Cloning this repository to `$HOME/.sources/`**
 
 - **NOTE** If you have already cloned this repository before, do not follow this step.
+
 ```bash
 [[ ! -d "$HOME/.sources" ]] && mkdir $HOME/.sources/ 
 git clone https://github.com/Scherso/Dotfiles $HOME/.sources/
 ```
 
 4. **Move the contents this repository's nvim directory to `$HOME/.config/`**
+
 ```bash
 mv $HOME/.sources/Dotfiles/.config/nvim/* $HOME/.config/nvim/
 ```
@@ -332,11 +356,13 @@ mv $HOME/.sources/Dotfiles/.config/nvim/* $HOME/.config/nvim/
 5. **Open NeoVim and `:PlugInstall`**
 
 - Firstly, open NeoVim by running:
+
 ```bash
 nvim
 ```
 
 - Secondly, once you're in NeoVim, press `<escape>` on your keyboard, and type the following, and then press enter.
+
 ```vim
 :PlugInstall
 ```
@@ -353,21 +379,25 @@ nvim
 1. **Install Alacritty**
 
 - Gentoo
+
 ```bash
 emerge -a x11-terms/alacritty
 ```
 
 - Arch
+
 ```bash
 pacman -S alacritty
 ```
 
 2. **Make `$HOME/.config/alacritty/alacritty.yml`**
+
 ```bash
 [[ -d "$HOME/.config/alacritty/alacritty.yml" ]] || mkdir $HOME/.config/alacritty/ ; touch $HOME/.config/alacritty/alacritty.yml
 ```
 
 3. **Appending this repository's `alacritty.yml` to your configuration.**
+
 ```bash
 curl https://raw.githubusercontent.com/Scherso/dotfiles/main/.config/alacritty/alacritty.yml > $HOME/.config/alacritty/alacritty.yml
 ```
@@ -379,21 +409,25 @@ curl https://raw.githubusercontent.com/Scherso/dotfiles/main/.config/alacritty/a
 1. **Install Picom**
 
 - Gentoo
+
 ```bash
 emerge -a x11-misc/picom
 ```
 
 - Arch 
+
 ```bash
 pacman -S picom
 ```
 
 2. **Make `$HOME/.config/picom/picom.conf`**
+
 ```bash
 [[ -d "$HOME/.config/picom/picom.conf" ]] || mkdir $HOME/.config/picom/ ; touch $HOME/.config/picom/picom.conf
 ```
 
 3. **Appending this repository's `alacritty.yml` to your configuration.**
+
 ```bash
 curl https://raw.githubusercontent.com/Scherso/dotfiles/main/.config/picom/picom.conf > $HOME/.config/picom/picom.conf
 ```
