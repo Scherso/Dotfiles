@@ -8,4 +8,4 @@
 
 gentoo-pipewire-launcher & 
 
-dbus-launch --sh-syntax --exit-with-session xmonad > $HOME/.config/xmonad/log.txt
+dbus-launch --sh-syntax --exit-with-session xmonad > "${HOME}/.config/xmonad/log.txt"
