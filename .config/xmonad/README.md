@@ -5,7 +5,7 @@
     src="https://xmonad.org/images/logo.svg" 
 />
 
-1. **Make `${HOME}/.local/bin` binaries executables.**
+1. **Add `"${HOME}/.local/bin"` to `"${PATH}"`, making binaries in the directory executable.**
 
 - Bash
 
@@ -51,9 +51,9 @@ pacman -S stack
 stack setup
 ```
 
-> NOTE: You can run `stack ghc` to configure GHC actions, and `stack ghci` to use an interactive environment. 
+> "You can run `stack ghc` to configure GHC actions, and `stack ghci` to use an interactive environment."
 
-4. **Make a `${HOME}/.config/xmonad/` directory.**
+4. **Create an `xmonad` directory in `"${HOME}/.config/"`.
 
 ```bash
 [[ ! -d "${HOME}/.config/xmonad" ]] && mkdir "${HOME}/.config/xmonad/" || cd "${HOME}/.config/xmonad" ; cd "${_}"
@@ -61,13 +61,13 @@ stack setup
 
 5. **Copying the XMonad directory from this respository.**
 
-- Cloning the repository to `${HOME}/.sources/`
+- Cloning the repository to `"${HOME}/.sources/"`
 
 ```bash
 [[ -d "${HOME}/.sources" ]] || mkdir "${HOME}/.sources/" ; git clone "https://github.com/Scherso/Dotfiles" "${HOME}/.sources/"
 ```
 
-- Moving the XMonad directory to `${HOME}/.config/xmonad`
+- Moving the XMonad directory to `"${HOME}/.config/xmonad/"`
 
 ```bash
 mv $HOME/.sources/.config/xmonad/* "${HOME}/.config/xmonad/"
@@ -75,23 +75,25 @@ mv $HOME/.sources/.config/xmonad/* "${HOME}/.config/xmonad/"
 
 6. **Building and Installing XMonad binaries.**
 
-- While still in `${HOME}/.config/xmonad/`
+- While your working directory is still `"${HOME}/.config/xmonad/"`, continue;
 
 ```bash 
 stack install
 ```
 
-- Once completed, run the following while still in the `${HOME}/.config/xmonad/` as your working directory.
+- Once completed, run
 
 ```bash
 ./build
 ```
 
-- Once `XMonad` and `XMobar` have been compiled and installed to `${HOME}/.local/bin/`, you can test the binaries by running:
+- Once `xmonad` and `xmobar` have been compiled and installed to `"${HOME}/.local/bin/"`, you should test the binaries by executing the following.
 
 ```bash
 xmonad --version
 ```
+
+> If this doesn't work, refer to step one, and run `source "${HOME}/.bashrc"` or `source "${HOME}/.zshrc"` respective to your preferred shell. 
 
 8. **Verifying and debugging XMonad**
 
@@ -110,8 +112,9 @@ xmonad --recompile
 ```
 
 - Add the `dbus-launch` command to your `.xinitrc` file to start XMonad on `startx`
+
 ```bash
-echo "dbus-launch --exit-with-session xmonad > ${HOME}/.config/xmonad/log.txt" > "${HOME}/.xinitrc"
+echo "dbus-launch --exit-with-session xmonad > "${HOME}/.config/xmonad/log.txt" > "${HOME}/.xinitrc"
 ```
 
 10. **Launch into XMonad**
