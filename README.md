@@ -79,6 +79,3 @@ emerge -a \
 
 [arch]:      https://archlinux.org
 [gentoo]:    https://gentoo.org
-[rustup]:    https://rustup.rs
-[picom]:     https://github.com/yshui/picom
-[neovim]:    https://neovim.io
