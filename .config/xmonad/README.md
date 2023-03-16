@@ -53,7 +53,7 @@ stack setup
 
 > "You can run `stack ghc` to configure GHC actions, and `stack ghci` to use an interactive environment."
 
-4. **Create an `xmonad` directory in `"${HOME}/.config/"`.
+4. **Create an `xmonad` directory in `"${HOME}/.config/"`.**
 
 ```bash
 [[ ! -d "${HOME}/.config/xmonad" ]] && mkdir "${HOME}/.config/xmonad/" || cd "${HOME}/.config/xmonad" ; cd "${_}"
