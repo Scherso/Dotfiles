@@ -7,10 +7,7 @@ alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
-alias ~="cd ~"
+alias ~="cd $(getent passwd "${USER}" 2>/dev/null | cut -d: -f6)"
 
 # Functionality 
-alias doas='doas ' 
-
-# Proton Executable for Windows apps
-alias protonexec="$HOME/.local/share/Steam/steamapps/common/Proton\ -\ Experimental/files/bin/wine"
+alias doas="doas "
