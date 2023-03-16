@@ -3,7 +3,7 @@
     src="https://wiki.gentoo.org/images/b/b8/Larry-nefarius-v2.svg"
 />
 
-### My [Gentoo][gentoo] Dotfiles, installation for [Arch][arch] and [Gentoo][gentoo] Linux.
+### My [Gentoo][gentoo] Linux Dotfiles
 
 <a href="https://xmonad.org">
     <img 
@@ -79,12 +79,6 @@ emerge -a \
 
 [arch]:      https://archlinux.org
 [gentoo]:    https://gentoo.org
-[xgwiki]:    https://wiki.gentoo.org/wiki/Xorg/Guide#make.conf_configuration
-[xmonad]:    https://xmonad.org/
-[xmobar]:    https://codeberg.org/xmobar/xmobar
-[stack]:     https://docs.haskellstack.org/en/stable/
-[dmenu]:     https://tools.suckless.org/dmenu/
-[alacritty]: https://alacritty.org
 [rustup]:    https://rustup.rs
 [picom]:     https://github.com/yshui/picom
 [neovim]:    https://neovim.io
