@@ -79,3 +79,5 @@ emerge -a \
 
 [arch]:      https://archlinux.org
 [gentoo]:    https://gentoo.org
+
+[xgwiki]:    https://wiki.gentoo.org/wiki/Xorg/Guide#make.conf_configuration
