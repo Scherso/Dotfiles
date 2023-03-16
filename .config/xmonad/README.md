@@ -124,73 +124,63 @@ echo "dbus-launch --exit-with-session xmonad > ${HOME}/.config/xmonad/log.txt" >
 startx
 ```
 
-- For a list of keybinds, click the dropdown below
+<br />
 
 <details>
     <summary> 
-        XMonad Bindings
+        Key Bindings
     </summary>
 
-    <br />
+  <br />
 
-  - **Base XMonad Keybinds**
+  | Keybinding             | Accociated Function                                       |
+  | :---                   | :---                                                      |
+  | `MOD + g`              | Toggle borders on a focused window.                       |
+  | `MOD + SHIFT + c`      | Kill the focused window.                                  |
+  | `MOD + SHIFT + x`      | Force kill focused window.                                |
+  | `MOD + space`          | Switch to next layout.                                    |
+  | `MOD + n`              | Refresh XMonad.                                           |
+  | `MOD + SHIFT + q`      | Quits XMonad and X Server.                                |
+  | `MOD + q`              | Re-compiles and restarts XMonad without killing X server. |
+  | `MOD + 1-9`            | Switch to workspaces 1-9 according to the key.            |
+  | `MOD + TAB`            | Switch focus to the next window.                          |
+  | `MOD + j`              | Switch focus to the next window to the left.              |
+  | `MOD + k`              | Switch focus to the next window to the right.             |
+  | `MOD + m`              | Switch focus to the master window.                        | 
+  | `MOD + RETURN`         | Swap the master window with the focused window.           |
+  | `MOD + SHIFT + j`      | Swap the focused window to the left.                      |
+  | `MOD + SHIFT + k`      | Swap the focused window to the right.                     |
+  | `MOD + h`              | Shrink focused window to the left.                        |
+  | `MOD + l`              | Shrink focused window to the right.                       |
+  | `MOD + t`              | Tile a floating window.                                   |
+  | `MOD + SHIFT + f`      | Toggle fullscreen on a window.                            |
+  | `MOD + SHIFT + RETURN` | Open Alacritty.                                           |
+  | `MOD + f`              | Open Firefox.                                             |
+  | `MOD + s`              | Selective screenshot.                                     |
+  | `PTRSC`                | Fullscreen screenshot.                                    |
+  | `MOD + p`              | Open `dmenu`.                                             |
+  | Play/Pause             | Play/Pause media/song.                                    |
+  | Previous               | Previous media/song.                                      |
+  | Next                   | Next media/song.                                          |
+  | Mute                   | Mute audio.                                               |
+  | Lower-Volume           | Lower the audio volume.                                   |
+  | Raise-Volume           | Raise the audio volume.                                   |
 
-  | Keybinding | Accociated Function |
-  |  :---  | :--- |
-  | MOD + g | Toggle borders on a focused window |
-  | MOD + SHIFT + c | kill focused window |
-  | MOD + SHIFT + x | Force kill focused window |
-  | MOD + space | Switch to next layout |
-  | MOD + n | Refresh XMonad |
-  | MOD + SHIFT + q | Quits XMonad and X Server |
-  | MOD + q | Re-compiles and restarts XMonad without killing X server |
-  | MOD + 1-9 | Switch to workspaces 1-9 according to the key |
+</details>
 
-  - **Window Managemnt**
+<details>
+    <summary> 
+        Mouse Bindings
+    </summary>
 
-  | Keybinding | Accociated Function | 
-  | :--- | :--- |
-  | MOD + tab | Switch focus to the next window |
-  | MOD + j | Switch focus to the next window to the left |
-  | MOD + k | Switch focus to the next window to the right |
-  | MOD + m | Switch focus to the master window | 
-  | MOD + return | Swap the master window with the focused window |
-  | MOD + SHIFT + j | Swap the focused window to the left |
-  | MOD + SHIFT + k | Swap the focused window to the right |
-  | MOD + h | shrink focused window to the left |
-  | MOD + l | shrink focused window to the right |
-  | MOD + t | Tile a floating window |
-  | MOD + SHIFT + F | Toggle fullscreen on a window |
+  <br />
 
-  - **Applicatoins (Screenshots are copied to the clipboard)**
-
-  | Keybindings | Accociated Function |
-  | :--- | :--- |
-  | MOD + SHIFT + return | Open Alacritty terminal |
-  | MOD + f | Open Firefox |
-  | MOD + s | Selective screenshot |
-  | Print Screen | Fullscreen screenshot |
-  | MOD + p | Open dmenu |
-
-  - **Multimedia**
-
-  | Keybindings | Accociated Function |
-  | :--- | :--- |
-  | Play/Pause | Play/Pause media/song |
-  | Previous | Previous media/song |
-  | Next | Next media/song |
-  | Mute | Mute audio |
-  | LowerVolume | Lower the audio volume |
-  | RaiseVolume | Raise the audio volume |
-
-  - **Mouse Bindings**
-
-  | Mousebinding | Accociated Function |
-  | :--- | :--- |
-  | MOD + Left Click | Float and move window by dragging |
-  | MOD + Middle Click | Move window to the top of the stack |
-  | MOD + Right Click | Float and resize window by dragging |
-
+  | Mousebinding           | Accociated Function                                       |
+  | :---                   | :---                                                      |
+  | `MOD` + Left Click     | Float and move window by dragging                         |
+  | `MOD` + Middle Click   | Move window to the top of the stack                       |
+  | `MOD` + Right Click    | Float and resize window by dragging                       |
+  
 </details>
 
 [arch]:      https://archlinux.org
