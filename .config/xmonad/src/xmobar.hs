@@ -4,11 +4,24 @@ import System.IO.Unsafe          (unsafeDupablePerformIO)
 import XMonad.Hooks.StatusBar.PP (wrap, xmobarColor, xmobarFont)
 import Xmobar
 
+myHomeDir :: String
+myHomeDir  = unsafeDupablePerformIO (getEnv "HOME") 
+
+formatbg, foreground, borderc, background :: String
+formatbg   = "#31353F" <> ":5" {- Lighter Grey -}
+foreground = "#ABB2BF"         {- White -}
+background = "#282C34"         {- Grey -}
+borderc    = "#544862"         {- Dark Purple -}
+
+red, blue, green, magenta, cyan :: String -> String
+red        = xmobarColor "#E06C75" formatbg
+blue       = xmobarColor "#61AFEF" formatbg 
+green      = xmobarColor "#98C379" formatbg 
+magenta    = xmobarColor "#C678DD" formatbg
+cyan       = xmobarColor "#56B6C2" formatbg 
+
 main :: IO ()
 main = xmobar =<< myConfig
-
-myHomeDir :: String
-myHomeDir = unsafeDupablePerformIO (getEnv "HOME") 
 
 myConfig :: IO Config
 myConfig = do 
@@ -81,16 +94,3 @@ baseConfig = defaultConfig
     , sepChar  = "%"
     , alignSep = "}{"
     }
-
-formatbg, foreground, borderc, background :: String
-formatbg   = "#31353F" <> ":5" {- Lighter Grey -}
-foreground = "#ABB2BF"         {- White -}
-background = "#282C34"         {- Grey -}
-borderc    = "#544862"         {- Dark Purple -}
-
-red, blue, green, magenta, cyan :: String -> String
-red     = xmobarColor "#E06C75" formatbg
-blue    = xmobarColor "#61AFEF" formatbg 
-green   = xmobarColor "#98C379" formatbg 
-magenta = xmobarColor "#C678DD" formatbg
-cyan    = xmobarColor "#56B6C2" formatbg 
