@@ -1,3 +1,9 @@
+#
+# Ignore this file, it's a git configuration which prevents
+# me from commiting and pushing useless binaries, or directories
+# that otherwise would build used space in this repository. 
+#
+
 # Haskell
 dist
 dist-*
