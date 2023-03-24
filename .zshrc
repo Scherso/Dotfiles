@@ -18,7 +18,7 @@ source "${ZSH}/oh-my-zsh.sh"
 source "${HOME}/.aliases"
 
 # Path variables 
-# Ensures binaries can be executed from '$HOME/.local/bin' and '$HOME/.spicetify'
+# Ensures binaries can be executed from '$HOME/.local/bin' and '$HOME/.spicetify'.
 [[ -d "${HOME}/.local/bin/" ]] && export PATH="${PATH}:${HOME}/.local/bin/"
 [[ -d "${HOME}/.spicetify"  ]] && export PATH="${PATH}:${HOME}/.spicetify/"
 # Source configurations
