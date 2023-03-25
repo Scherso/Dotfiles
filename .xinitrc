@@ -1,11 +1,12 @@
-#!/bin/sh
-
-#
+#!/bin/sh 
+# 
 # ~/.xinitrc
 #
-# Executed by startx or sx sh $HOME/.xinitrc preferably  
+# Executed by startx preferably  
 #
 
-gentoo-pipewire-launcher & 
+export MOZ_X11_EGL=1
+export MOZ_ENABLE_WAYLAND=0
+export XDG_SESSION_TYPE=x11
 
-dbus-launch --sh-syntax --exit-with-session xmonad > "${HOME}/.config/xmonad/log.txt"
+exec dbus-launch --exit-with-session xmonad > "${HOME}/.config/xmonad/log.txt""
