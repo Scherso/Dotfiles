@@ -1,4 +1,4 @@
-<img 
+<img
     align="right" width="200px"
     src="https://wiki.gentoo.org/images/b/b8/Larry-nefarius-v2.svg"
 />
@@ -25,11 +25,11 @@
     Larry :two_hearts:
 </p>
 
-## Dependencies 
+## Dependencies
 
 <img
     align="right" width="30px"
-    src="http://www.archlinux.org/logos/archlinux-icon-crystal-64.svg" 
+    src="http://www.archlinux.org/logos/archlinux-icon-crystal-64.svg"
 />
 
 - **Arch Linux**
@@ -75,9 +75,11 @@ emerge -a \
 
 <br />
 
-> See directories in [`.config`](https://github.com/Scherso/Dotfiles/tree/main/.config) for documentation on my configurations. 
+> See directories in [`.config`](https://github.com/Scherso/Dotfiles/tree/main/.config) for documentation on my
+> configurations.
 
 [arch]:      https://archlinux.org
+
 [gentoo]:    https://gentoo.org
 
 [xgwiki]:    https://wiki.gentoo.org/wiki/Xorg/Guide#make.conf_configuration

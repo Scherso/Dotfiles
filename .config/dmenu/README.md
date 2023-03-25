@@ -1,8 +1,8 @@
-### Installing and configuring [dmenu][dmenu] with this repository's configurations. 
+### Installing and configuring [dmenu][dmenu] with this repository's configurations.
 
-<img 
-     align="right" width="30px" 
-     src="https://suckless.org/logo.svg" 
+<img
+    align="right" width="30px"
+    src="https://suckless.org/logo.svg"
 />
 
 1. **Cloning this repository to `"${HOME}/.sources/"`**
@@ -19,7 +19,7 @@
 mv "${HOME}/.sources/Dotfiles/.config/dmenu/" "${HOME}/.config/"
 ```
 
-3. Change your working directory to `"${HOME}/.config/dmenu/"`, and subsequently compiling. 
+3. Change your working directory to `"${HOME}/.config/dmenu/"`, and subsequently compiling.
 
 - Changing your working directory.
 

@@ -1,8 +1,8 @@
 ### Installing and configuring [NeoVim][neovim].
 
 <img
-     align="right" width="30px"
-     src="https://user-images.githubusercontent.com/90007553/189978733-fa2ec9bb-ee8f-4611-8d7d-5ee309f703c5.png"
+    align="right" width="30px"
+    src="https://user-images.githubusercontent.com/90007553/189978733-fa2ec9bb-ee8f-4611-8d7d-5ee309f703c5.png"
 />
 
 1. **Install NeoVim.**
@@ -13,7 +13,7 @@
 emerge -a app-editors/neovim
 ```
 
-- Arch 
+- Arch
 
 ```bash
 pacman -S app-editors/neovim
@@ -62,5 +62,7 @@ nvim
 ```
 
 [rustup]:    https://rustup.rs
+
 [picom]:     https://github.com/yshui/picom
+
 [neovim]:    https://neovim.io

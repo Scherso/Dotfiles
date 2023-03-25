@@ -1,7 +1,7 @@
 name:     xmonad-scherso
-version:  0.1.0 
-synopsis: My XMonad configuration. 
-license:  DBAD 
+version:  0.1.0
+synopsis: My XMonad configuration.
+license:  DBAD
 author:   Scherso
 homepage: https://github.com/Scherso/Dotfiles
 
@@ -12,7 +12,7 @@ dependencies:
     - xmonad-contrib >= 0.16
 
 source-dirs: src
-  
+
 executables:
     xmonad:
         main: xmonad.hs
@@ -20,8 +20,8 @@ executables:
             - xmonad
             - containers
             - X11 >= 1.10
-  xmobar:
-      main: xmobar.hs
-      dependencies:
-          - xmobar
-      ghc-options: -rtsopts -threaded -with-rtsopts=-N
+    xmobar:
+        main: xmobar.hs
+        dependencies:
+            - xmobar
+        ghc-options: -rtsopts -threaded -with-rtsopts=-N

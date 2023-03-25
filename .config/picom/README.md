@@ -1,4 +1,3 @@
-
 ### Installing and configuring [Picom][picom].
 
 1. **Install Picom**
@@ -9,7 +8,7 @@
 emerge -a x11-misc/picom
 ```
 
-- Arch 
+- Arch
 
 ```bash
 pacman -S picom
