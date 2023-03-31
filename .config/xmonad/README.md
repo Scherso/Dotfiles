@@ -10,13 +10,13 @@
 - Bash
 
 ```bash
-echo 'PATH="${HOME}/.local/bin/:${PATH}"' >> "${HOME}/.bashrc"
+echo 'PATH="${PATH}:${HOME}/.local/bin/"' >> "${HOME}/.bashrc""
 ```
 
 - Z-Shell
 
 ```bash
-echo 'PATH="${HOME}/.local/bin/:${PATH}"' >> "${HOME}/.zshrc"
+echo 'PATH="${PATH}:${HOME}/.local/bin/"' >> "${HOME}/.zshrc"
 ```
 
 2. **Installing [Stack][stack].**
