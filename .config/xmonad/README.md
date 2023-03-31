@@ -10,7 +10,7 @@
 - Bash
 
 ```bash
-echo 'PATH="${PATH}:${HOME}/.local/bin/"' >> "${HOME}/.bashrc""
+echo 'PATH="${PATH}:${HOME}/.local/bin/"' >> "${HOME}/.bashrc"
 ```
 
 - Z-Shell
