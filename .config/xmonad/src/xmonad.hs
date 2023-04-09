@@ -151,7 +151,7 @@ myStartupHook = do
         [ "xrandr --output DisplayPort-1 --left-of DisplayPort-0 --output DisplayPort-0 --primary"
         , "picom &"
         , "dunst -conf " ++ myHomeDir ++ "/.config/dunst/dunstrc"
---      , "gentoo-pipewire-launcher &"
+        , "gentoo-pipewire-launcher &"
         , myHomeDir ++ "/.fehbg"
         ]
     setDefaultCursor xC_left_ptr
@@ -185,6 +185,7 @@ steam   = ClassApp "Steam"                 "Steam"
 obs     = ClassApp "obs"                   "obs"
 wine    = TitleApp "Wine System Tray"      "Wine System Tray"
 news    = TitleApp "Steam - News"          "Steam - News"
+discord = TitleApp "Discord Updater"       "Discord Updater"
 
 myManageHook :: XMonad.Query (Data.Monoid.Endo WindowSet)
 myManageHook = manageRules
@@ -216,8 +217,8 @@ myManageHook = manageRules
         {- Managing rules for applications. -}
         manageRules = composeOne
             [ transience
-            , isDialog     -?> doCenterFloat
-            , isFullscreen -?> (doF W.focusDown <+> doFullFloat) 
+            , isDialog          -?> doCenterFloat
+            , isFullscreen      -?> (doF W.focusDown <+> doFullFloat) 
             , match [ gimp
                     , gimp2
                     , about
@@ -227,14 +228,15 @@ myManageHook = manageRules
                     , save
                     , signin
                     , toolkit
-                    ] -?> doFloat
+                    ]           -?> doFloat
             , match [ steam
                     , multimc
                     , library
-                    ] -?> doCenterFloat
+                    ]           -?> doCenterFloat
             , match [ wine 
                     , news
-                    ] -?> doHide
+                    ]           -?> doHide
+            , match [ discord ] -?> hasBorder False
             , anyOf [ isFileChooserDialog
                     , isDialog
                     , isPopup
@@ -248,8 +250,8 @@ myManageHook = manageRules
             , isRole    ^? "About"      <||> isRole   ^? "about"                      --> doFloat
             , "_NET_WM_WINDOW_TYPE" `isInProperty` "_KDE_NET_WM_WINDOW_TYPE_OVERRIDE" --> doIgnore <> doRaise
             {- Steam Game Fixes -} 
---          , className =? "Steam"      <&&> title =? "hover"                         --> (doF W.focusDown <+> doFloat <+> hasBorder False)
---          , className =? "steam_app_1551360" <&&> title /=? "Forza Horizon 5"       --> doHide -- Prevents black screen when fullscreening.
+            , className =? "Steam"      <&&> title =? "hover"                         --> (doF W.focusDown <+> doFloat <+> hasBorder False)
+            , className =? "steam_app_1551360" <&&> title /=? "Forza Horizon 5"       --> doHide -- Prevents black screen when fullscreening.
             {- Jetbrains class helpers -}
             , className ^? "jetbrains-" <&&> title ^? "Welcome to "                   --> doCenterFloat
             , className ^? "jetbrains-" <&&> title =? "splash"                        --> (doFloat <+> hasBorder False) 
