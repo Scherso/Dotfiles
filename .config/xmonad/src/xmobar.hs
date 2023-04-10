@@ -4,21 +4,21 @@ import System.IO.Unsafe          (unsafeDupablePerformIO)
 import XMonad.Hooks.StatusBar.PP (wrap, xmobarColor, xmobarFont)
 import Xmobar
 
-myHomeDir :: String
-myHomeDir  = unsafeDupablePerformIO (getEnv "HOME") 
-
 formatbg, foreground, borderc, background :: String
-formatbg   = "#31353F" <> ":5" {- Lighter Grey -}
+formatbg   = "#31353F"         {- Lighter Grey -}
 foreground = "#ABB2BF"         {- White -}
 background = "#282C34"         {- Grey -}
 borderc    = "#544862"         {- Dark Purple -}
 
 red, blue, green, magenta, cyan :: String -> String
-red        = xmobarColor "#E06C75" formatbg
-blue       = xmobarColor "#61AFEF" formatbg 
-green      = xmobarColor "#98C379" formatbg 
-magenta    = xmobarColor "#C678DD" formatbg
-cyan       = xmobarColor "#56B6C2" formatbg 
+red        = xmobarColor "#E06C75" (formatbg <> ":5")
+blue       = xmobarColor "#61AFEF" (formatbg <> ":5") 
+green      = xmobarColor "#98C379" (formatbg <> ":5") 
+magenta    = xmobarColor "#C678DD" (formatbg <> ":5")
+cyan       = xmobarColor "#56B6C2" (formatbg <> ":5")
+
+myHomeDir :: String
+myHomeDir = unsafeDupablePerformIO (getEnv "HOME") 
 
 main :: IO ()
 main = xmobar =<< myConfig
@@ -42,8 +42,9 @@ myConfig = do
     where
         inWrapper :: String -> String
         inWrapper = wrap 
-            (xmobarColor "#31353F" "#282C34:7" (xmobarFont 2 "\xe0b6"))
-            (xmobarColor "#31353F" "#282C34:7" (xmobarFont 2 "\xe0b4") <> " ")
+            (xmobarColor formatbg (background <> ":7") (xmobarFont 2 "\xe0b6"))
+            (xmobarColor formatbg (background <> ":7") (xmobarFont 2 "\xe0b4") <> " ")
+
 
 myCommands :: [Runnable]
 myCommands = 
@@ -63,12 +64,12 @@ myCommands =
 
 baseConfig :: Config
 baseConfig = defaultConfig
-    { font            =   "xft:SF Mono Nerd Font:pixelsize=11:antialias=true:hinting=true" 
-    , additionalFonts = [ "xft:SF Mono Nerd Font:pixelsize=10:antialias=true:hinting=true"
-                        , "xft:SF Mono Nerd Font:size=13:antialias=true:hinting=true"
-                        , "xft:SF Mono Nerd Font:size=11:antialias=true:hinting=true"
-                        , "xft:SF Mono Nerd Font:size=11:antialias=true:hinting=true"
-                        , "xft:SF Mono Nerd Font:pixelsize=10:antialias=true:hinting=true"
+    { font            =   "xft:SF Mono:size=11:antialias=true:hinting=true" 
+    , additionalFonts = [ "xft:SF Mono:size=11:antialias=true:hinting=true"
+                        , "xft:SF Mono:size=13:antialias=true:hinting=true"
+                        , "xft:SF Mono:size=11:antialias=true:hinting=true"
+                        , "xft:SF Mono:size=11:antialias=true:hinting=true"
+                        , "xft:SF Mono:size=11:antialias=true:hinting=true"
                         ]     --      --    
     , textOffsets      = [20, 22, 22, 21, 22]
     , bgColor          = background 
