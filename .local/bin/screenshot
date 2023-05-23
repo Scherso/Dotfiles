@@ -26,9 +26,9 @@ case "$1" in
         ;;
     *)
         tee -a <<-END
-            Usage:
-                -s, --selection,   selects a region and copies the region to the clipboard.
-                -f, --fullscreen,  copies the whole screen to the clipboard.
-            END
+        Usage:
+            -s, --selection,   selects a region and copies the region to the clipboard.
+            -f, --fullscreen,  copies the whole screen to the clipboard.
+        END
         ;;
 esac
