@@ -14,21 +14,21 @@ declare CLIPBOARD=${CLIPBOARD:-"xclip -t image/png -selection clipboard"}
 
 # -s, or --selection, selects a region with `slop` and copies the region to the clipboard.
 # -f, or --fullscreen, copies the whole screen to the clipboard.
-case "${1}" in 
-    -s | --selection) 
-        GRAB="$(slop -c 0.10,0.10,0.10,0.10 -l -f "-i %i -g %g")"
-	shotgun "${GRAB}" - | 
-	    "${CLIPBOARD}"
-	;;
+case "$1" in
+    -s | --selection)
+        GRAB=$(slop -c 0.5,0.5,0.5,0.3 -l -f "-i %i -g %g")
+        shotgun $GRAB - | 
+            $CLIPBOARD
+        ;;
     -f | --fullscreen)
-        shotgun - "${CLIPBOARD}" 
-	;;
+        shotgun -s - |
+            $CLIPBOARD
+        ;;
     *)
-        tee -a <<-EOL
-	
-	USAGE:
-	  -s, --selection,  Selects a region and copies the region to the clipboard.
-	  -f, --fullscreen, Copies the whole screen to the clipboard.
-	EOL
+        tee -a <<-END
+            Usage:
+                -s, --selection,   selects a region and copies the region to the clipboard.
+                -f, --fullscreen,  copies the whole screen to the clipboard.
+            END
         ;;
 esac
