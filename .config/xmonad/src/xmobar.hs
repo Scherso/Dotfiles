@@ -31,7 +31,7 @@ myConfig = do
             <> (inWrapper (xmobarFont 4 "%UnsafeXMonadLog%"))
             <> "}{"
             <> concatMap inWrapper
-                [ red     (xmobarFont 4 "%wlp5s0%")     {- Received and sent analytics -}
+                [ red     (xmobarFont 4 "%wlan0%")     {- Received and sent analytics -}
                 , cyan    (xmobarFont 4 "%k10temp%")    {- CPU temperature             -} 
                 , magenta (xmobarFont 4 "%gpu%")        {- GPU temperature             -}
                 , green   (xmobarFont 4 "%vol%")        {- Volume percentage           -}
@@ -49,7 +49,7 @@ myConfig = do
 myCommands :: [Runnable]
 myCommands = 
     [ Run UnsafeXMonadLog
-    , Run $ Network "wlp5s0" 
+    , Run $ Network "wlan0" 
     [ "-t"
     , "\xf433 <rx> kb \xf431 <tx> kb"
     ] 10

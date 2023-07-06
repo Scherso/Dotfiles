@@ -89,6 +89,12 @@ myAdditionalKeys = base
             | otherwise -> W.float w fullscreen s 
                 where
                     fullscreen = W.RationalRect 0 0 1 1
+        {- Dmenu stuff -}
+        dmenuArgs :: X String
+        dmenuArgs = (("-m " ++) . show) `fmap` curscreen where
+            curscreen = (fromIntegral . W.screen . W.current) `fmap` gets windowset :: X Int
+        dmenuCmd :: String -> X ()
+        dmenuCmd cmd = dmenuArgs >>= \args -> spawn $ "dmenu_run " ++ args ++ " " ++ cmd
         {- Screenshots -}
         screenShotSelection  = "screenshot -s" :: String 
         screenShotFullscreen = "screenshot -f" :: String
@@ -122,7 +128,7 @@ myAdditionalKeys = base
             , ("M-f",          spawn myBrowser)
             , ("M-s",          spawn screenShotSelection)
             , ("<Print>",      spawn screenShotFullscreen)
-            , ("M-p",          spawn "dmenu_run")
+            , ("M-p",          dmenuCmd "")
             ]
         {- Multimedia keybinds. -}
         multimedia =
@@ -132,7 +138,7 @@ myAdditionalKeys = base
             , ("<XF86AudioMute>",        spawn "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle")
             , ("<XF86AudioLowerVolume>", spawn "wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%-")
             , ("<XF86AudioRaiseVolume>", spawn "wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%+")
-            , ("<Pause>",                spawn "amixer sset Capture toggle")
+            , ("<Pause>",                spawn "playerctl play-pause")
             ]
 
 myMouseBindings :: XConfig l -> M.Map (KeyMask, Button) (Window -> X ())
@@ -181,7 +187,8 @@ file    = TitleApp "File Upload"           "File Upload"
 save    = TitleApp "Save"                  "Save"
 library = TitleApp "Library"               "Library"
 message = ClassApp "Xmessage"              "Xmessage"
-steam   = ClassApp "Steam"                 "Steam"
+steam   = ClassApp "steam"                 "steam"
+friends = TitleApp "Friends List"          "Friends List"
 obs     = ClassApp "obs"                   "obs"
 wine    = TitleApp "Wine System Tray"      "Wine System Tray"
 news    = TitleApp "Steam - News"          "Steam - News"
@@ -236,7 +243,9 @@ myManageHook = manageRules
             , match [ wine 
                     , news
                     ]           -?> doHide
-            , match [ discord ] -?> hasBorder False
+            , match [ discord 
+                    , friends
+                    ]           -?> hasBorder False
             , anyOf [ isFileChooserDialog
                     , isDialog
                     , isPopup
@@ -263,6 +272,7 @@ myManageHook = manageRules
             , className =? "java"       <&&> title =? "Attach"                        --> doCenterFloat
             , className =? "java"       <&&> title =? "Create new JVM"                --> doCenterFloat
             , className ~? "enigma"     <&&> "_NET_WM_WINDOW_TYPE" `isInProperty` "_NET_WM_WINDOW_TYPE_DIALOG" --> hasBorder False
+            , className =? "Spotify"                                                  --> hasBorder True
             ]
 
 {- May be useful one day 
@@ -293,7 +303,7 @@ myXmobarPP = clickablePP $ def
     , ppHidden           = xmobarColor "#ABB2BF" "#31353F:5"
     , ppHiddenNoWindows  = xmobarColor "#6B7089" "#31353F:5"
     , ppUrgent           = xmobarColor "#F7768E" "#31353F:5" . wrap "!" "!"
-    , ppTitle            = xmobarColor "#98C379" "#31353F:5" . shorten 49 
+    , ppTitle            = xmobarColor "#98C379" "#31353F:5" {- . shorten 49 -} 
     , ppSep              = wrapSep " "
     , ppTitleSanitize    = xmobarStrip
     , ppWsSep            = xmobarColor "" "#31353F:5" "   "
