@@ -160,6 +160,13 @@ myStartupHook = do
         , "gentoo-pipewire-launcher &"
         , myHomeDir ++ "/.fehbg"
         ]
+    screenWorkspace 1 >>= flip whenJust (windows . W.view)
+    {- Forcing the second screen to be our second workspace, 
+     - it is labeled as 1 because our map starts at 0 -}
+    windows $ W.greedyView (myWorkspaces !! 1)
+    {- Re-focusing our original screen, 0. 
+     - This ensures that we will always have our 1st workspace on our primary monitor. -}
+    screenWorkspace 0 >>= flip whenJust (windows . W.view)
     setDefaultCursor xC_left_ptr
     setWMName "XMonad LG3D"
 
