@@ -177,22 +177,24 @@ data App = ClassApp AppClassName AppCommand
     | NameApp AppName AppCommand
     deriving Show
 
-gimp    = ClassApp "Gimp"                  "gimp"
-gimp2   = ClassApp "Gimp-2.99"             "gimp-2.99"
-multimc = ClassApp "MultiMC"               "MultiMC"
-about   = TitleApp "About Mozilla Firefox" "About Mozilla Firefox"
-signin  = TitleApp "Sign In"               "Sign In"
-toolkit = TitleApp "Toolkit"               "Toolkit"
-file    = TitleApp "File Upload"           "File Upload"
-save    = TitleApp "Save"                  "Save"
-library = TitleApp "Library"               "Library"
-message = ClassApp "Xmessage"              "Xmessage"
-steam   = ClassApp "steam"                 "steam"
-friends = TitleApp "Friends List"          "Friends List"
-obs     = ClassApp "obs"                   "obs"
-wine    = TitleApp "Wine System Tray"      "Wine System Tray"
-news    = TitleApp "Steam - News"          "Steam - News"
-discord = TitleApp "Discord Updater"       "Discord Updater"
+gimp       = ClassApp "Gimp"                  "gimp"
+gimp2      = ClassApp "Gimp-2.99"             "gimp-2.99"
+multimc    = ClassApp "MultiMC"               "MultiMC"
+about      = TitleApp "About Mozilla Firefox" "About Mozilla Firefox"
+signin     = TitleApp "Sign In"               "Sign In"
+spotify    = ClassApp "Spotify"               "spotify"
+toolkit    = TitleApp "Toolkit"               "Toolkit"
+file       = TitleApp "File Upload"           "File Upload"
+save       = TitleApp "Save"                  "Save"
+library    = TitleApp "Library"               "Library"
+message    = ClassApp "Xmessage"              "Xmessage"
+steam      = ClassApp "steam"                 "steam"
+friends    = TitleApp "Friends List"          "Friends List"
+obs        = ClassApp "obs"                   "obs"
+wine       = TitleApp "Wine System Tray"      "Wine System Tray"
+news       = TitleApp "Steam - News"          "Steam - News"
+discUpdate = TitleApp "Discord Updater"       "Discord Updater"
+discord    = ClassApp "discord"               "discord"
 
 myManageHook :: XMonad.Query (Data.Monoid.Endo WindowSet)
 myManageHook = manageRules
@@ -224,8 +226,8 @@ myManageHook = manageRules
         {- Managing rules for applications. -}
         manageRules = composeOne
             [ transience
-            , isDialog          -?> doCenterFloat
-            , isFullscreen      -?> (doF W.focusDown <+> doFullFloat) 
+            , isDialog             -?> doCenterFloat
+            , isFullscreen         -?> (doF W.focusDown <+> doFullFloat) 
             , match [ gimp
                     , gimp2
                     , about
@@ -235,23 +237,24 @@ myManageHook = manageRules
                     , save
                     , signin
                     , toolkit
-                    ]           -?> doFloat
+                    ]              -?> doFloat
             , match [ steam
                     , multimc
                     , library
-                    ]           -?> doCenterFloat
+                    ]              -?> doCenterFloat
             , match [ wine 
                     , news
-                    ]           -?> doHide
+                    ]              -?> doHide
+            , match [ discUpdate ] -?> hasBorder False
             , match [ discord 
-                    , friends
-                    ]           -?> hasBorder False
+                    , spotify
+                    ]              -?> doShift (myWorkspaces !! 1) -- Map starts at 0, 1 is 2nd workspace. 
             , anyOf [ isFileChooserDialog
                     , isDialog
                     , isPopup
                     , isSplash
                     , isSysInfoDialog
-                    ] -?> doCenterFloat
+                    ]              -?> doCenterFloat
             ] <> composeAll
             [ manageDocks
             , resource  =? "desktop_window"                                           --> doIgnore
