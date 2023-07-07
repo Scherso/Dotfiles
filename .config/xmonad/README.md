@@ -183,7 +183,7 @@ startx
   <br />
 
 | Mousebinding         | Accociated Function                                       |
-----------------------| :---                   | :---                                                      |
+|----------------------|:---                                                       |
 | `MOD` + Left Click   | Float and move window by dragging                         |
 | `MOD` + Middle Click | Move window to the top of the stack                       |
 | `MOD` + Right Click  | Float and resize window by dragging                       |
