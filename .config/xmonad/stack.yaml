@@ -10,7 +10,7 @@ extra-deps:
     commit: 1aac6611d82065c9198e5584176058a9483fcbb0					
   - github: xmonad/xmonad-contrib
     commit: 4d0f3ee9444bb998e0831fc381953466b6d3ecdf					
-  - xmobar-0.46
+  - xmobar-0.44.2
 
 flags:
   xmobar:
