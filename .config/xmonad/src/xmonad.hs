@@ -248,15 +248,15 @@ myManageHook = manageRules
             , match [ steam
                     , multimc
                     , library
-                    ]     -?> doCenterFloat
+                    ]      -?> doCenterFloat
             , match [ wine 
                     , news
-                    ]     -?> doHide
+                    ]      -?> doHide
             , match [ discUpdate 
-                    ]     -?> hasBorder False
+                    ]      -?> hasBorder False
             , match [ discord 
                     , spotify
-                    ]     -?> doShift (myWorkspaces !! 1) -- Map starts at 0, 1 is 2nd workspace. 
+                    ]      -?> doShift (myWorkspaces !! 1) -- Map starts at 0, 1 is 2nd workspace. 
             , anyOf [ isFileChooserDialog
                     , isDialog
                     , isPopup
