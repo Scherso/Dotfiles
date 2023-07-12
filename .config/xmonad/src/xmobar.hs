@@ -31,7 +31,7 @@ myConfig = do
             <> (inWrapper (xmobarFont 4 "%UnsafeXMonadLog%"))
             <> "}{"
             <> concatMap inWrapper
-                [ red     (xmobarFont 4 "%wlan0%")      {- Received and sent analytics -}
+                [ red     (xmobarFont 4 "%enp6s0%")     {- Received and sent analytics -}
                 , cyan    (xmobarFont 4 "%k10temp%")    {- CPU temperature             -} 
                 , magenta (xmobarFont 4 "%gpu%")        {- GPU temperature             -}
                 , green   (xmobarFont 4 "%vol%")        {- Volume percentage           -}
@@ -49,7 +49,7 @@ myConfig = do
 myCommands :: [Runnable]
 myCommands = 
     [ Run UnsafeXMonadLog
-    , Run $ Network "wlan0" 
+    , Run $ Network "enp6s0" 
     [ "-t"
     , "\xf433 <rx> kb \xf431 <tx> kb"
     ] 10
@@ -72,6 +72,7 @@ baseConfig = defaultConfig
                         , "xft:SF Mono:size=11:antialias=true:hinting=true"
                         ]     --      --    
     , textOffsets      = [20, 22, 22, 21, 22]
+--  , textOffsets      = [0, 0, 0, 0, 0]
     , bgColor          = background 
     , fgColor          = foreground
     , borderColor      = borderc

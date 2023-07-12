@@ -233,8 +233,8 @@ myManageHook = manageRules
         {- Managing rules for applications. -}
         manageRules = composeOne
             [ transience
-            , isDialog             -?> doCenterFloat
-            , isFullscreen         -?> (doF W.focusDown <+> doFullFloat) 
+            , isDialog     -?> doCenterFloat
+            , isFullscreen -?> (doF W.focusDown <+> doFullFloat) 
             , match [ gimp
                     , gimp2
                     , about
@@ -244,45 +244,32 @@ myManageHook = manageRules
                     , save
                     , signin
                     , toolkit
-                    ]              -?> doFloat
+                    ]      -?> doFloat
             , match [ steam
                     , multimc
                     , library
-                    ]              -?> doCenterFloat
+                    ]     -?> doCenterFloat
             , match [ wine 
                     , news
-                    ]              -?> doHide
-            , match [ discUpdate ] -?> hasBorder False
+                    ]     -?> doHide
+            , match [ discUpdate 
+                    ]     -?> hasBorder False
             , match [ discord 
                     , spotify
-                    ]              -?> doShift (myWorkspaces !! 1) -- Map starts at 0, 1 is 2nd workspace. 
+                    ]     -?> doShift (myWorkspaces !! 1) -- Map starts at 0, 1 is 2nd workspace. 
             , anyOf [ isFileChooserDialog
                     , isDialog
                     , isPopup
                     , isSplash
                     , isSysInfoDialog
-                    ]              -?> doCenterFloat
+                    ]     -?> doCenterFloat
             ] <> composeAll
             [ manageDocks
-            , resource  =? "desktop_window"                                           --> doIgnore
-            , resource  =? "kdesktop"                                                 --> doIgnore
-            , isRole    ^? "About"      <||> isRole   ^? "about"                      --> doFloat
-            , "_NET_WM_WINDOW_TYPE" `isInProperty` "_KDE_NET_WM_WINDOW_TYPE_OVERRIDE" --> doIgnore <> doRaise
-            {- Steam Game Fixes -} 
-            , className =? "Steam"      <&&> title =? "hover"                         --> (doF W.focusDown <+> doFloat <+> hasBorder False)
-            , className =? "steam_app_1551360" <&&> title /=? "Forza Horizon 5"       --> doHide -- Prevents black screen when fullscreening.
-            {- Jetbrains class helpers -}
-            , className ^? "jetbrains-" <&&> title ^? "Welcome to "                   --> doCenterFloat
-            , className ^? "jetbrains-" <&&> title =? "splash"                        --> (doFloat <+> hasBorder False) 
-            {- Java application helpers -}
-            , className =? "java"       <&&> title ^? "Search"                        --> doCenterFloat
-            , className =? "java"       <&&> title =? "Config"                        --> doCenterFloat
-            , className =? "java"       <&&> title =? "History"                       --> doCenterFloat
-            , className =? "java"       <&&> title =? "Contact"                       --> doCenterFloat
-            , className =? "java"       <&&> title =? "Attach"                        --> doCenterFloat
-            , className =? "java"       <&&> title =? "Create new JVM"                --> doCenterFloat
-            , className ~? "enigma"     <&&> "_NET_WM_WINDOW_TYPE" `isInProperty` "_NET_WM_WINDOW_TYPE_DIALOG" --> hasBorder False
-            , className =? "Spotify"                                                  --> hasBorder True
+            , className ^? "jetbrains-" <&&> title  ^? "Welcome to "            --> doCenterFloat
+            , className ^? "jetbrains-" <&&> title  ^? "splash"                 --> (doFloat <+> hasBorder False)
+            , className ^? "jetbrains-" <&&> title  ^? "win"                    --> hasBorder False
+            , isRole    ^? "About"      <||> isRole ^? "about"                  --> doFloat
+            , className =? "steam_app_1551360" <&&> title /=? "Forza Horizon 5" --> doHide -- Prevents black screen when fullscreening.
             ]
 
 {- May be useful one day 
