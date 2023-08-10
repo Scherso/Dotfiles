@@ -40,23 +40,35 @@ function main() {
 
     if [[ "${LATEST_XMONAD}" != "${CURRENT_XMONAD}" ]] ; then
         sed -i "s/${CURRENT_XMONAD}/${LATEST_XMONAD}/" "${STACK}"
-        format "Updated XMonad to commit ${RESET}${BOLD}${LATEST_XMONAD}${RESET}${YELLOW}..."
+        format_success "Updated XMonad to commit ${RESET}${BOLD}${LATEST_XMONAD}${RESET}${YELLOW}..."
+    else
+        format "XMonad is already up to date."
     fi
 
     if [[ "${LATEST_CONTRIB}" != "${CURRENT_CONTRIB}" ]] ; then
         sed -i "s/${CURRENT_CONTRIB}/${LATEST_CONTRIB}/" "${STACK}"
-        format "Updated XMonad Contrib to commit ${RESET}${BOLD}${LATEST_CONTRIB}${RESET}${YELLOW}..."
+        format_success "Updated XMonad Contrib to commit ${RESET}${BOLD}${LATEST_CONTRIB}${RESET}${YELLOW}..."
+    else
+        format "XMonad Contrib is already up to date."
     fi
 
     if [[ "${LATEST_X11}" != "${CURRENT_X11}" ]] ; then
         sed -i "s/${CURRENT_X11}/${LATEST_X11}/" "${STACK}"
-        format "Updated X11 to commit ${RESET}${BOLD}${LATEST_X11}${RESET}${YELLOW}..."
+        format_success "Updated X11 to commit ${RESET}${BOLD}${LATEST_X11}${RESET}${YELLOW}..."
+    else
+        format "X11 is already up to date."
     fi
+
+    format_success "Finished updating stack.yaml. Run ${RESET}${BOLD}stack install${RESET}${YELLOW} to apply these latest commits to your build."
+}
+
+format_success() {
+    # Outputs as a green "* " and follows with a yellow body.
+    printf "${BOLD}${GREEN} * SUCCESS ${RESET}${YELLOW}%s\n${RESET}" "${*}" 2>&1
 }
 
 format() {
-    # Outputs as a green "* " and follows with a yellow body.
-    printf "${BOLD}${GREEN} * SUCCESS ${RESET}${YELLOW}%s\n${RESET}" "${*}" 2>&1
+    printf "${BOLD} * ${RESET}${YELLOW}%s\n${RESET}" "${*}" 2>&1
 }
 
 main "${@}"
