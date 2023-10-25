@@ -184,24 +184,24 @@ data App = ClassApp AppClassName AppCommand
     | NameApp AppName AppCommand
     deriving Show
 
-gimp       = ClassApp "Gimp"                  "gimp"
-gimp2      = ClassApp "Gimp-2.99"             "gimp-2.99"
-multimc    = ClassApp "MultiMC"               "MultiMC"
-about      = TitleApp "About Mozilla Firefox" "About Mozilla Firefox"
-signin     = TitleApp "Sign In"               "Sign In"
-spotify    = ClassApp "Spotify"               "spotify"
-toolkit    = TitleApp "Toolkit"               "Toolkit"
-file       = TitleApp "File Upload"           "File Upload"
-save       = TitleApp "Save"                  "Save"
-library    = TitleApp "Library"               "Library"
-message    = ClassApp "Xmessage"              "Xmessage"
-steam      = ClassApp "steam"                 "steam"
-friends    = TitleApp "Friends List"          "Friends List"
-obs        = ClassApp "obs"                   "obs"
-wine       = TitleApp "Wine System Tray"      "Wine System Tray"
-news       = TitleApp "Steam - News"          "Steam - News"
-discUpdate = TitleApp "Discord Updater"       "Discord Updater"
-discord    = ClassApp "discord"               "discord"
+gimp          = ClassApp "Gimp"                  "gimp"
+gimp2         = ClassApp "Gimp-2.99"             "gimp-2.99"
+prismlauncher = ClassApp "PrismLauncher"         "prismlauncher"
+about         = TitleApp "About Mozilla Firefox" "About Mozilla Firefox"
+signin        = TitleApp "Sign In"               "Sign In"
+spotify       = ClassApp "Spotify"               "spotify"
+toolkit       = TitleApp "Toolkit"               "Toolkit"
+file          = TitleApp "File Upload"           "File Upload"
+save          = TitleApp "Save"                  "Save"
+library       = TitleApp "Library"               "Library"
+message       = ClassApp "Xmessage"              "Xmessage"
+steam         = ClassApp "steam"                 "steam"
+friends       = TitleApp "Friends List"          "Friends List"
+obs           = ClassApp "obs"                   "obs"
+wine          = TitleApp "Wine System Tray"      "Wine System Tray"
+news          = TitleApp "Steam - News"          "Steam - News"
+discUpdate    = TitleApp "Discord Updater"       "Discord Updater"
+discord       = ClassApp "discord"               "discord"
 
 myManageHook :: XMonad.Query (Data.Monoid.Endo WindowSet)
 myManageHook = manageRules
@@ -246,17 +246,17 @@ myManageHook = manageRules
                     , toolkit
                     ]      -?> doFloat
             , match [ steam
-                    , multimc
+                    , prismlauncher
                     , library
-                    ]      -?> doCenterFloat
+                    ]     -?> doCenterFloat
             , match [ wine 
                     , news
-                    ]      -?> doHide
+                    ]     -?> doHide
             , match [ discUpdate 
-                    ]      -?> hasBorder False
+                    ]     -?> hasBorder False
             , match [ discord 
                     , spotify
-                    ]      -?> doShift (myWorkspaces !! 1) -- Map starts at 0, 1 is 2nd workspace. 
+                    ]     -?> doShift (myWorkspaces !! 1) -- Map starts at 0, 1 is 2nd workspace. 
             , anyOf [ isFileChooserDialog
                     , isDialog
                     , isPopup
@@ -265,11 +265,9 @@ myManageHook = manageRules
                     ]     -?> doCenterFloat
             ] <> composeAll
             [ manageDocks
-            , className ^? "jetbrains-" <&&> title  ^? "Welcome to "            --> doCenterFloat
-            , className ^? "jetbrains-" <&&> title  ^? "splash"                 --> (doFloat <+> hasBorder False)
-            , className ^? "jetbrains-" <&&> title  ^? "win"                    --> hasBorder False
-            , isRole    ^? "About"      <||> isRole ^? "about"                  --> doFloat
-            , className =? "steam_app_1551360" <&&> title /=? "Forza Horizon 5" --> doHide -- Prevents black screen when fullscreening.
+            , className ^? "jetbrains-" <&&> title ^? "Welcome to " --> doCenterFloat
+            , className ^? "jetbrains-" <&&> title ^? "splash"      --> (doFloat <+> hasBorder False)
+            , className ^? "jetbrains-" <&&> title ^? "win"         --> hasBorder False
             ]
 
 {- May be useful one day 
