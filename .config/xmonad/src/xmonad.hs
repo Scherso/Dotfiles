@@ -33,30 +33,39 @@ import           XMonad.Util.SpawnOnce
 {- Windows key/Super key -}
 myModMask :: KeyMask
 myModMask = mod4Mask 
+
 {- Default Terminal -}
 myTerminal :: String
-myTerminal = "alacritty" 
+myTerminal = "alacritty"
+
 {- Default Browser -}
 myBrowser :: String
 myBrowser = "firefox" 
+
 {- Workspaces -}
 myWorkspaces :: [String]
 myWorkspaces = map show [1 .. 9]
+
 {- Border Width -}
 myBorderWidth :: Dimension
 myBorderWidth = 3 
+
 {- Formal Unfocused Color -}
 myNormColor :: String
 myNormColor = "#544862" 
+
 {- Focused Color -}
 myFocusColor :: String
 myFocusColor = "#61AFEF" 
+
 {- Home Directory -}
 myHomeDir :: String
 myHomeDir = unsafeDupablePerformIO (getEnv "HOME") 
+
 {- XMobar proprerty variable declaration -}
 xmobar :: StatusBarConfig
 xmobar = statusBarProp myXmobar myXmobarPP 
+
 {- My XMobar directory -}
 myXmobar :: String
 myXmobar = ("xmobar " ++ myHomeDir ++ "/.config/xmonad/src/xmobar.hs")
@@ -82,7 +91,7 @@ myAdditionalKeys = base
         forceKillWindow :: Window -> X ()
         forceKillWindow w = withDisplay $ \d ->
             io $ void $ killClient d w
-        {- Making a window have a full float over a workspace. -}
+        {- Float and resize a window to fill a workspace. -}
         toggleFull :: Window -> X () 
         toggleFull w = windows $ \s -> if
             | M.lookup w (W.floating s) == Just fullscreen -> W.sink w s
@@ -98,7 +107,6 @@ myAdditionalKeys = base
         {- Screenshots -}
         screenShotSelection  = "screenshot -s" :: String 
         screenShotFullscreen = "screenshot -f" :: String
-        {- XMonad base keybinds. -}
         base = 
             [ ("M-g",          withFocused toggleBorder)
             , ("M-S-c",        kill)
@@ -108,7 +116,6 @@ myAdditionalKeys = base
             , ("M-S-q",        io exitSuccess)
             , ("M-q",          spawn "xmonad --recompile ; killall xmobar ; xmonad --restart")
             ]
-        {- Window management keybinds. -}
         window = 
             [ ("M-<Tab>",      windows W.focusDown)
             , ("M-j",          windows W.focusDown)
@@ -122,7 +129,6 @@ myAdditionalKeys = base
             , ("M-t",          withFocused $ windows . W.sink)
             , ("M-S-f",        withFocused toggleFull)
             ]
-        {- Spawning applications. -}
         applications =
             [ ("M-S-<Return>", spawn myTerminal)
             , ("M-f",          spawn myBrowser)
@@ -130,7 +136,6 @@ myAdditionalKeys = base
             , ("<Print>",      spawn screenShotFullscreen)
             , ("M-p",          dmenuCmd "")
             ]
-        {- Multimedia keybinds. -}
         multimedia =
             [ ("<XF86AudioPlay>",        spawn "playerctl play-pause")
             , ("<XF86AudioPrev>",        spawn "playerctl previous")
@@ -165,7 +170,8 @@ myStartupHook = do
      - it is labeled as 1 because our map starts at 0 -}
     windows $ W.greedyView (myWorkspaces !! 1)
     {- Re-focusing our original screen, 0. 
-     - This ensures that we will always have our 1st workspace on our primary monitor. -}
+     - This ensures that we will always have our 1st 
+     - workspace on our primary monitor. -}
     screenWorkspace 0 >>= flip whenJust (windows . W.view)
     setDefaultCursor xC_left_ptr
     setWMName "XMonad LG3D"
