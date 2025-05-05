@@ -20,16 +20,18 @@ import           XMonad.Hooks.ManageHelpers
 import           XMonad.Hooks.SetWMName
 import           XMonad.Hooks.StatusBar
 import           XMonad.Hooks.StatusBar.PP
-import           XMonad.Layout.Fullscreen
 import           XMonad.Layout.NoBorders    
-import           XMonad.Layout.MultiToggle           (mkToggle, single, EOT(EOT), (??))
-import           XMonad.Layout.MultiToggle.Instances (StdTransformers(NBFULL, MIRROR, NOBORDERS))
 import           XMonad.Layout.Spacing
 import qualified XMonad.StackSet                     as W
 import           XMonad.Util.ClickableWorkspaces
 import           XMonad.Util.Cursor
 import           XMonad.Util.EZConfig                (additionalKeysP)
 import qualified XMonad.Util.Hacks                   as Hacks
+import           XMonad.Util.NamedScratchpad         (NamedScratchpad (NS),
+                                                      customFloating,
+						      namedScratchpadAction,
+						      namedScratchpadManageHook,
+						      scratchpadWorkspaceTag)
 import           XMonad.Util.SpawnOnce
 
 {- Windows key/Super key -}
@@ -87,6 +89,7 @@ myAdditionalKeys = base
     ++ window
     ++ applications
     ++ multimedia
+    ++ scratchpad
     where 
         {- Force killing a frozen window. -}
         forceKillWindow :: Window -> X ()
@@ -130,6 +133,9 @@ myAdditionalKeys = base
             , ("M-t",                    withFocused $ windows . W.sink)
             , ("M-S-f",                  withFocused toggleFull)
             ]
+	scratchpad = 
+	    [ ("M-C-<Return>",           namedScratchpadAction myScratchpads "terminal")
+	    ]
         applications =
             [ ("M-S-<Return>",           spawn myTerminal)
             , ("M-f",                    spawn myBrowser)
@@ -189,6 +195,15 @@ myQuitHook = do
 	]
     io exitSuccess
 
+myScratchpads :: [NamedScratchpad]
+myScratchpads = 
+    [ NS "terminal" spawnTerm findTerm manageTerm
+    ]
+    where
+        spawnTerm  = myTerminal ++ " --class Scratchpad"
+	findTerm   = className =? "Scratchpad"
+	manageTerm = customFloating $ W.RationalRect (1 / 6) (1 / 8) (2 / 3) (3 / 4)
+
 isInstance (ClassApp c _) = className =? c
 isInstance (TitleApp t _) = title     =? t
 isInstance (NameApp n  _) = appName   =? n
@@ -215,7 +230,6 @@ save          = TitleApp "Save"                         "Save"
 library       = TitleApp "Library"                      "Library"
 message       = ClassApp "Xmessage"                     "Xmessage"
 steam         = ClassApp "steam"                        "steam" 
-friends       = TitleApp "Friends List"                 "Friends List"
 obs           = ClassApp "obs"                          "obs"
 wine          = TitleApp "Wine System Tray"             "Wine System Tray"
 news          = TitleApp "Steam - News"                 "Steam - News"
@@ -303,7 +317,7 @@ myManageHook = manageRules
             , className ^? "jetbrains-"     <&&> title ^? "win"         --> hasBorder False
 	    , className ^? "software.coley" <&&> title =? ""            --> doCenterFloat
 	    , className ^? "software.coley" <&&> title =? "Config"      --> doCenterFloat
-            ]
+            ] <+> namedScratchpadManageHook myScratchpads
 
 {- May be useful one day 
 doClose = ask >>= liftX . killWindow >> mempty :: ManageHook
@@ -326,29 +340,31 @@ myLayoutHook =
         w       = 7       {- Width of pixel size between windows while tiled.       -} 
 
 myXmobarPP :: X PP
-myXmobarPP = clickablePP $ def
-    { ppCurrent          = xmobarColor "#61AFEF" "#31353F:5" . xmobarFont 4
-    , ppVisibleNoWindows = Just (xmobarColor "#A9B1D6" "#31353F:5")
-    , ppVisible          = xmobarColor "#61AFEF" "#31353F:5"
-    , ppHidden           = xmobarColor "#ABB2BF" "#31353F:5"
-    , ppHiddenNoWindows  = xmobarColor "#6B7089" "#31353F:5"
-    , ppUrgent           = xmobarColor "#F7768E" "#31353F:5" . wrap "!" "!"
-    , ppTitle            = xmobarColor "#ABB2BF" "#31353F:5" . shorten 80  
-    , ppSep              = wrapSep " "
-    , ppTitleSanitize    = xmobarStrip
-    , ppWsSep            = xmobarColor "" "#31353F:5" "   "
-    , ppLayout           = xmobarColor "#31353F" "" 
-                           . (\case 
-                               "Spacing Tall"        -> "<icon=tiled.xpm/>"
-                               "Spacing Mirror Tall" -> "<icon=mirrortiled.xpm/>"
-                               "Spacing Full"        -> "<icon=full.xpm/>"
-                             )
-    }
+myXmobarPP = pure (filterOutWsPP [scratchpadWorkspaceTag] myPP) >>= clickablePP
     where
-        wrapSep :: String -> String
-        wrapSep = wrap 
-            (xmobarColor "#31353F" "#282C34:6" (xmobarFont 2 "\xe0b4"))
-            (xmobarColor "#31353F" "#282C34:6" (xmobarFont 2 "\xe0b6"))
+        myPP = def
+            { ppCurrent          = xmobarColor "#61AFEF" "#31353F:5" . xmobarFont 4
+            , ppVisibleNoWindows = Just (xmobarColor "#A9B1D6" "#31353F:5")
+            , ppVisible          = xmobarColor "#61AFEF" "#31353F:5"
+            , ppHidden           = xmobarColor "#ABB2BF" "#31353F:5"
+            , ppHiddenNoWindows  = xmobarColor "#6B7089" "#31353F:5"
+            , ppUrgent           = xmobarColor "#F7768E" "#31353F:5" . wrap "!" "!"
+            , ppTitle            = xmobarColor "#ABB2BF" "#31353F:5" . shorten 80  
+            , ppSep              = wrapSep " "
+            , ppTitleSanitize    = xmobarStrip
+            , ppWsSep            = xmobarColor "" "#31353F:5" "   "
+            , ppLayout           = xmobarColor "#31353F" "" 
+                                   . (\case 
+                                       "Spacing Tall"        -> "<icon=tiled.xpm/>"
+                                       "Spacing Mirror Tall" -> "<icon=mirrortiled.xpm/>"
+                                       "Spacing Full"        -> "<icon=full.xpm/>"
+                                     )
+            }
+            where
+                wrapSep :: String -> String
+                wrapSep = wrap 
+                    (xmobarColor "#31353F" "#282C34:6" (xmobarFont 2 "\xe0b4"))
+                    (xmobarColor "#31353F" "#282C34:6" (xmobarFont 2 "\xe0b6"))
 
 myConfig = def
     { modMask            = myModMask
