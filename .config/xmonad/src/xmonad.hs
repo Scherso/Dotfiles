@@ -259,7 +259,6 @@ myManageHook = manageRules
         {- Managing rules for applications. -}
         manageRules = composeOne
             [ transience
-            , isDialog -?> doCenterFloat
             , match [ gimp
                     , gimp2
                     , about
