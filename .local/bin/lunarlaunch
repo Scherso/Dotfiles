@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+# Add your JVM Args here.
+declare -r LUNAR_JVM_ARGS="\
+    --add-modules jdk.naming.dns                              \
+    --add-exports jdk.naming.dns/com.sun.jndi.dns=java.naming \
+    -Djna.boot.library.path=natives                           \
+    -Dlog4j2.formatMsgNoLookups=true                          \
+    --add-opens java.base/java.io=ALL-UNNAMED                 \
+    -Xms3072m                                                 \
+    -Xmx3072m                                                 \
+    -Djava.library.path=natives"
+
+# Add your agent to inject here.
+# declare -r LUNAR_AGENT="${HOME}/Downloads/Weave-Loader-Agent-1.0.0-b.2.jar"
+declare -r LUNAR_AGENT="${HOME}/Downloads/FastPlace.jar"
+
+declare -r SENTRY_ID="d18024a7194889f977e9931da3954fce"
+
+# Version specific variable.
+declare -r LUNAR_VERSION="1.8.9"
+
+# Width and Height
+declare -r LUNAR_WIDTH="854"
+declare -r LUNAR_HEIGHT="480"
+
+# JVM stuff
+declare -r LUNAR_JRE="${HOME}/.lunarclient/jre/893edaa9da4f6792cd765e07bf287212c9c29ff0/zulu17.34.19-ca-jre17.0.3-linux_x64/bin/java"
+declare -r LUNAR_CLASSPATH="common-0.1.0-SNAPSHOT-all.jar:genesis-0.1.0-SNAPSHOT-all.jar:legacy-0.1.0-SNAPSHOT-all.jar:lunar-lang.jar:lunar-emote.jar:lunar.jar:optifine-0.1.0-SNAPSHOT-all.jar"
+declare -r LUNAR_MAIN_CLASS="com.moonsworth.lunar.genesis.Genesis"
+declare -r ICHOR_EXT_FILE="OptiFine_v1_8.jar,hypixel-quickplay-data.json,hypixel-bedwars-data.json,hypixel-skyblock-dungeon-rooms.json"
+
+cd "${HOME}/.lunarclient/offline/multiver"
+
+exec "${LUNAR_JRE}" ${LUNAR_JVM_ARGS}                                       \
+    -cp "${LUNAR_CLASSPATH}"                                                \
+    -javaagent:"${LUNAR_AGENT}"                                             \
+    "${LUNAR_MAIN_CLASS}"                                                   \
+    --version "${LUNAR_VERSION}"                                            \
+    --sentryTraceId "${SENTRY_ID}"                                          \
+    --accessToken 0                                                         \
+    --assetIndex ${LUNAR_VERSION/.9/}                                       \
+    --userProperties {}                                                     \
+    --gameDir "${HOME}/.minecraft"                                          \
+    --texturesDir "${HOME}/.lunarclient/textures"                           \
+    --uiDir "${HOME}/.lunarclient/ui"                                       \
+    --width "${LUNAR_WIDTH}"                                                \
+    --height "${LUNAR_HEIGHT}"                                              \
+    --workingDirectory .                                                    \
+    --classpathDir .                                                        \
+    --ichorClassPath "${LUNAR_CLASSPATH}"                                   \
+    --ichorExternalFiles "${ICHOR_EXT_FILE}"

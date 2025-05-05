@@ -1,4 +1,0 @@
-#!/bin/bash
-
-kern=$(uname -r | sed 's/-gentoo-dist//')
-echo "Kernel Version $kern"

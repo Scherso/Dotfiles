@@ -9,26 +9,40 @@
 # `-o` set's the <option-name> flag. In this case, it setss the `pipefail` option.
 set -eo pipefail
 
-# Declaring clipboard, for a shortened codebase later
-declare CLIPBOARD=${CLIPBOARD:-"xclip -t image/png -selection clipboard"}
+IMG="$(date '+%Y-%m-%d@%H:%M:%S').png"
+DIR=$(xdg-user-dir PICTURES)
+
+if [[ ! -d "${DIR}/Screenshots" ]] ; then
+	mkdir "${DIR}/Screenshots"
+fi
+
+FILE="${DIR}/Screenshots/${IMG}"
 
 # -s, or --selection, selects a region with `slop` and copies the region to the clipboard.
 # -f, or --fullscreen, copies the whole screen to the clipboard.
-case "$1" in
-    -s | --selection)
-        GRAB=$(slop -c 0.5,0.5,0.5,0.3 -l -f "-i %i -g %g")
-        shotgun $GRAB - | 
-            $CLIPBOARD
-        ;;
-    -f | --fullscreen)
-        shotgun -s - |
-            $CLIPBOARD
-        ;;
-    *)
-        tee -a <<-END
-        Usage:
-            -s, --selection,   selects a region and copies the region to the clipboard.
-            -f, --fullscreen,  copies the whole screen to the clipboard.
-        END
-        ;;
+case "${1}" in
+	-s | --selection)
+		GRAB=$(slop -c 0.8,0.8,0.8,0.23 -l -f "%g") || 
+			dunstify -u critical -i gnome-screenshot "Shotgun" "Failed to take screenshot."
+		shotgun -g "${GRAB}" "${FILE}"
+		;;
+	-f | --fullscreen)
+		shotgun -s "${FILE}"
+		;;
+	*)
+		echo hi
+		;;
+esac
+
+xclip -selection clipboard -target image/png -i "${FILE}"
+
+ACTION=$(dunstify -u low -A "default,Open" -I "${FILE}" "Shotgun" "Screenshot saved!")
+
+case "${ACTION}" in
+	"default")
+		rm "${FILE}"
+		;;
+	"2")
+		feh "${FILE}"
+		;;
 esac
