@@ -10,12 +10,14 @@ foreground = "#ABB2BF"         {- White -}
 background = "#282C34"         {- Grey -}
 borderc    = "#544862"         {- Dark Purple -}
 
-red, blue, green, magenta, cyan :: String -> String
+red, blue, green, magenta, cyan, white, grey :: String -> String
 red        = xmobarColor "#E06C75" (formatbg <> ":5")
 blue       = xmobarColor "#61AFEF" (formatbg <> ":5") 
 green      = xmobarColor "#98C379" (formatbg <> ":5") 
 magenta    = xmobarColor "#C678DD" (formatbg <> ":5")
 cyan       = xmobarColor "#56B6C2" (formatbg <> ":5")
+white      = xmobarColor "#ABB2BF" (formatbg <> ":5")
+grey       = xmobarColor "#6B7089" (formatbg <> ":5")
 
 myHomeDir :: String
 myHomeDir = unsafeDupablePerformIO (getEnv "HOME") 
@@ -27,16 +29,15 @@ myConfig :: IO Config
 myConfig = do 
     pure baseConfig
         { template = 
-            (wrap "  " " " (xmobarColor "#C678DD" "" (xmobarFont 4 "\xf30d ")))
+            (wrap "  " " " (xmobarColor "#6B7089"  "" (xmobarFont 5 "\xe61f ")))
             <> (inWrapper (xmobarFont 4 "%UnsafeXMonadLog%"))
-            <> "}{"
+            <> wrap "}" "{" (xmobarFont 4 "%date%")
             <> concatMap inWrapper
-                [ red     (xmobarFont 4 "%enp6s0%")     {- Received and sent analytics -}
-                , cyan    (xmobarFont 4 "%k10temp%")    {- CPU temperature             -} 
-                , magenta (xmobarFont 4 "%gpu%")        {- GPU temperature             -}
-                , green   (xmobarFont 4 "%vol%")        {- Volume percentage           -}
-                , blue    (xmobarFont 4 "%date%")       {- Time                        -}
+                [ white (xmobarFont 4 "%enp7s0%")     {- Received and sent analytics -}
+		, white (xmobarFont 4 "%wttr%")       {- Weather information         -}
+                , white (xmobarFont 4 "%vol%")        {- Volume percentage           -}
                 ]
+	    <> white (xmobarFont 4 "%playerctl%")     {- Spotify information         -}
         , commands = myCommands
         }
     where
@@ -49,30 +50,35 @@ myConfig = do
 myCommands :: [Runnable]
 myCommands = 
     [ Run UnsafeXMonadLog
-    , Run $ Network "enp6s0" 
+    , Run $ Network "enp7s0" 
     [ "-t"
-    , "\xf433 <rx> kb \xf431 <tx> kb"
+    , "<fn=2><fc=#98C379,#31353F>\xf433</fc></fn> <rx> kb <fn=2><fc=#E5C07B,#31353F>\xf431</fc></fn> <tx> kb"
     ] 10
     , Run $ K10Temp "0000:00:18.3"
     [ "-t"
     , "<Tdie>°C"
     ] 10
-    , Run $ Date "\xf017 %-l:%M %p" "date" 10
-    , Run $ Com (myHomeDir <> "/.config/xmonad/scripts/gputemp.sh") ["gpu"] "gpu" 5
-    , Run $ Com (myHomeDir <> "/.config/xmonad/scripts/volume.sh" ) ["vol"] "vol" 1
+    , Run $ Date "%H:%M:%S" "date" 10
+    , Run $ Com (myHomeDir <> "/.config/xmonad/scripts/gputemp.sh"  ) ["gpu"] "gpu" 5
+    , Run $ CommandReader ("exec " <> myHomeDir <> "/.config/xmonad/scripts/volume.sh") "vol" 
+    , Run $ CommandReader ("exec " <> myHomeDir <> "/.config/xmonad/scripts/playerctl.sh") "playerctl"  
+    , Run $ CommandReader ("exec " <> myHomeDir <> "/.config/xmonad/scripts/weather.sh") "wttr"
     ] 
 
 baseConfig :: Config
 baseConfig = defaultConfig
-    { font            =   "xft:SF Mono:size=11:antialias=true:hinting=true" 
+    { font            = concatMap fontWrap [
+                          "xft:SF Mono:size=11:antialias=true:hinting=true"
+		          , "xft:Twemoji:size=11"
+		        ]
     , additionalFonts = [ "xft:SF Mono:size=11:antialias=true:hinting=true"
+                        , "xft:SF Mono:size=12:antialias=true:hinting=true"
+                        , "xft:SF Mono:size=11:antialias=true:hinting=true"
+                        , "xft:SF Mono:size=11:antialias=true:hinting=true"
                         , "xft:SF Mono:size=13:antialias=true:hinting=true"
-                        , "xft:SF Mono:size=11:antialias=true:hinting=true"
-                        , "xft:SF Mono:size=11:antialias=true:hinting=true"
-                        , "xft:SF Mono:size=11:antialias=true:hinting=true"
-                        ]     --      --    
+                        ]     --      --
     , textOffsets      = [20, 22, 22, 21, 22]
---  , textOffsets      = [0, 0, 0, 0, 0]
+--    , textOffsets      = [0, 0, 0, 0, 0]
     , bgColor          = background 
     , fgColor          = foreground
     , borderColor      = borderc
@@ -96,3 +102,7 @@ baseConfig = defaultConfig
     , sepChar  = "%"
     , alignSep = "}{"
     }
+    where
+        fontWrap :: String -> String
+        fontWrap = wrap "" ","
+

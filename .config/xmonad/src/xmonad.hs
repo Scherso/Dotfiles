@@ -22,6 +22,8 @@ import           XMonad.Hooks.StatusBar
 import           XMonad.Hooks.StatusBar.PP
 import           XMonad.Layout.Fullscreen
 import           XMonad.Layout.NoBorders    
+import           XMonad.Layout.MultiToggle (mkToggle, single, EOT(EOT), (??))
+import           XMonad.Layout.MultiToggle.Instances (StdTransformers(NBFULL, MIRROR, NOBORDERS))
 import           XMonad.Layout.Spacing
 import qualified XMonad.StackSet            as W
 import           XMonad.Util.ClickableWorkspaces
@@ -40,7 +42,7 @@ myTerminal = "alacritty"
 
 {- Default Browser -}
 myBrowser :: String
-myBrowser = "firefox" 
+myBrowser = "librewolf" 
 
 {- Workspaces -}
 myWorkspaces :: [String]
@@ -48,7 +50,7 @@ myWorkspaces = map show [1 .. 9]
 
 {- Border Width -}
 myBorderWidth :: Dimension
-myBorderWidth = 3 
+myBorderWidth = 2 
 
 {- Formal Unfocused Color -}
 myNormColor :: String
@@ -98,12 +100,12 @@ myAdditionalKeys = base
             | otherwise -> W.float w fullscreen s 
                 where
                     fullscreen = W.RationalRect 0 0 1 1
-        {- Dmenu stuff -}
-        dmenuArgs :: X String
-        dmenuArgs = (("-m " ++) . show) `fmap` curscreen where
-            curscreen = (fromIntegral . W.screen . W.current) `fmap` gets windowset :: X Int
-        dmenuCmd :: String -> X ()
-        dmenuCmd cmd = dmenuArgs >>= \args -> spawn $ "dmenu_run " ++ args ++ " " ++ cmd
+        {- Ensure Rofi spawns in the focused monitor -}
+        rofiArgs :: X String
+        rofiArgs = (("-show run -monitor " ++) . show) `fmap` curscreen where
+            curscreen = ((+1) . fromIntegral . W.screen . W.current) `fmap` gets windowset :: X Int
+        rofiCmd:: String -> X ()
+        rofiCmd cmd = rofiArgs >>= \args -> spawn $ "rofi " ++ args ++ " " ++ cmd
         {- Screenshots -}
         screenShotSelection  = "screenshot -s" :: String 
         screenShotFullscreen = "screenshot -f" :: String
@@ -113,7 +115,7 @@ myAdditionalKeys = base
             , ("M-S-x",        withFocused forceKillWindow)
             , ("M-<Space>",    sendMessage NextLayout)
             , ("M-n",          refresh)
-            , ("M-S-q",        io exitSuccess)
+            , ("M-S-q",        myQuitHook)
             , ("M-q",          spawn "xmonad --recompile ; killall xmobar ; xmonad --restart")
             ]
         window = 
@@ -134,15 +136,19 @@ myAdditionalKeys = base
             , ("M-f",          spawn myBrowser)
             , ("M-s",          spawn screenShotSelection)
             , ("<Print>",      spawn screenShotFullscreen)
-            , ("M-p",          dmenuCmd "")
+            , ("M-p",          rofiCmd "")
             ]
         multimedia =
             [ ("<XF86AudioPlay>",        spawn "playerctl play-pause")
+            , ("M-<Left>",               spawn "playerctl previous")
+            , ("M-<Right>",              spawn "playerctl next")
             , ("<XF86AudioPrev>",        spawn "playerctl previous")
             , ("<XF86AudioNext>",        spawn "playerctl next")
+            , ("M-<Down>",               spawn "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-")
+            , ("M-<Up>",                 spawn "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+")
             , ("<XF86AudioMute>",        spawn "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle")
-            , ("<XF86AudioLowerVolume>", spawn "wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%-")
-            , ("<XF86AudioRaiseVolume>", spawn "wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%+")
+            , ("<XF86AudioLowerVolume>", spawn "wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%-")
+            , ("<XF86AudioRaiseVolume>", spawn "wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%+")
             , ("<Pause>",                spawn "playerctl play-pause")
             ]
 
@@ -159,8 +165,7 @@ myMouseBindings XConfig {XMonad.modMask = modm} = M.fromList
 myStartupHook :: X ()
 myStartupHook = do
     _ <- traverse spawnOnce
-        [ "xrandr --output DisplayPort-1 --left-of DisplayPort-0 --output DisplayPort-0 --primary"
-        , "picom &"
+        [ "picom &"
         , "dunst -conf " ++ myHomeDir ++ "/.config/dunst/dunstrc"
         , "gentoo-pipewire-launcher &"
         , myHomeDir ++ "/.fehbg"
@@ -176,6 +181,15 @@ myStartupHook = do
     setDefaultCursor xC_left_ptr
     setWMName "XMonad LG3D"
 
+myQuitHook :: X ()
+myQuitHook = do
+    _ <- traverse spawnOnce
+        [ "killall picom"
+	, "killall pipewire"
+	, "killall wireplumber"
+	]
+    io exitSuccess
+
 isInstance (ClassApp c _) = className =? c
 isInstance (TitleApp t _) = title     =? t
 isInstance (NameApp n  _) = appName   =? n
@@ -190,28 +204,36 @@ data App = ClassApp AppClassName AppCommand
     | NameApp AppName AppCommand
     deriving Show
 
-gimp          = ClassApp "Gimp"                  "gimp"
-gimp2         = ClassApp "Gimp-2.99"             "gimp-2.99"
-prismlauncher = ClassApp "PrismLauncher"         "prismlauncher"
-about         = TitleApp "About Mozilla Firefox" "About Mozilla Firefox"
-signin        = TitleApp "Sign In"               "Sign In"
-spotify       = ClassApp "Spotify"               "spotify"
-toolkit       = TitleApp "Toolkit"               "Toolkit"
-file          = TitleApp "File Upload"           "File Upload"
-save          = TitleApp "Save"                  "Save"
-library       = TitleApp "Library"               "Library"
-message       = ClassApp "Xmessage"              "Xmessage"
-steam         = ClassApp "steam"                 "steam"
-friends       = TitleApp "Friends List"          "Friends List"
-obs           = ClassApp "obs"                   "obs"
-wine          = TitleApp "Wine System Tray"      "Wine System Tray"
-news          = TitleApp "Steam - News"          "Steam - News"
-discUpdate    = TitleApp "Discord Updater"       "Discord Updater"
-discord       = ClassApp "discord"               "discord"
+gimp          = ClassApp "Gimp"                         "gimp"
+gimp2         = ClassApp "Gimp-2.99"                    "gimp-2.99"
+prismlauncher = ClassApp "PrismLauncher"                "prismlauncher"
+about         = TitleApp "About LibreWolf"              "About LibreWolf"
+signin        = TitleApp "Sign In"                      "Sign In"
+spotify       = ClassApp "Spotify"                      "spotify"
+toolkit       = TitleApp "Toolkit"                      "Toolkit"
+file          = TitleApp "File Upload"                  "File Upload"
+save          = TitleApp "Save"                         "Save"
+library       = TitleApp "Library"                      "Library"
+message       = ClassApp "Xmessage"                     "Xmessage"
+steam         = ClassApp "steam"                        "steam" 
+friends       = TitleApp "Friends List"                 "Friends List"
+obs           = ClassApp "obs"                          "obs"
+wine          = TitleApp "Wine System Tray"             "Wine System Tray"
+news          = TitleApp "Steam - News"                 "Steam - News"
+discUpdate    = TitleApp "Discord Updater"              "Discord Updater"
+discord       = ClassApp "vesktop"                      "vesktop"
+recaf1        = TitleApp "Remove methods"               "Remove methods"
+recaf2        = TitleApp "Remove fields"                "Remove fields"
+recaf3        = TitleApp "Rename class"                 "Rename class"
+recaf4        = TitleApp "Select a destination package" "Select a destination package"
+recaf5        = TitleApp "Remove annotations"           "Remove annotations"
+blueman       = ClassApp "Blueman-services"             "Blueman-services"
+blueman2      = ClassApp "Blueman-manager"              "Blueman-manager"
 
 myManageHook :: XMonad.Query (Data.Monoid.Endo WindowSet)
 myManageHook = manageRules
     where
+    	steamgame = stringProperty "STEAM_GAME"
         {- Hides windows without ignoring it, see doHideIgnore in XMonad contrib. -}
         doHide :: ManageHook
         doHide = ask >>= doF . W.delete 
@@ -229,7 +251,7 @@ myManageHook = manageRules
         isSplash = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_SPLASH"
         {- Checking for pop-ups. -}
         isPopup :: Query Bool 
-        isPopup = isRole =? "pop-up"
+	isPopup = (isRole =? "pop-up") <||> (isRole =? "Popup")
         {- Checking for file chooser dialog. -}
         isFileChooserDialog :: Query Bool 
         isFileChooserDialog = isRole =? "GtkFileChooserDialog" 
@@ -240,7 +262,7 @@ myManageHook = manageRules
         manageRules = composeOne
             [ transience
             , isDialog     -?> doCenterFloat
-            , isFullscreen -?> (doF W.focusDown <+> doFullFloat) 
+            , isFullscreen -?> (doF W.focusDown <+> doFullFloat <+> hasBorder False) 
             , match [ gimp
                     , gimp2
                     , about
@@ -250,10 +272,17 @@ myManageHook = manageRules
                     , save
                     , signin
                     , toolkit
+		    , blueman
+		    , blueman2
+		    , steam
                     ]      -?> doFloat
-            , match [ steam
-                    , prismlauncher
+            , match [ prismlauncher
                     , library
+		    , recaf1
+		    , recaf2
+		    , recaf3
+		    , recaf4
+		    , recaf5
                     ]     -?> doCenterFloat
             , match [ wine 
                     , news
@@ -269,11 +298,14 @@ myManageHook = manageRules
                     , isSplash
                     , isSysInfoDialog
                     ]     -?> doCenterFloat
-            ] <> composeAll
+	    , anyOf [ isPopup
+	            ]     -?> hasBorder False ] <> composeAll
             [ manageDocks
-            , className ^? "jetbrains-" <&&> title ^? "Welcome to " --> doCenterFloat
-            , className ^? "jetbrains-" <&&> title ^? "splash"      --> (doFloat <+> hasBorder False)
-            , className ^? "jetbrains-" <&&> title ^? "win"         --> hasBorder False
+            , className ^? "jetbrains-"     <&&> title ^? "Welcome to " --> doCenterFloat
+            , className ^? "jetbrains-"     <&&> title ^? "splash"      --> (doFloat <+> hasBorder False)
+            , className ^? "jetbrains-"     <&&> title ^? "win"         --> hasBorder False
+	    , className ^? "software.coley" <&&> title =? ""            --> doCenterFloat
+	    , className ^? "software.coley" <&&> title =? "Config"      --> doCenterFloat
             ]
 
 {- May be useful one day 
@@ -287,6 +319,7 @@ myEventHook _ = return (All True)
 myLayoutHook =
     avoidStruts
     $ lessBorders OnlyScreenFloat
+--  $ mkToggle (NBFULL ?? NOBORDERS ?? EOT)
     $ spacingRaw False(Border w w w w) True(Border w w w w) True
     $ tiled ||| Mirror tiled ||| Full
     where
@@ -304,7 +337,7 @@ myXmobarPP = clickablePP $ def
     , ppHidden           = xmobarColor "#ABB2BF" "#31353F:5"
     , ppHiddenNoWindows  = xmobarColor "#6B7089" "#31353F:5"
     , ppUrgent           = xmobarColor "#F7768E" "#31353F:5" . wrap "!" "!"
-    , ppTitle            = xmobarColor "#98C379" "#31353F:5" {- . shorten 49 -} 
+    , ppTitle            = xmobarColor "#ABB2BF" "#31353F:5" . shorten 80  
     , ppSep              = wrapSep " "
     , ppTitleSanitize    = xmobarStrip
     , ppWsSep            = xmobarColor "" "#31353F:5" "   "

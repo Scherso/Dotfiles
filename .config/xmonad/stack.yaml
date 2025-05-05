@@ -5,11 +5,11 @@ packages:
 
 extra-deps:
   - github: xmonad/x11
-    commit: 8a33c4ebe7d0a1be96073d8c019f1f3901bbf344					
+    commit: 7512f74eae88540f854759f77a0c0160734c4e77					
   - github: xmonad/xmonad
-    commit: 1aac6611d82065c9198e5584176058a9483fcbb0					
+    commit: ebf265a84c6295d4fe15c4a5cf88cb08746f2145					
   - github: xmonad/xmonad-contrib
-    commit: 4d0f3ee9444bb998e0831fc381953466b6d3ecdf					
+    commit: 4b866210512b90bc532b4cd46dc5171542d0fac8					
   - xmobar-0.44.2
 
 flags:
