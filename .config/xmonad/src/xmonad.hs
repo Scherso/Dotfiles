@@ -77,7 +77,6 @@ main = do
     xmonad
     . docks
     . ewmhFullscreen
-    . fullscreenSupport
     . ewmh
     . Hacks.javaHack
     . withEasySB xmobar def
@@ -233,7 +232,6 @@ blueman2      = ClassApp "Blueman-manager"              "Blueman-manager"
 myManageHook :: XMonad.Query (Data.Monoid.Endo WindowSet)
 myManageHook = manageRules
     where
-    	steamgame = stringProperty "STEAM_GAME"
         {- Hides windows without ignoring it, see doHideIgnore in XMonad contrib. -}
         doHide :: ManageHook
         doHide = ask >>= doF . W.delete 
@@ -262,7 +260,6 @@ myManageHook = manageRules
         manageRules = composeOne
             [ transience
             , isDialog     -?> doCenterFloat
-            , isFullscreen -?> (doF W.focusDown <+> doFullFloat <+> hasBorder False) 
             , match [ gimp
                     , gimp2
                     , about
@@ -299,7 +296,8 @@ myManageHook = manageRules
                     , isSysInfoDialog
                     ]     -?> doCenterFloat
 	    , anyOf [ isPopup
-	            ]     -?> hasBorder False ] <> composeAll
+	            ]     -?> hasBorder False 
+	    ] <> composeAll
             [ manageDocks
             , className ^? "jetbrains-"     <&&> title ^? "Welcome to " --> doCenterFloat
             , className ^? "jetbrains-"     <&&> title ^? "splash"      --> (doFloat <+> hasBorder False)
@@ -316,12 +314,14 @@ doForceKill = ask >>= liftX . forceKillWindow >> mempty :: ManageHook
 myEventHook :: Event -> X All
 myEventHook _ = return (All True)
 
+
 myLayoutHook =
     avoidStruts
+    $ smartBorders
     $ lessBorders OnlyScreenFloat
 --  $ mkToggle (NBFULL ?? NOBORDERS ?? EOT)
     $ spacingRaw False(Border w w w w) True(Border w w w w) True
-    $ tiled ||| Mirror tiled ||| Full
+    $ tiled ||| Mirror tiled ||| Full 
     where
         tiled = Tall nmaster delta ratio
         nmaster = 1     {- Default number of windows in the master pane. -}
