@@ -317,9 +317,7 @@ myEventHook _ = return (All True)
 
 myLayoutHook =
     avoidStruts
-    $ smartBorders
     $ lessBorders OnlyScreenFloat
---  $ mkToggle (NBFULL ?? NOBORDERS ?? EOT)
     $ spacingRaw False(Border w w w w) True(Border w w w w) True
     $ tiled ||| Mirror tiled ||| Full 
     where
