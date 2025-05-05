@@ -2,18 +2,18 @@
 {-# OPTIONS_GHC -Wno-missing-signatures -Wno-orphans  #-}
 
 {- Data Imports -} 
-import qualified Data.Map                   as M
+import qualified Data.Map                            as M
 import           Data.Functor
 import           Data.Monoid
 
 {- System Imports -} 
 import           System.Exit
-import           System.Environment         (getEnv)
-import           System.IO.Unsafe           (unsafeDupablePerformIO)
+import           System.Environment                  (getEnv)
+import           System.IO.Unsafe                    (unsafeDupablePerformIO)
 
 {- XMonad imports -} 
 import           XMonad
-import           XMonad.Actions.NoBorders   (toggleBorder)
+import           XMonad.Actions.NoBorders            (toggleBorder)
 import           XMonad.Hooks.EwmhDesktops
 import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.ManageHelpers
@@ -22,14 +22,14 @@ import           XMonad.Hooks.StatusBar
 import           XMonad.Hooks.StatusBar.PP
 import           XMonad.Layout.Fullscreen
 import           XMonad.Layout.NoBorders    
-import           XMonad.Layout.MultiToggle (mkToggle, single, EOT(EOT), (??))
+import           XMonad.Layout.MultiToggle           (mkToggle, single, EOT(EOT), (??))
 import           XMonad.Layout.MultiToggle.Instances (StdTransformers(NBFULL, MIRROR, NOBORDERS))
 import           XMonad.Layout.Spacing
-import qualified XMonad.StackSet            as W
+import qualified XMonad.StackSet                     as W
 import           XMonad.Util.ClickableWorkspaces
 import           XMonad.Util.Cursor
-import           XMonad.Util.EZConfig       (additionalKeysP)
-import qualified XMonad.Util.Hacks          as Hacks
+import           XMonad.Util.EZConfig                (additionalKeysP)
+import qualified XMonad.Util.Hacks                   as Hacks
 import           XMonad.Util.SpawnOnce
 
 {- Windows key/Super key -}
@@ -103,39 +103,39 @@ myAdditionalKeys = base
         rofiArgs :: X String
         rofiArgs = (("-show run -monitor " ++) . show) `fmap` curscreen where
             curscreen = ((+1) . fromIntegral . W.screen . W.current) `fmap` gets windowset :: X Int
-        rofiCmd:: String -> X ()
+        rofiCmd :: String -> X ()
         rofiCmd cmd = rofiArgs >>= \args -> spawn $ "rofi " ++ args ++ " " ++ cmd
         {- Screenshots -}
         screenShotSelection  = "screenshot -s" :: String 
         screenShotFullscreen = "screenshot -f" :: String
         base = 
-            [ ("M-g",          withFocused toggleBorder)
-            , ("M-S-c",        kill)
-            , ("M-S-x",        withFocused forceKillWindow)
-            , ("M-<Space>",    sendMessage NextLayout)
-            , ("M-n",          refresh)
-            , ("M-S-q",        myQuitHook)
-            , ("M-q",          spawn "xmonad --recompile ; killall xmobar ; xmonad --restart")
+            [ ("M-g",                    withFocused toggleBorder)
+            , ("M-S-c",                  kill)
+            , ("M-S-x",                  withFocused forceKillWindow)
+            , ("M-<Space>",              sendMessage NextLayout)
+            , ("M-n",                    refresh)
+            , ("M-S-q",                  myQuitHook)
+            , ("M-q",                    spawn "xmonad --recompile ; killall xmobar ; xmonad --restart")
             ]
         window = 
-            [ ("M-<Tab>",      windows W.focusDown)
-            , ("M-j",          windows W.focusDown)
-            , ("M-k",          windows W.focusUp)
-            , ("M-m",          windows W.focusMaster)
-            , ("M-<Return>",   windows W.swapMaster)
-            , ("M-S-j",        windows W.swapDown)
-            , ("M-S-k",        windows W.swapUp)
-            , ("M-h",          sendMessage Shrink)
-            , ("M-l",          sendMessage Expand)
-            , ("M-t",          withFocused $ windows . W.sink)
-            , ("M-S-f",        withFocused toggleFull)
+            [ ("M-<Tab>",                windows W.focusDown)
+            , ("M-j",                    windows W.focusDown)
+            , ("M-k",                    windows W.focusUp)
+            , ("M-m",                    windows W.focusMaster)
+            , ("M-<Return>",             windows W.swapMaster)
+            , ("M-S-j",                  windows W.swapDown)
+            , ("M-S-k",                  windows W.swapUp)
+            , ("M-h",                    sendMessage Shrink)
+            , ("M-l",                    sendMessage Expand)
+            , ("M-t",                    withFocused $ windows . W.sink)
+            , ("M-S-f",                  withFocused toggleFull)
             ]
         applications =
-            [ ("M-S-<Return>", spawn myTerminal)
-            , ("M-f",          spawn myBrowser)
-            , ("M-s",          spawn screenShotSelection)
-            , ("<Print>",      spawn screenShotFullscreen)
-            , ("M-p",          rofiCmd "")
+            [ ("M-S-<Return>",           spawn myTerminal)
+            , ("M-f",                    spawn myBrowser)
+            , ("M-s",                    spawn screenShotSelection)
+            , ("<Print>",                spawn screenShotFullscreen)
+            , ("M-p",                    rofiCmd "")
             ]
         multimedia =
             [ ("<XF86AudioPlay>",        spawn "playerctl play-pause")
@@ -259,7 +259,6 @@ myManageHook = manageRules
         {- Managing rules for applications. -}
         manageRules = composeOne
             [ transience
-            , isDialog     -?> doCenterFloat
             , match [ gimp
                     , gimp2
                     , about
@@ -272,7 +271,7 @@ myManageHook = manageRules
 		    , blueman
 		    , blueman2
 		    , steam
-                    ]      -?> doFloat
+                    ] -?> doFloat
             , match [ prismlauncher
                     , library
 		    , recaf1
@@ -280,23 +279,23 @@ myManageHook = manageRules
 		    , recaf3
 		    , recaf4
 		    , recaf5
-                    ]     -?> doCenterFloat
+                    ] -?> doCenterFloat
             , match [ wine 
                     , news
-                    ]     -?> doHide
+                    ] -?> doHide
             , match [ discUpdate 
-                    ]     -?> hasBorder False
+                    ] -?> hasBorder False
             , match [ discord 
                     , spotify
-                    ]     -?> doShift (myWorkspaces !! 1) -- Map starts at 0, 1 is 2nd workspace. 
+                    ] -?> doShift (myWorkspaces !! 1) -- Map starts at 0, 1 is 2nd workspace. 
             , anyOf [ isFileChooserDialog
                     , isDialog
                     , isPopup
                     , isSplash
                     , isSysInfoDialog
-                    ]     -?> doCenterFloat
+                    ] -?> doCenterFloat
 	    , anyOf [ isPopup
-	            ]     -?> hasBorder False 
+	            ] -?> hasBorder False 
 	    ] <> composeAll
             [ manageDocks
             , className ^? "jetbrains-"     <&&> title ^? "Welcome to " --> doCenterFloat
@@ -314,18 +313,17 @@ doForceKill = ask >>= liftX . forceKillWindow >> mempty :: ManageHook
 myEventHook :: Event -> X All
 myEventHook _ = return (All True)
 
-
 myLayoutHook =
     avoidStruts
     $ lessBorders OnlyScreenFloat
     $ spacingRaw False(Border w w w w) True(Border w w w w) True
     $ tiled ||| Mirror tiled ||| Full 
     where
-        tiled = Tall nmaster delta ratio
-        nmaster = 1     {- Default number of windows in the master pane. -}
-        ratio = 1 / 2   {- Default proportion of screen occupied by master panes. -}
-        delta = 3 / 100 {- Percent of screen increment by when resizing panes. -}
-        w = 7           {- Width of pixel size between windows while tiled. -} 
+        tiled   = Tall nmaster delta ratio
+        nmaster = 1       {- Default number of windows in the master pane.          -}
+        ratio   = 1 / 2   {- Default proportion of screen occupied by master panes. -}
+        delta   = 3 / 100 {- Percent of screen increment by when resizing panes.    -}
+        w       = 7       {- Width of pixel size between windows while tiled.       -} 
 
 myXmobarPP :: X PP
 myXmobarPP = clickablePP $ def
