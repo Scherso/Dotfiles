@@ -5,10 +5,10 @@ import XMonad.Hooks.StatusBar.PP (wrap, xmobarColor, xmobarFont)
 import Xmobar
 
 formatbg, foreground, borderc, background :: String
-formatbg   = "#31353F"         {- Lighter Grey -}
-foreground = "#ABB2BF"         {- White -}
-background = "#282C34"         {- Grey -}
-borderc    = "#544862"         {- Dark Purple -}
+formatbg   = "#31353F" {- Lighter Grey -}
+foreground = "#ABB2BF" {- White        -}
+background = "#282C34" {- Grey         -}
+borderc    = "#544862" {- Dark Purple  -}
 
 red, blue, green, magenta, cyan, white, grey :: String -> String
 red        = xmobarColor "#E06C75" (formatbg <> ":5")
@@ -59,7 +59,6 @@ myCommands =
     , "<Tdie>°C"
     ] 10
     , Run $ Date "%H:%M:%S" "date" 10
-    , Run $ Com (myHomeDir <> "/.config/xmonad/scripts/gputemp.sh"  ) ["gpu"] "gpu" 5
     , Run $ CommandReader ("exec " <> myHomeDir <> "/.config/xmonad/scripts/volume.sh") "vol" 
     , Run $ CommandReader ("exec " <> myHomeDir <> "/.config/xmonad/scripts/playerctl.sh") "playerctl"  
     , Run $ CommandReader ("exec " <> myHomeDir <> "/.config/xmonad/scripts/weather.sh") "wttr"
@@ -78,7 +77,6 @@ baseConfig = defaultConfig
                         , "xft:SF Mono:size=13:antialias=true:hinting=true"
                         ]     --      --
     , textOffsets      = [20, 22, 22, 21, 22]
---    , textOffsets      = [0, 0, 0, 0, 0]
     , bgColor          = background 
     , fgColor          = foreground
     , borderColor      = borderc
@@ -105,4 +103,3 @@ baseConfig = defaultConfig
     where
         fontWrap :: String -> String
         fontWrap = wrap "" ","
-
