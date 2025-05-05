@@ -54,10 +54,6 @@ myCommands =
     [ "-t"
     , "<fn=2><fc=#98C379,#31353F>\xf433</fc></fn> <rx> kb <fn=2><fc=#E5C07B,#31353F>\xf431</fc></fn> <tx> kb"
     ] 10
-    , Run $ K10Temp "0000:00:18.3"
-    [ "-t"
-    , "<Tdie>°C"
-    ] 10
     , Run $ Date "%H:%M:%S" "date" 10
     , Run $ CommandReader ("exec " <> myHomeDir <> "/.config/xmonad/scripts/volume.sh") "vol" 
     , Run $ CommandReader ("exec " <> myHomeDir <> "/.config/xmonad/scripts/playerctl.sh") "playerctl"  
