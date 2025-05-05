@@ -103,7 +103,7 @@ myAdditionalKeys = base
         rofiArgs :: X String
         rofiArgs = (("-show run -monitor " ++) . show) `fmap` curscreen where
             curscreen = ((+1) . fromIntegral . W.screen . W.current) `fmap` gets windowset :: X Int
-        rofiCmd:: String -> X ()
+        rofiCmd :: String -> X ()
         rofiCmd cmd = rofiArgs >>= \args -> spawn $ "rofi " ++ args ++ " " ++ cmd
         {- Screenshots -}
         screenShotSelection  = "screenshot -s" :: String 
