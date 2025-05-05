@@ -1,13 +1,14 @@
-#!/bin/zsh
-#
-# Aliases 
+alias "ds"="du -hs -- * .[^.]* | sort -h"
 
-# Shortcuts 
-alias ..="cd .."
-alias ...="cd ../.."
-alias ....="cd ../../.."
-alias .....="cd ../../../.."
-alias ~="cd $(getent passwd "$(id -u -n)" 2>/dev/null | cut -d: -f6)"
+alias "gparted"="env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY gparted"
 
-# Functionality 
-alias doas="doas "
+alias ".."="cd .."
+alias "..."="cd ../.."
+alias "...."="cd ../../.."
+alias "....."="cd ../../../.."
+alias "......"="cd ../../../../.."
+
+alias "~"="cd $(getent passwd "$(id -u -n)" 2>/dev/null | cut -d: -f6)"
+
+alias "sudo"="doas "
+alias "doas"="doas "
