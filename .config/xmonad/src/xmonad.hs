@@ -1,15 +1,18 @@
 {-# LANGUAGE MultiWayIf, LambdaCase, FlexibleContexts #-}
 {-# OPTIONS_GHC -Wno-missing-signatures -Wno-orphans  #-}
 
-{- Data Imports -} 
+{- Data imports -} 
 import qualified Data.Map                            as M
 import           Data.Functor
 import           Data.Monoid
 
-{- System Imports -} 
+{- System imports -} 
 import           System.Exit
 import           System.Environment                  (getEnv)
 import           System.IO.Unsafe                    (unsafeDupablePerformIO)
+
+{- Local imports -}
+import           Theme.Theme
 
 {- XMonad imports -} 
 import           XMonad
@@ -74,6 +77,14 @@ xmobar = statusBarProp myXmobar myXmobarPP
 myXmobar :: String
 myXmobar = ("xmobar " ++ myHomeDir ++ "/.config/xmonad/src/xmobar.hs")
 
+red, blue, magenta, white :: String 
+red        = base01
+blue       = base04
+magenta    = base05
+magenta1   = base0D
+white      = base07 
+background = base08 <> ":5"
+
 main :: IO ()
 main = do
     xmonad
@@ -135,6 +146,7 @@ myAdditionalKeys = base
             ]
 	scratchpad = 
 	    [ ("M-C-<Return>",           namedScratchpadAction myScratchpads "terminal")
+	    , ("M-C-<Backspace>",  namedScratchpadAction myScratchpads "htop")
 	    ]
         applications =
             [ ("M-S-<Return>",           spawn myTerminal)
@@ -184,7 +196,7 @@ myStartupHook = do
      - workspace on our primary monitor. -}
     screenWorkspace 0 >>= flip whenJust (windows . W.view)
     setDefaultCursor xC_left_ptr
-    setWMName "XMonad LG3D"
+    --setWMName "XMonad LG3D"
 
 myQuitHook :: X ()
 myQuitHook = do
@@ -198,11 +210,15 @@ myQuitHook = do
 myScratchpads :: [NamedScratchpad]
 myScratchpads = 
     [ NS "terminal" spawnTerm findTerm manageTerm
+    , NS "htop"     spawnHtop findHtop manageHtop
     ]
     where
         spawnTerm  = myTerminal ++ " --class Scratchpad"
 	findTerm   = className =? "Scratchpad"
 	manageTerm = customFloating $ W.RationalRect (1 / 6) (1 / 8) (2 / 3) (3 / 4)
+	spawnHtop  = myTerminal ++ " --class HTOP -e htop"
+	findHtop   = className =? "HTOP"
+	manageHtop = customFloating $ W.RationalRect (1 / 6) (1 / 8) (2 / 3) (3 / 4)
 
 isInstance (ClassApp c _) = className =? c
 isInstance (TitleApp t _) = title     =? t
@@ -282,9 +298,6 @@ myManageHook = manageRules
                     , save
                     , signin
                     , toolkit
-		    , blueman
-		    , blueman2
-		    , steam
                     ] -?> doFloat
             , match [ prismlauncher
                     , library
@@ -293,6 +306,9 @@ myManageHook = manageRules
 		    , recaf3
 		    , recaf4
 		    , recaf5
+		    , steam 
+		    , blueman
+		    , blueman2
                     ] -?> doCenterFloat
             , match [ wine 
                     , news
@@ -343,17 +359,17 @@ myXmobarPP :: X PP
 myXmobarPP = pure (filterOutWsPP [scratchpadWorkspaceTag] myPP) >>= clickablePP
     where
         myPP = def
-            { ppCurrent          = xmobarColor "#61AFEF" "#31353F:5" . xmobarFont 4
-            , ppVisibleNoWindows = Just (xmobarColor "#A9B1D6" "#31353F:5")
-            , ppVisible          = xmobarColor "#61AFEF" "#31353F:5"
-            , ppHidden           = xmobarColor "#ABB2BF" "#31353F:5"
-            , ppHiddenNoWindows  = xmobarColor "#6B7089" "#31353F:5"
-            , ppUrgent           = xmobarColor "#F7768E" "#31353F:5" . wrap "!" "!"
-            , ppTitle            = xmobarColor "#ABB2BF" "#31353F:5" . shorten 80  
+            { ppCurrent          = xmobarColor blue background . xmobarFont 4
+            , ppVisibleNoWindows = Just (xmobarColor magenta background)
+            , ppVisible          = xmobarColor blue background 
+            , ppHidden           = xmobarColor white background 
+            , ppHiddenNoWindows  = xmobarColor magenta1 background 
+            , ppUrgent           = xmobarColor red background . wrap "!" "!"
+            , ppTitle            = xmobarColor white background . shorten 80  
             , ppSep              = wrapSep " "
             , ppTitleSanitize    = xmobarStrip
-            , ppWsSep            = xmobarColor "" "#31353F:5" "   "
-            , ppLayout           = xmobarColor "#31353F" "" 
+            , ppWsSep            = xmobarColor "" background "   "
+            , ppLayout           = xmobarColor background "" 
                                    . (\case 
                                        "Spacing Tall"        -> "<icon=tiled.xpm/>"
                                        "Spacing Mirror Tall" -> "<icon=mirrortiled.xpm/>"
@@ -363,8 +379,8 @@ myXmobarPP = pure (filterOutWsPP [scratchpadWorkspaceTag] myPP) >>= clickablePP
             where
                 wrapSep :: String -> String
                 wrapSep = wrap 
-                    (xmobarColor "#31353F" "#282C34:6" (xmobarFont 2 "\xe0b4"))
-                    (xmobarColor "#31353F" "#282C34:6" (xmobarFont 2 "\xe0b6"))
+                    (xmobarColor background (basebg <> ":6") (xmobarFont 2 "\xe0b4"))
+                    (xmobarColor background (basebg <> ":6") (xmobarFont 2 "\xe0b6"))
 
 myConfig = def
     { modMask            = myModMask

@@ -1,0 +1,41 @@
+#include ".colorschemes/onedark"
+
+! Cursor theme
+Xcursor.size: 16
+
+! special
+*.background: 		basebg
+*.foreground: 		basefg
+*.cursorColor:          basefg
+
+! black
+*.color0: 		base00
+*.color8: 		base08
+
+! red
+*.color1: 		base01
+*.color9: 		base09
+
+! green
+*.color2: 		base02
+*.color10: 		base0A
+
+! yellow
+*.color3: 		base03
+*.color11: 		base0B
+
+! blue
+*.color4: 		base04
+*.color12: 		base0C
+
+! magenta
+*.color5: 		base05
+*.color13: 		base0D
+
+! cyan
+*.color6: 		base06
+*.color14: 		base0E
+
+! white
+*.color7: 		base07
+*.color15: 		base0F

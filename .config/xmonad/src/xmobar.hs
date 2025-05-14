@@ -1,26 +1,20 @@
 import System.Environment        (getEnv)
 import System.IO.Unsafe          (unsafeDupablePerformIO)
+import Theme.Theme
 
 import XMonad.Hooks.StatusBar.PP (wrap, xmobarColor, xmobarFont)
 import Xmobar
 
-formatbg, foreground, borderc, background :: String
-formatbg   = "#31353F" {- Lighter Grey -}
-foreground = "#ABB2BF" {- White        -}
-background = "#282C34" {- Grey         -}
+background, foreground, borderc :: String
+background = basebg
+foreground = basefg 
 borderc    = "#544862" {- Dark Purple  -}
 
-red, blue, green, magenta, cyan, white, grey :: String -> String
-red        = xmobarColor "#E06C75" (formatbg <> ":5")
-blue       = xmobarColor "#61AFEF" (formatbg <> ":5") 
-green      = xmobarColor "#98C379" (formatbg <> ":5") 
-magenta    = xmobarColor "#C678DD" (formatbg <> ":5")
-cyan       = xmobarColor "#56B6C2" (formatbg <> ":5")
-white      = xmobarColor "#ABB2BF" (formatbg <> ":5")
-grey       = xmobarColor "#6B7089" (formatbg <> ":5")
+white :: String -> String
+white      = xmobarColor base07 (base08 <> ":5") 
 
 myHomeDir :: String
-myHomeDir = unsafeDupablePerformIO (getEnv "HOME") 
+myHomeDir  = unsafeDupablePerformIO (getEnv "HOME") 
 
 main :: IO ()
 main = xmobar =<< myConfig
@@ -34,17 +28,17 @@ myConfig = do
             <> wrap "}" "{" (xmobarFont 4 "%date%")
             <> concatMap inWrapper
                 [ white (xmobarFont 4 "%enp7s0%")     {- Received and sent analytics -}
-		, white (xmobarFont 4 "%wttr%")       {- Weather information         -}
+                , white (xmobarFont 4 "%wttr%")       {- Weather information         -}
                 , white (xmobarFont 4 "%vol%")        {- Volume percentage           -}
                 ]
-	    <> white (xmobarFont 4 "%playerctl%")     {- Spotify information         -}
+            <> white (xmobarFont 4 "%playerctl%")     {- Spotify information         -}
         , commands = myCommands
         }
     where
         inWrapper :: String -> String
         inWrapper = wrap 
-            (xmobarColor formatbg (background <> ":7") (xmobarFont 2 "\xe0b6"))
-            (xmobarColor formatbg (background <> ":7") (xmobarFont 2 "\xe0b4") <> " ")
+            (xmobarColor base08 (background <> ":7") (xmobarFont 2 "\xe0b6"))
+            (xmobarColor base08 (background <> ":7") (xmobarFont 2 "\xe0b4") <> " ")
 
 
 myCommands :: [Runnable]
@@ -52,7 +46,7 @@ myCommands =
     [ Run UnsafeXMonadLog
     , Run $ Network "enp7s0" 
     [ "-t"
-    , "<fn=2><fc=#98C379,#31353F>\xf433</fc></fn> <rx> kb <fn=2><fc=#E5C07B,#31353F>\xf431</fc></fn> <tx> kb"
+    , "<fn=2><fc=#98C379,#31353F:5>\xf433</fc></fn> <rx> kb <fn=2><fc=#E5C07B,#31353F:5>\xf431</fc></fn> <tx> kb"
     ] 10
     , Run $ Date "%H:%M:%S" "date" 10
     , Run $ CommandReader ("exec " <> myHomeDir <> "/.config/xmonad/scripts/volume.sh") "vol" 
@@ -62,10 +56,10 @@ myCommands =
 
 baseConfig :: Config
 baseConfig = defaultConfig
-    { font            = concatMap fontWrap [
-                          "xft:SF Mono:size=11:antialias=true:hinting=true"
-		          , "xft:Twemoji:size=11"
-		        ]
+    { font            = concatMap fontWrap 
+                        [ "xft:SF Mono:size=11:antialias=true:hinting=true"
+                        , "xft:Twemoji:size=11"
+                        ]
     , additionalFonts = [ "xft:SF Mono:size=11:antialias=true:hinting=true"
                         , "xft:SF Mono:size=12:antialias=true:hinting=true"
                         , "xft:SF Mono:size=11:antialias=true:hinting=true"
@@ -74,7 +68,7 @@ baseConfig = defaultConfig
                         ]     --      --
     , textOffsets      = [20, 22, 22, 21, 22]
     , bgColor          = background 
-    , fgColor          = foreground
+    , fgColor          = foreground 
     , borderColor      = borderc
     , border           = FullB 
     , borderWidth      = 1
@@ -99,3 +93,4 @@ baseConfig = defaultConfig
     where
         fontWrap :: String -> String
         fontWrap = wrap "" ","
+
