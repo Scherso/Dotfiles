@@ -10,6 +10,4 @@ xrandr --output DisplayPort-0 --primary
 xrandr --output DisplayPort-1 --left-of DisplayPort-0 
 xrandr --output DisplayPort-1 --rotate left
 
-xrdb -merge "${HOME}/.Xresources"
-
 exec dbus-launch --exit-with-session xmonad > "${HOME}/.config/xmonad/log.txt"
