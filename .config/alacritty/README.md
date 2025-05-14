@@ -12,16 +12,16 @@ emerge -a x11-terms/alacritty
 pacman -S alacritty
 ```
 
-2. **Make `"${HOME}/.config/alacritty/alacritty.yml"`**
+2. **Make `"${HOME}/.config/alacritty/alacritty.toml"`**
 
 ```bash
-[[ -d "${HOME}/.config/alacritty/alacritty.yml" ]] || mkdir "${HOME}/.config/alacritty/" ; touch "${HOME}/.config/alacritty/alacritty.yml"
+[[ -d "${HOME}/.config/alacritty/alacritty.toml" ]] || mkdir "${HOME}/.config/alacritty/" ; touch "${HOME}/.config/alacritty/alacritty.toml"
 ```
 
-3. **Appending this repository's `alacritty.yml` to your configuration.**
+3. **Appending this repository's `alacritty.toml` to your configuration.**
 
 ```bash
-curl https://raw.githubusercontent.com/Scherso/dotfiles/main/.config/alacritty/alacritty.yml > "${HOME}/.config/alacritty/alacritty.yml"
+curl https://raw.githubusercontent.com/Scherso/dotfiles/main/.config/alacritty/alacritty.toml > "${HOME}/.config/alacritty/alacritty.toml"
 ```
 
 [alacritty]: https://alacritty.org
