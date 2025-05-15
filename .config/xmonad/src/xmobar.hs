@@ -58,12 +58,14 @@ baseConfig :: Config
 baseConfig = defaultConfig
     { font            = concatMap fontWrap 
                         [ "xft:SF Mono:size=11:antialias=true:hinting=true"
-                        , "xft:Twemoji:size=11"
+			, "Twemoji:size=11"
+			, "Noto Sans Bengali:size=10:style=Bold"
+                        , "Noto Sans Arabic:size=10:style=Bold"
+                        , "Noto Color Emoji:size=10:style=Regular"
+                        , "Noto Sans CJK JP:size=10:style=Bold"
+                        , "Noto Sans CJK KR:size=10:style=Bold"
                         ]
     , additionalFonts = [ "xft:SF Mono:size=11:antialias=true:hinting=true"
-                        , "xft:SF Mono:size=12:antialias=true:hinting=true"
-                        , "xft:SF Mono:size=11:antialias=true:hinting=true"
-                        , "xft:SF Mono:size=11:antialias=true:hinting=true"
                         , "xft:SF Mono:size=13:antialias=true:hinting=true"
                         ]     --      --
     , textOffsets      = [20, 22, 22, 21, 22]

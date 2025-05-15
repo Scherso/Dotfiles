@@ -359,7 +359,7 @@ myXmobarPP :: X PP
 myXmobarPP = pure (filterOutWsPP [scratchpadWorkspaceTag] myPP) >>= clickablePP
     where
         myPP = def
-            { ppCurrent          = xmobarColor blue background . xmobarFont 4
+            { ppCurrent          = xmobarColor red background . xmobarFont 4
             , ppVisibleNoWindows = Just (xmobarColor magenta background)
             , ppVisible          = xmobarColor blue background 
             , ppHidden           = xmobarColor white background 
