@@ -59,11 +59,11 @@ baseConfig = defaultConfig
     { font            = concatMap fontWrap 
                         [ "xft:SF Mono:size=11:antialias=true:hinting=true"
 			, "Twemoji:size=11"
-			, "Noto Sans Bengali:size=10:style=Bold"
-                        , "Noto Sans Arabic:size=10:style=Bold"
-                        , "Noto Color Emoji:size=10:style=Regular"
-                        , "Noto Sans CJK JP:size=10:style=Bold"
-                        , "Noto Sans CJK KR:size=10:style=Bold"
+			, "Noto Sans Devanagari:size=11"
+			, "Noto Sans Bengali:size=11"
+                        , "Noto Sans Arabic:size=11"
+                        , "Noto Sans CJK JP:size=11"
+                        , "Noto Sans CJK KR:size=11"
                         ]
     , additionalFonts = [ "xft:SF Mono:size=11:antialias=true:hinting=true"
                         , "xft:SF Mono:size=13:antialias=true:hinting=true"
