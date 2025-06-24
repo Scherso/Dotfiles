@@ -248,19 +248,23 @@ centerFloatApps = map mkApp
     , "Remove annotations"
     ]
 
+secondaryMonitorApps :: [App]
+secondaryMonitorApps = map mkApp
+    [ "vesktop"
+    , "Spotify"
+    , "Signal"
+    ]
+
 hideApps :: [App]
 hideApps = [mkTitle "Wine System Tray", mkTitle "Steam - News"]
-
-workspace2Apps :: [App]
-workspace2Apps = [mkApp "vesktop", mkApp "Spotify"]
 
 myManageHook :: ManageHook
 myManageHook = composeOne
     [ transience
-    , match floatApps       -?> doFloat
-    , match centerFloatApps -?> doCenterFloat
-    , match hideApps        -?> doHide
-    , match workspace2Apps  -?> doShift (myWorkspaces !! 1)
+    , match floatApps            -?> doFloat
+    , match centerFloatApps      -?> doCenterFloat
+    , match hideApps             -?> doHide
+    , match secondaryMonitorApps -?> doSendToScreen (S 1) 
     , anyOf 
         [ isDialog
 	, isRole =? "pop-up"
@@ -284,6 +288,13 @@ myManageHook = composeOne
     isRole   = stringProperty "WM_WINDOW_ROLE"
     isSplash = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_SPLASH"
     doHide   = ask >>= doF . W.delete
+
+-- Force a window to always appear on the same ScreenId
+doSendToScreen :: ScreenId -> ManageHook
+doSendToScreen sid = ask >>= (\w -> doF . shifter w =<< maybeWs)
+  where maybeWs = liftX $ screenWorkspace sid
+        shifter win (Just ws) = W.shiftWin ws win
+        shifter _   Nothing   = id
 
 myLayoutHook =
     avoidStruts
