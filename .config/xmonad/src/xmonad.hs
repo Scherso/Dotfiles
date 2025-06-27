@@ -25,6 +25,7 @@ import           XMonad.Hooks.StatusBar
 import           XMonad.Hooks.StatusBar.PP
 import           XMonad.Layout.NoBorders    
 import           XMonad.Layout.Spacing
+import           XMonad.Layout.ResizableTile
 import qualified XMonad.StackSet                     as W
 import           XMonad.Util.ClickableWorkspaces
 import           XMonad.Util.Cursor
@@ -125,6 +126,8 @@ myKeys = concat
       , ("M-S-k",           windows W.swapUp)
       , ("M-h",             sendMessage Shrink)
       , ("M-l",             sendMessage Expand)
+      , ("M-S-h",           sendMessage MirrorExpand)
+      , ("M-S-l",           sendMessage MirrorShrink)
       , ("M-t",             withFocused $ windows . W.sink)
       , ("M-S-f",           withFocused toggleFull)
       ]
@@ -302,7 +305,7 @@ myLayoutHook =
     $ spacingRaw False(Border w w w w) True(Border w w w w) True
     $ tiled ||| Mirror tiled ||| Full 
     where
-        tiled   = Tall nmaster delta ratio
+        tiled   = ResizableTall nmaster delta ratio []
         nmaster = 1       {- Default number of windows in the master pane.          -}
         ratio   = 1 / 2   {- Default proportion of screen occupied by master panes. -}
         delta   = 3 / 100 {- Percent of screen increment by when resizing panes.    -}
@@ -340,7 +343,7 @@ myPP = def
     
     layoutIcon :: String -> String
     layoutIcon layout = xmobarColor background "" $ case layout of
-        "Spacing Tall"        -> "<icon=tiled.xpm/>"
-        "Spacing Mirror Tall" -> "<icon=mirrortiled.xpm/>"
-        "Spacing Full"        -> "<icon=full.xpm/>"
-        _                     -> "Error in myPP"
+        "Spacing ResizableTall"        -> "<icon=tiled.xpm/>"
+        "Spacing Mirror ResizableTall" -> "<icon=mirrortiled.xpm/>"
+        "Spacing Full"                 -> "<icon=full.xpm/>"
+        _                              -> "Error in myPP"
