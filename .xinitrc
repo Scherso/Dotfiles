@@ -6,6 +6,8 @@ export XDG_SESSION_TYPE=x11
 
 [[ -f "${HOME}/.Xresources" ]] && xrdb -merge "${HOME}/.Xresources"
 
+xhost +SI:localuser:root
+
 xrandr --output DisplayPort-0 --primary
 xrandr --output DisplayPort-1 --left-of DisplayPort-0 
 xrandr --output DisplayPort-1 --rotate left
