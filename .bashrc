@@ -14,6 +14,11 @@ if [[ $- != *i* ]] ; then
 	return
 fi
 
-# Put your fun stuff here.
-source "${HOME}/.aliases"
+if [[ -f "${HOME}/.local/share/blesh/ble.sh" ]] ; then
+	source -- "${HOME}/.local/share/blesh/ble.sh"
+fi
+
+if [[ -f "${HOME}/.aliases" ]] ; then
+	source -- "${HOME}/.aliases"
+fi
 
