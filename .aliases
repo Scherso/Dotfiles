@@ -1,4 +1,5 @@
-alias "ds"="du -hs -- * .[^.]* | sort -h"
+alias "ds"="du -hs -- * | sort -h"
+alias "deep-filter-source"="pipewire -c filter-chain.conf & pactl set-default-source output.filter-chain-9186-8"
 
 alias "gparted"="env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY gparted"
 
@@ -12,3 +13,17 @@ alias "~"="cd $(getent passwd "$(id -u -n)" 2>/dev/null | cut -d: -f6)"
 
 alias "sudo"="doas "
 alias "doas"="doas "
+
+alias "vim"="nvim"
+
+alias "ls"="eza -al --color=always --group-directories-first" # my preferred listing
+alias "la"="eza -a --color=always --group-directories-first"  # all files and dirs
+alias "ll"="eza -l --color=always --group-directories-first"  # long format
+alias "lt"="eza -aT --color=always --group-directories-first" # tree listing
+alias "l."="eza -al --color=always --group-directories-first ../" # ls on the PARENT directory
+alias "l.."="eza -al --color=always --group-directories-first ../../" # ls on directory 2 levels up
+alias "l..."="eza -al --color=always --group-directories-first ../../../" # ls on directory 3 levels up
+
+alias "df"="df -h" 
+alias "free"="free -m"
+alias "grep"="grep --color=auto"
