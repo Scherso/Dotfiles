@@ -1,90 +1,128 @@
-import System.Environment        (getEnv)
-import System.IO.Unsafe          (unsafeDupablePerformIO)
-import Theme.Theme
+module Main ( main ) where
 
-import XMonad.Hooks.StatusBar.PP (wrap, xmobarColor, xmobarFont)
-import Xmobar
+import           Data.List                 (minimumBy)
+import           Data.Maybe                (fromMaybe)
+import           Data.Ord                  (comparing)
+import           Plugins.NowPlaying        (NowPlaying (..))
+import           Plugins.SinkVolume        (SinkVolume (..))
+import           Plugins.Wttr              (Wttr (..))
+import           System.Environment        (getEnv)
+import           System.IO.Error           (catchIOError)
+import           Text.Read                 (readMaybe)
+import           Theme.Bar
+import           Theme.Scale               (scaled)
+import           Theme.Theme               (basefg)
+import           XMonad.Hooks.StatusBar.PP (wrap, xmobarColor, xmobarFont)
+import           Xmobar
 
-background, foreground, borderc :: String
-background = basebg
-foreground = basefg 
-borderc    = "#544862" -- Dark Purple
-
-white :: String -> String
-white      = xmobarColor base07 (base08 <> ":5") 
-
-myHomeDir :: String
-myHomeDir  = unsafeDupablePerformIO (getEnv "HOME")
-
-fonts :: [String]
-fonts = map (++ ":size=11:antialias=true:hinting=true") 
-    [ "SF Mono" 
-    , "Twemoji"
-    , "Noto Sans Devanagari"
-    , "Noto Sans Bengali"
-    , "Noto Sans Arabic"
-    , "Noto Sans CJK JP"
-    , "Noto Sans CJK KR"
-    ]
-
-additional_fonts :: [String]
-additional_fonts = map (\size -> "xft:SF Mono:size=" ++ show size ++ ":antialias=true:hinting=true") [11, 13 :: Int]
+-- | xmobar poll intervals are counted in tenths of a second, which is easy
+-- to misread as either milliseconds or seconds.
+seconds :: Int -> Int
+seconds n = n * 10
 
 main :: IO ()
-main = xmobar =<< myConfig
+main = do
+    home  <- getEnv "HOME"
+    iface <- defaultInterface
+    xmobar =<< configFromArgs (myConfig home iface)
 
-myConfig :: IO Config
-myConfig = pure baseConfig
-    { template = makeTemplate
-    , commands = myCommands
+myConfig :: String -> Maybe String -> Config
+myConfig home iface = baseConfig
+    { template = myTemplate iface
+    , commands = myCommands iface
+    , iconRoot = home <> "/.config/xmonad/icons"
     }
 
-makeTemplate :: String
-makeTemplate = 
-    wrap "  " " " (xmobarColor "#6B7089" "" (xmobarFont 2 "\xe61f "))
-    <> inWrapper (xmobarFont 4 "%UnsafeXMonadLog%")
-    <> wrap "}" "{" (xmobarFont 4 "%date%")
-    <> concatMap (inWrapper . white . xmobarFont 4) monitors
-    <> white (xmobarFont 4 "%playerctl%")
-  where
-    monitors = ["%enp7s0%", "%weather%", "%volume%"]
-    inWrapper = wrap 
-        (xmobarColor base08 (background <> ":7") (xmobarFont 2 "\xe0b6"))
-        (xmobarColor base08 (background <> ":7") (xmobarFont 2 "\xe0b4") <> " ")
+defaultInterface :: IO (Maybe String)
+defaultInterface = do
+    txt <- readFile "/proc/net/route" `catchIOError` const (pure "")
+    let routes = [ (dev, metric)
+                 -- Iface Destination Gateway Flags RefCnt Use Metric ...
+                 | row <- drop 1 (lines txt)
+                 , dev : dest : _gw : _flags : _ref : _use : metricStr : _ <- [words row]
+                 , dest == "00000000"
+                 , Just metric <- [readMaybe metricStr :: Maybe Int]
+                 ]
+    pure $ if null routes
+               then Nothing
+               else Just (fst (minimumBy (comparing snd) routes))
 
-myCommands :: [Runnable]
-myCommands = 
-    [ Run UnsafeXMonadLog
-    , Run $ Network "enp7s0" netOpts 10
-    , Run $ Date "%H:%M:%S" "date" 10
-    ] ++ map mkCmdReader ["volume", "playerctl", "weather"]
+netAlias :: Maybe String -> String
+netAlias = fromMaybe "dynnetwork"
+
+netCommand :: Maybe String -> Runnable
+netCommand (Just dev) = Run $ Network dev ["-t", netTemplate] (seconds 1)
+netCommand Nothing    = Run $ DynNetwork   ["-t", netTemplate] (seconds 1)
+
+inBubble :: String -> String
+inBubble = wrap capLeft (capRight <> " ")
   where
-    netOpts = ["-t", "<fn=2><fc=#98C379,#31353F:5>\xf433</fc></fn> <rx> kb <fn=2><fc=#E5C07B,#31353F:5>\xf431</fc></fn> <tx> kb"]
-    mkCmdReader script_name = Run $ CommandReader 
-        (script script_name) script_name
-    script script_name = "exec " <> myHomeDir <> "/.config/xmonad/scripts/" <> script_name <> ".sh"
+    capLeft  = xmobarColor bubbleBg (barBg `withOffset` bubbleOffset) (xmobarFont nerdFontIdx "\xe0b6")
+    capRight = xmobarColor bubbleBg (barBg `withOffset` bubbleOffset) (xmobarFont nerdFontIdx "\xe0b4")
+
+onBubble :: String -> String
+onBubble = xmobarColor bubbleFg bubbleBgSpec
+
+var :: String -> String
+var = wrap "%" "%"
+
+myTemplate :: Maybe String -> String
+myTemplate iface =
+       wrap "  " " " (xmobarColor subtleFg "" (xmobarFont nerdFontIdx "\xe61f "))
+    <> inBubble (var "UnsafeXMonadLog")
+    <> wrap "}" "{" (var "date")
+    <> concatMap (inBubble . onBubble) monitors
+    <> onBubble (var (alias NowPlaying))
+    <> var trayPadProp
+  where
+    monitors = map var [netAlias iface, alias Wttr, alias SinkVolume]
+
+netTemplate :: String
+netTemplate =
+       netIcon okFg   "\xf433 " <> " <rx> kb "
+    <> netIcon warnFg "\xf431 " <> " <tx> kb"
+  where
+    netIcon colour = xmobarFont nerdFontIdx . xmobarColor colour bubbleBgSpec
+
+-- | The widgets, including the three in "Plugins" that used to be shell
+-- scripts behind a 'CommandReader'. Being real 'Exec' instances gets them the
+-- shared palette out of "Theme.Bar" and the type checker over their markup,
+-- and drops three persistent @bash@ processes off the session.
+myCommands :: Maybe String -> [Runnable]
+myCommands iface =
+    [ Run UnsafeXMonadLog
+    , netCommand iface
+    , Run $ Date "%H:%M:%S" "date" (seconds 1)
+      -- Room for the system tray. xmonad measures the tray and writes
+      -- "<hspace=N/>" here whenever it resizes (see the Tray module); this
+      -- replaces a shell script that xmobar re-ran twice a second.
+    , Run $ XPropertyLog trayPadProp
+    , Run SinkVolume
+    , Run NowPlaying
+    , Run Wttr
+    ]
 
 baseConfig :: Config
 baseConfig = defaultConfig
-    { font             = concatMap (\f -> "xft:" ++ f ++ ",") fonts 
-    , additionalFonts  = additional_fonts
-    , textOffsets      = [20, 22, 22, 21, 22]
-    , bgColor          = background 
-    , fgColor          = foreground 
-    , borderColor      = borderc
---  , border           = FullB
-    , border           = BottomB 
-    , borderWidth      = 1
---  , position         = Static { xpos = 1933, ypos = 8, width = 2533, height = 32 }
-    , position         = Static { xpos = 1920, ypos = 0, width = 2560, height = 32 }
+    { font             = barFont
+    , additionalFonts  = additionalBarFonts
+    , textOffsets      = []
+    , bgColor          = barBg
+    , fgColor          = basefg
+    , borderColor      = borderCol
+    , border           = BottomB
+    , borderWidth      = scaled 1
+      -- Fallback only, for running xmobar by hand: xmonad overrides this
+      -- with an exact Static rectangle. TopSize treats its height argument as
+      -- a minimum and would inflate the bar to the font's height.
+    , position         = TopSize L 100 barHeight
     , alpha            = 255
     , overrideRedirect = False
     , lowerOnStart     = True
     , hideOnStart      = False
     , allDesktops      = False
     , persistent       = True
-    , iconRoot         = myHomeDir ++ "/.config/xmonad/icons"
     , iconOffset       = -1
-    , sepChar  = "%"
-    , alignSep = "}{"
+    , sepChar          = "%"
+    , alignSep         = "}{"
     }

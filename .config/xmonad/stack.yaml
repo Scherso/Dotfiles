@@ -1,15 +1,15 @@
 resolver: lts-19.23
 
 packages:
-  - . 
+  - .
 
 extra-deps:
   - github: xmonad/x11
-    commit: 7512f74eae88540f854759f77a0c0160734c4e77					
+    commit: 3f6e53cb81abf624bb3de1749b3d46c0aa205ad1
   - github: xmonad/xmonad
-    commit: ebf265a84c6295d4fe15c4a5cf88cb08746f2145					
+    commit: e3cd2b26e2b1bbcf30df5598af5324785f5ac6a6
   - github: xmonad/xmonad-contrib
-    commit: 4b866210512b90bc532b4cd46dc5171542d0fac8					
+    commit: 81c3cbc289e842855b632144fa7a964c8c0fc24c
   - xmobar-0.44.2
 
 flags:

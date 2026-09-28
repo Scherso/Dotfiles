@@ -1,0 +1,69 @@
+--- a/src/proxyicon.vala
++++ b/src/proxyicon.vala
+@@ -9,6 +9,7 @@
+ 
+     async void init(string name, string object) {
+         item = yield Bus.get_proxy(BusType.SESSION, name, object, DBusProxyFlags.NONE, null);
++        yield ensure_properties(name, object);
+         icon = new Gtk.StatusIcon();
+ 
+         item.changed.connect(property => {
+@@ -32,6 +33,47 @@
+         icon.scroll_event.connect(on_scroll);
+     }
+ 
++    /* chromium/electron (vesktop) calls RegisterStatusNotifierItem naming a
++     * well-known bus name it has not finished acquiring, so at the moment the
++     * proxy is built that name still has no owner. GDBusProxy resolves the
++     * owner exactly once, during construction, and afterwards fails every
++     * call locally without touching the bus -- so such an item is proxied
++     * with an empty property cache and stays a blank, unsized 200x200 window
++     * for the rest of the session. Read the properties again once the name is
++     * actually owned. */
++    async void ensure_properties(string name, string object) {
++        var proxy = item as DBusProxy;
++        if (proxy.get_cached_property_names() != null) return;
++
++        /* Deliberately not proxy.call(): GDBusProxy resolves the destination's
++         * name owner once at construction and, having found none, fails every
++         * later call locally without touching the bus. Go through the
++         * connection instead, which re-resolves the name each time. */
++        DBusConnection conn;
++        try { conn = yield Bus.get(BusType.SESSION); }
++        catch (Error e) { return; }
++
++        for (int attempt = 0; attempt < 40; attempt++) {
++            try {
++                var res = yield conn.call(name, object, "org.freedesktop.DBus.Properties",
++                        "GetAll", new Variant("(s)", proxy.get_interface_name()),
++                        null, 0, -1, null);
++                VariantIter iter;
++                res.get("(a{sv})", out iter);
++                string key;
++                Variant val;
++                while (iter.next("{sv}", out key, out val)) {
++                    proxy.set_cached_property(key, val);
++                }
++                if (proxy.get_cached_property_names() != null) return;
++            } catch (Error e) { /* name not owned yet; retry below */ }
++
++            Timeout.add(250, ensure_properties.callback);
++            yield;
++        }
++        stderr.printf("%s: no readable properties after retrying\n", name);
++    }
++
+     bool on_button_press(Gdk.EventButton event) {
+         if (event.button == 3) {
+             if (menu != null) {
+--- a/src/statusnotifieritem.vala
++++ b/src/statusnotifieritem.vala
+@@ -95,7 +95,7 @@
+                 (me as StatusNotifierItem).changed(name);
+                 return true;
+             }
+-        } catch (DBusError.UNKNOWN_PROPERTY e) {} catch (DBusError.INVALID_ARGS e) {}
++        } catch (DBusError.UNKNOWN_PROPERTY e) {} catch (DBusError.INVALID_ARGS e) {} catch (DBusError.FAILED e) {}
+         return false;
+     }
+ }

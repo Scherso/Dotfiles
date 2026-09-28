@@ -149,7 +149,11 @@ startx
 | `MOD + n`              | Refresh XMonad.                                           |
 | `MOD + SHIFT + q`      | Quits XMonad and X Server.                                |
 | `MOD + q`              | Re-compiles and restarts XMonad without killing X server. |
-| `MOD + 1-9`            | Switch to workspaces 1-9 according to the key.            |
+| `MOD + 1-9`            | Switch to topics 1-9; runs the topic's action if empty.   |
+| `MOD + a`              | Re-run the current topic's action.                        |
+| `MOD + o`              | Switch to a topic by name.                                |
+| `MOD + SHIFT + o`      | Send the focused window to a topic by name.               |
+| `MOD + SHIFT + ;`      | Back to the previous topic on this screen.                |
 | `MOD + TAB`            | Switch focus to the next window.                          |
 | `MOD + j`              | Switch focus to the next window to the left.              |
 | `MOD + k`              | Switch focus to the next window to the right.             |
@@ -161,11 +165,11 @@ startx
 | `MOD + l`              | Shrink focused window to the right.                       |
 | `MOD + t`              | Tile a floating window.                                   |
 | `MOD + SHIFT + f`      | Toggle fullscreen on a window.                            |
-| `MOD + SHIFT + RETURN` | Open Alacritty.                                           |
-| `MOD + f`              | Open Firefox.                                             |
+| `MOD + SHIFT + RETURN` | Open Alacritty in the current topic's directory.          |
+| `MOD + f`              | Open LibreWolf.                                           |
 | `MOD + s`              | Selective screenshot.                                     |
 | `PTRSC`                | Fullscreen screenshot.                                    |
-| `MOD + p`              | Open `dmenu`.                                             |
+| `MOD + p`              | Open `rofi`.                                              |
 | Play/Pause             | Play/Pause media/song.                                    |
 | Previous               | Previous media/song.                                      |
 | Next                   | Next media/song.                                          |

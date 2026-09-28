@@ -12,6 +12,7 @@
 
 module Theme.Theme ( basebg
                    , basefg
+                   , baseborder
                    , base00
                    , base08
                    , base01
@@ -33,9 +34,14 @@ module Theme.Theme ( basebg
 import           Prelude          (String)
 import           Theme.Xresources (xprop)
 
-basebg, basefg, base00, base08, base01, base09, base02, base0A, base03, base0B, base04, base0C, base05, base0D, base06, base0E, base07, base0F :: String
-basebg = xprop "*.background"
-basefg = xprop "*.foreground"
+basebg, basefg, baseborder                                     :: String
+base00, base01, base02, base03, base04, base05, base06, base07 :: String
+base08, base09, base0A, base0B, base0C, base0D, base0E, base0F :: String
+basebg     = xprop "*.background"
+basefg     = xprop "*.foreground"
+-- The one colour here with no X resource behind it: xrdb defines background,
+-- foreground and color0-15, but nothing standard for a window border.
+baseborder = "#544862"
 base00 = xprop "*.color0"
 base08 = xprop "*.color8"
 base01 = xprop "*.color1"

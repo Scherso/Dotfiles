@@ -1,11 +1,13 @@
 #include ".colorschemes/onedark"
 
-! Cursor 
-Xcursor.size: 16
+Xft.dpi: 192
+
+Xcursor.theme: Adwaita
+Xcursor.size: 48
 
 ! Special
-*.background: 		basebg
-*.foreground: 		basefg
+*.background: 	basebg
+*.foreground: 	basefg
 
 ! Black
 *.color0: 		base00

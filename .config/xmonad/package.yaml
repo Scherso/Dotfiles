@@ -13,15 +13,47 @@ dependencies:
 
 source-dirs: src
 
+# other-modules are listed explicitly rather than left to hpack's autodetection:
+# both executables share src/, so autodetection would compile the window
+# manager's modules into the bar as well, and they need dependencies the bar
+# does not have.
 executables:
     xmonad:
         main: xmonad.hs
+        other-modules:
+            - Bar
+            - Bindings
+            - Layouts
+            - Manage
+            - Scratchpads
+            - Screens
+            - Settings
+            - Topics
+            - Tray
+            - Theme.Bar
+            - Theme.Scale
+            - Theme.Theme
+            - Theme.Xresources
         dependencies:
             - xmonad
             - containers
             - X11 >= 1.10
     xmobar:
         main: xmobar.hs
+        other-modules:
+            - Plugins.NowPlaying
+            - Plugins.SinkVolume
+            - Plugins.Wttr
+            - Theme.Bar
+            - Theme.Scale
+            - Theme.Theme
+            - Theme.Xresources
         dependencies:
             - xmobar
+            # The widgets in Plugins used to be shell scripts: process runs
+            # the commands that still have to be external (wpctl, alsactl,
+            # playerctl, curl); time supplies the clock that the weather
+            # icon's day/night swap and the title scroll need.
+            - process
+            - time
         ghc-options: -rtsopts -threaded -with-rtsopts=-N

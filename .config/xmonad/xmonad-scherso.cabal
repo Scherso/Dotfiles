@@ -1,6 +1,6 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.36.0.
+-- This file has been generated from package.yaml by hpack version 0.37.0.
 --
 -- see: https://github.com/sol/hpack
 
@@ -16,14 +16,20 @@ build-type:     Simple
 executable xmobar
   main-is: xmobar.hs
   other-modules:
+      Plugins.NowPlaying
+      Plugins.SinkVolume
+      Plugins.Wttr
+      Theme.Bar
+      Theme.Scale
       Theme.Theme
       Theme.Xresources
-      Paths_xmonad_scherso
   hs-source-dirs:
       src
   ghc-options: -Wall -Wcompat -Wincomplete-record-updates -Wincomplete-uni-patterns -Wredundant-constraints -O2 -j -dynamic -rtsopts -threaded -with-rtsopts=-N
   build-depends:
       base
+    , process
+    , time
     , xmobar
     , xmonad-contrib >=0.16
   default-language: Haskell2010
@@ -31,9 +37,19 @@ executable xmobar
 executable xmonad
   main-is: xmonad.hs
   other-modules:
+      Bar
+      Bindings
+      Layouts
+      Manage
+      Scratchpads
+      Screens
+      Settings
+      Topics
+      Tray
+      Theme.Bar
+      Theme.Scale
       Theme.Theme
       Theme.Xresources
-      Paths_xmonad_scherso
   hs-source-dirs:
       src
   ghc-options: -Wall -Wcompat -Wincomplete-record-updates -Wincomplete-uni-patterns -Wredundant-constraints -O2 -j -dynamic
